@@ -7,7 +7,7 @@
   },
   "host": "salespoc-api.azurewebsites.net",
   "basePath": "/api",
-  "schemes": ["http"],
+  "schemes": ["https"],
   "consumes": ["application/json"],
   "produces": ["application/json"],
   "paths": {
