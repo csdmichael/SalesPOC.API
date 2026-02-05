@@ -1,0 +1,1167 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "SalesAPI",
+    "description": "Sales API for managing customers, products, orders, and sales representatives",
+    "version": "1.0.0"
+  },
+  "host": "salespoc-api.azurewebsites.net",
+  "basePath": "/api",
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/Customers": {
+      "get": {
+        "tags": ["Customers"],
+        "operationId": "Customers_GetAll",
+        "summary": "Get all customers",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Customer"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Customers"],
+        "operationId": "Customers_Create",
+        "summary": "Create a new customer",
+        "parameters": [
+          {
+            "name": "customer",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Customer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Customer"
+            }
+          }
+        }
+      }
+    },
+    "/Customers/{id}": {
+      "get": {
+        "tags": ["Customers"],
+        "operationId": "Customers_GetById",
+        "summary": "Get customer by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Customer"
+            }
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Customers"],
+        "operationId": "Customers_Update",
+        "summary": "Update a customer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "customer",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Customer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Customers"],
+        "operationId": "Customers_Delete",
+        "summary": "Delete a customer",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        }
+      }
+    },
+    "/Products": {
+      "get": {
+        "tags": ["Products"],
+        "operationId": "Products_GetAll",
+        "summary": "Get all products",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Product"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Products"],
+        "operationId": "Products_Create",
+        "summary": "Create a new product",
+        "parameters": [
+          {
+            "name": "product",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          }
+        }
+      }
+    },
+    "/Products/{id}": {
+      "get": {
+        "tags": ["Products"],
+        "operationId": "Products_GetById",
+        "summary": "Get product by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Products"],
+        "operationId": "Products_Update",
+        "summary": "Update a product",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "product",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Products"],
+        "operationId": "Products_Delete",
+        "summary": "Delete a product",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      }
+    },
+    "/Products/category/{category}": {
+      "get": {
+        "tags": ["Products"],
+        "operationId": "Products_GetByCategory",
+        "summary": "Get products by category",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Product"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/OrderItems": {
+      "get": {
+        "tags": ["OrderItems"],
+        "operationId": "OrderItems_GetAll",
+        "summary": "Get all order items",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OrderItem"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["OrderItems"],
+        "operationId": "OrderItems_Create",
+        "summary": "Create a new order item",
+        "parameters": [
+          {
+            "name": "orderItem",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrderItem"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/OrderItem"
+            }
+          }
+        }
+      }
+    },
+    "/OrderItems/{id}": {
+      "get": {
+        "tags": ["OrderItems"],
+        "operationId": "OrderItems_GetById",
+        "summary": "Get order item by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/OrderItem"
+            }
+          },
+          "404": {
+            "description": "Order item not found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["OrderItems"],
+        "operationId": "OrderItems_Update",
+        "summary": "Update an order item",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderItem",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrderItem"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Order item not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["OrderItems"],
+        "operationId": "OrderItems_Delete",
+        "summary": "Delete an order item",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Order item not found"
+          }
+        }
+      }
+    },
+    "/OrderItems/order/{orderId}": {
+      "get": {
+        "tags": ["OrderItems"],
+        "operationId": "OrderItems_GetByOrderId",
+        "summary": "Get order items by order ID",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OrderItem"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/SalesOrders": {
+      "get": {
+        "tags": ["SalesOrders"],
+        "operationId": "SalesOrders_GetAll",
+        "summary": "Get all sales orders",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SalesOrder"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["SalesOrders"],
+        "operationId": "SalesOrders_Create",
+        "summary": "Create a new sales order",
+        "parameters": [
+          {
+            "name": "salesOrder",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SalesOrder"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SalesOrder"
+            }
+          }
+        }
+      }
+    },
+    "/SalesOrders/{id}": {
+      "get": {
+        "tags": ["SalesOrders"],
+        "operationId": "SalesOrders_GetById",
+        "summary": "Get sales order by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SalesOrder"
+            }
+          },
+          "404": {
+            "description": "Sales order not found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["SalesOrders"],
+        "operationId": "SalesOrders_Update",
+        "summary": "Update a sales order",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "salesOrder",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SalesOrder"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Sales order not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["SalesOrders"],
+        "operationId": "SalesOrders_Delete",
+        "summary": "Delete a sales order",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Sales order not found"
+          }
+        }
+      }
+    },
+    "/SalesOrders/customer/{customerId}": {
+      "get": {
+        "tags": ["SalesOrders"],
+        "operationId": "SalesOrders_GetByCustomerId",
+        "summary": "Get sales orders by customer ID",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SalesOrder"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/SalesOrders/salesrep/{salesRepId}": {
+      "get": {
+        "tags": ["SalesOrders"],
+        "operationId": "SalesOrders_GetBySalesRepId",
+        "summary": "Get sales orders by sales rep ID",
+        "parameters": [
+          {
+            "name": "salesRepId",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SalesOrder"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/SalesReps": {
+      "get": {
+        "tags": ["SalesReps"],
+        "operationId": "SalesReps_GetAll",
+        "summary": "Get all sales representatives",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SalesRep"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["SalesReps"],
+        "operationId": "SalesReps_Create",
+        "summary": "Create a new sales representative",
+        "parameters": [
+          {
+            "name": "salesRep",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SalesRep"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SalesRep"
+            }
+          }
+        }
+      }
+    },
+    "/SalesReps/{id}": {
+      "get": {
+        "tags": ["SalesReps"],
+        "operationId": "SalesReps_GetById",
+        "summary": "Get sales representative by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SalesRep"
+            }
+          },
+          "404": {
+            "description": "Sales representative not found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["SalesReps"],
+        "operationId": "SalesReps_Update",
+        "summary": "Update a sales representative",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "salesRep",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SalesRep"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Sales representative not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["SalesReps"],
+        "operationId": "SalesReps_Delete",
+        "summary": "Delete a sales representative",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Sales representative not found"
+          }
+        }
+      }
+    },
+    "/SalesReps/region/{region}": {
+      "get": {
+        "tags": ["SalesReps"],
+        "operationId": "SalesReps_GetByRegion",
+        "summary": "Get sales representatives by region",
+        "parameters": [
+          {
+            "name": "region",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SalesRep"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/SalesFacts": {
+      "get": {
+        "tags": ["SalesFacts"],
+        "operationId": "SalesFacts_GetAll",
+        "summary": "Get all sales facts",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VwSalesFact"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/SalesFacts/customer/{customerName}": {
+      "get": {
+        "tags": ["SalesFacts"],
+        "operationId": "SalesFacts_GetByCustomerName",
+        "summary": "Get sales facts by customer name",
+        "parameters": [
+          {
+            "name": "customerName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VwSalesFact"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/SalesFacts/product/{productName}": {
+      "get": {
+        "tags": ["SalesFacts"],
+        "operationId": "SalesFacts_GetByProductName",
+        "summary": "Get sales facts by product name",
+        "parameters": [
+          {
+            "name": "productName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VwSalesFact"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/SalesFacts/salesrep/{repName}": {
+      "get": {
+        "tags": ["SalesFacts"],
+        "operationId": "SalesFacts_GetByRepName",
+        "summary": "Get sales facts by sales rep name",
+        "parameters": [
+          {
+            "name": "repName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VwSalesFact"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/SalesFacts/region/{region}": {
+      "get": {
+        "tags": ["SalesFacts"],
+        "operationId": "SalesFacts_GetByRegion",
+        "summary": "Get sales facts by region",
+        "parameters": [
+          {
+            "name": "region",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VwSalesFact"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/SalesFacts/category/{category}": {
+      "get": {
+        "tags": ["SalesFacts"],
+        "operationId": "SalesFacts_GetByCategory",
+        "summary": "Get sales facts by product category",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VwSalesFact"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Customer": {
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "customerType": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "industry": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "country": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "state": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "city": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "annualRevenueUsd": {
+          "type": "number",
+          "format": "double",
+          "x-nullable": true
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": true
+        }
+      },
+      "required": ["customerName"]
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "productCategory": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "processNodeNm": {
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
+        },
+        "packageType": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "unitPriceUsd": {
+          "type": "number",
+          "format": "double"
+        },
+        "lifecycleStatus": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": true
+        }
+      },
+      "required": ["productName", "unitPriceUsd"]
+    },
+    "OrderItem": {
+      "type": "object",
+      "properties": {
+        "orderItemId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "orderId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "productId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "unitPriceUsd": {
+          "type": "number",
+          "format": "double"
+        },
+        "lineTotalUsd": {
+          "type": "number",
+          "format": "double",
+          "x-nullable": true
+        }
+      },
+      "required": ["orderId", "productId", "quantity", "unitPriceUsd"]
+    },
+    "SalesOrder": {
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "customerId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "salesRepId": {
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
+        },
+        "orderDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "orderStatus": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "totalAmountUsd": {
+          "type": "number",
+          "format": "double",
+          "x-nullable": true
+        },
+        "currency": {
+          "type": "string",
+          "x-nullable": true
+        }
+      },
+      "required": ["customerId", "orderDate"]
+    },
+    "SalesRep": {
+      "type": "object",
+      "properties": {
+        "salesRepId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "repName": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "email": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "hireDate": {
+          "type": "string",
+          "format": "date",
+          "x-nullable": true
+        }
+      },
+      "required": ["repName"]
+    },
+    "VwSalesFact": {
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "orderDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "customerType": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "productName": {
+          "type": "string"
+        },
+        "productCategory": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "processNodeNm": {
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "unitPriceUsd": {
+          "type": "number",
+          "format": "double"
+        },
+        "lineTotalUsd": {
+          "type": "number",
+          "format": "double",
+          "x-nullable": true
+        },
+        "repName": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "region": {
+          "type": "string",
+          "x-nullable": true
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Customers",
+      "description": "Customer management operations"
+    },
+    {
+      "name": "Products",
+      "description": "Product catalog operations"
+    },
+    {
+      "name": "OrderItems",
+      "description": "Order line item operations"
+    },
+    {
+      "name": "SalesOrders",
+      "description": "Sales order operations"
+    },
+    {
+      "name": "SalesReps",
+      "description": "Sales representative operations"
+    },
+    {
+      "name": "SalesFacts",
+      "description": "Sales analytics view operations"
+    }
+  ]
+}
