@@ -24,7 +24,7 @@ jobs:
           dotnet-version: '10.x'
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build SalesAPI.csproj --configuration Release
 
       - name: dotnet publish
         run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
@@ -62,4 +62,5 @@ jobs:
           app-name: 'SalesPOC-API'
           slot-name: 'Production'
           package: .
+
           
