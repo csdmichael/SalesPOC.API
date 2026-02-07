@@ -1,0 +1,11 @@
+# Example Terraform variables file
+# Copy this file to terraform.tfvars and fill in the values
+
+resource_group_name   = "rg-salespoc-api"
+location              = "East US"
+app_service_plan_name = "asp-salespoc-api"
+app_service_name      = "salespoc-api"
+sql_server_name       = "sql-salespoc"
+sql_database_name     = "SalesDb"
+sql_admin_login       = "sqladmin"
+sql_admin_password    = "YourSecurePassword123!"  # Change this to a secure password
