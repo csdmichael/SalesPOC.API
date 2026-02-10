@@ -1,9 +1,12 @@
 ﻿{
   "openapi": "3.1.1",
   "info": {
-    "title": "SalesAPI | v1",
+    "title": "SalesAPI",
+    "summary": "Sales REST API for managing customers, products, orders, and sales data.",
+    "description": "A RESTful API for the Sales POC application. Provides CRUD operations for customers, products, sales orders, order items, and sales representatives, as well as read-only access to aggregated sales facts.",
     "version": "1.0.0"
   },
+  "jsonSchemaDialect": "https://spec.openapis.org/oas/3.1/dialect/base",
   "servers": [
     {
       "url": "http://localhost:5107/"
@@ -15,6 +18,9 @@
         "tags": [
           "Chat"
         ],
+        "summary": "Send a chat message",
+        "description": "Sends a question to the AI chat endpoint and returns a response.",
+        "operationId": "postChat",
         "requestBody": {
           "content": {
             "application/json": {
@@ -47,6 +53,9 @@
         "tags": [
           "Customers"
         ],
+        "summary": "Get all customers",
+        "description": "Retrieves a list of all customers.",
+        "operationId": "getCustomers",
         "responses": {
           "200": {
             "description": "OK",
@@ -83,6 +92,9 @@
         "tags": [
           "Customers"
         ],
+        "summary": "Create a customer",
+        "description": "Creates a new customer record.",
+        "operationId": "createCustomer",
         "requestBody": {
           "content": {
             "application/json": {
@@ -132,6 +144,9 @@
         "tags": [
           "Customers"
         ],
+        "summary": "Get a customer by ID",
+        "description": "Retrieves a single customer by their unique identifier.",
+        "operationId": "getCustomerById",
         "parameters": [
           {
             "name": "id",
@@ -174,6 +189,9 @@
         "tags": [
           "Customers"
         ],
+        "summary": "Update a customer",
+        "description": "Updates an existing customer by their unique identifier.",
+        "operationId": "updateCustomer",
         "parameters": [
           {
             "name": "id",
@@ -219,6 +237,9 @@
         "tags": [
           "Customers"
         ],
+        "summary": "Delete a customer",
+        "description": "Deletes a customer by their unique identifier.",
+        "operationId": "deleteCustomer",
         "parameters": [
           {
             "name": "id",
@@ -246,6 +267,9 @@
         "tags": [
           "OrderItems"
         ],
+        "summary": "Get all order items",
+        "description": "Retrieves a list of all order items.",
+        "operationId": "getOrderItems",
         "responses": {
           "200": {
             "description": "OK",
@@ -282,6 +306,9 @@
         "tags": [
           "OrderItems"
         ],
+        "summary": "Create an order item",
+        "description": "Creates a new order item.",
+        "operationId": "createOrderItem",
         "requestBody": {
           "content": {
             "application/json": {
@@ -331,6 +358,9 @@
         "tags": [
           "OrderItems"
         ],
+        "summary": "Get an order item by ID",
+        "description": "Retrieves a single order item by its unique identifier.",
+        "operationId": "getOrderItemById",
         "parameters": [
           {
             "name": "id",
@@ -373,6 +403,9 @@
         "tags": [
           "OrderItems"
         ],
+        "summary": "Update an order item",
+        "description": "Updates an existing order item by its unique identifier.",
+        "operationId": "updateOrderItem",
         "parameters": [
           {
             "name": "id",
@@ -418,6 +451,9 @@
         "tags": [
           "OrderItems"
         ],
+        "summary": "Delete an order item",
+        "description": "Deletes an order item by its unique identifier.",
+        "operationId": "deleteOrderItem",
         "parameters": [
           {
             "name": "id",
@@ -445,6 +481,9 @@
         "tags": [
           "OrderItems"
         ],
+        "summary": "Get order items by order ID",
+        "description": "Retrieves all order items for a given order.",
+        "operationId": "getOrderItemsByOrderId",
         "parameters": [
           {
             "name": "orderId",
@@ -498,6 +537,9 @@
         "tags": [
           "Products"
         ],
+        "summary": "Get all products",
+        "description": "Retrieves a list of all products.",
+        "operationId": "getProducts",
         "responses": {
           "200": {
             "description": "OK",
@@ -534,6 +576,9 @@
         "tags": [
           "Products"
         ],
+        "summary": "Create a product",
+        "description": "Creates a new product record.",
+        "operationId": "createProduct",
         "requestBody": {
           "content": {
             "application/json": {
@@ -583,6 +628,9 @@
         "tags": [
           "Products"
         ],
+        "summary": "Get a product by ID",
+        "description": "Retrieves a single product by its unique identifier.",
+        "operationId": "getProductById",
         "parameters": [
           {
             "name": "id",
@@ -625,6 +673,9 @@
         "tags": [
           "Products"
         ],
+        "summary": "Update a product",
+        "description": "Updates an existing product by its unique identifier.",
+        "operationId": "updateProduct",
         "parameters": [
           {
             "name": "id",
@@ -670,6 +721,9 @@
         "tags": [
           "Products"
         ],
+        "summary": "Delete a product",
+        "description": "Deletes a product by its unique identifier.",
+        "operationId": "deleteProduct",
         "parameters": [
           {
             "name": "id",
@@ -697,6 +751,9 @@
         "tags": [
           "Products"
         ],
+        "summary": "Get products by category",
+        "description": "Retrieves all products in a given category.",
+        "operationId": "getProductsByCategory",
         "parameters": [
           {
             "name": "category",
@@ -745,6 +802,9 @@
         "tags": [
           "SalesFacts"
         ],
+        "summary": "Get all sales facts",
+        "description": "Retrieves all aggregated sales fact records.",
+        "operationId": "getSalesFacts",
         "responses": {
           "200": {
             "description": "OK",
@@ -783,6 +843,9 @@
         "tags": [
           "SalesFacts"
         ],
+        "summary": "Get sales facts by customer name",
+        "description": "Retrieves sales facts filtered by customer name.",
+        "operationId": "getSalesFactsByCustomer",
         "parameters": [
           {
             "name": "customerName",
@@ -831,6 +894,9 @@
         "tags": [
           "SalesFacts"
         ],
+        "summary": "Get sales facts by product name",
+        "description": "Retrieves sales facts filtered by product name.",
+        "operationId": "getSalesFactsByProduct",
         "parameters": [
           {
             "name": "productName",
@@ -879,6 +945,9 @@
         "tags": [
           "SalesFacts"
         ],
+        "summary": "Get sales facts by sales rep name",
+        "description": "Retrieves sales facts filtered by sales representative name.",
+        "operationId": "getSalesFactsByRep",
         "parameters": [
           {
             "name": "repName",
@@ -927,6 +996,9 @@
         "tags": [
           "SalesFacts"
         ],
+        "summary": "Get sales facts by region",
+        "description": "Retrieves sales facts filtered by region.",
+        "operationId": "getSalesFactsByRegion",
         "parameters": [
           {
             "name": "region",
@@ -975,6 +1047,9 @@
         "tags": [
           "SalesFacts"
         ],
+        "summary": "Get sales facts by category",
+        "description": "Retrieves sales facts filtered by product category.",
+        "operationId": "getSalesFactsByCategory",
         "parameters": [
           {
             "name": "category",
@@ -1023,6 +1098,9 @@
         "tags": [
           "SalesOrders"
         ],
+        "summary": "Get all sales orders",
+        "description": "Retrieves a list of all sales orders.",
+        "operationId": "getSalesOrders",
         "responses": {
           "200": {
             "description": "OK",
@@ -1059,6 +1137,9 @@
         "tags": [
           "SalesOrders"
         ],
+        "summary": "Create a sales order",
+        "description": "Creates a new sales order.",
+        "operationId": "createSalesOrder",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1108,6 +1189,9 @@
         "tags": [
           "SalesOrders"
         ],
+        "summary": "Get a sales order by ID",
+        "description": "Retrieves a single sales order by its unique identifier.",
+        "operationId": "getSalesOrderById",
         "parameters": [
           {
             "name": "id",
@@ -1150,6 +1234,9 @@
         "tags": [
           "SalesOrders"
         ],
+        "summary": "Update a sales order",
+        "description": "Updates an existing sales order by its unique identifier.",
+        "operationId": "updateSalesOrder",
         "parameters": [
           {
             "name": "id",
@@ -1195,6 +1282,9 @@
         "tags": [
           "SalesOrders"
         ],
+        "summary": "Delete a sales order",
+        "description": "Deletes a sales order by its unique identifier.",
+        "operationId": "deleteSalesOrder",
         "parameters": [
           {
             "name": "id",
@@ -1222,6 +1312,9 @@
         "tags": [
           "SalesOrders"
         ],
+        "summary": "Get sales orders by customer ID",
+        "description": "Retrieves all sales orders for a given customer.",
+        "operationId": "getSalesOrdersByCustomer",
         "parameters": [
           {
             "name": "customerId",
@@ -1275,6 +1368,9 @@
         "tags": [
           "SalesOrders"
         ],
+        "summary": "Get sales orders by sales rep ID",
+        "description": "Retrieves all sales orders for a given sales representative.",
+        "operationId": "getSalesOrdersBySalesRep",
         "parameters": [
           {
             "name": "salesRepId",
@@ -1328,6 +1424,9 @@
         "tags": [
           "SalesReps"
         ],
+        "summary": "Get all sales reps",
+        "description": "Retrieves a list of all sales representatives.",
+        "operationId": "getSalesReps",
         "responses": {
           "200": {
             "description": "OK",
@@ -1364,6 +1463,9 @@
         "tags": [
           "SalesReps"
         ],
+        "summary": "Create a sales rep",
+        "description": "Creates a new sales representative record.",
+        "operationId": "createSalesRep",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1413,6 +1515,9 @@
         "tags": [
           "SalesReps"
         ],
+        "summary": "Get a sales rep by ID",
+        "description": "Retrieves a single sales representative by their unique identifier.",
+        "operationId": "getSalesRepById",
         "parameters": [
           {
             "name": "id",
@@ -1455,6 +1560,9 @@
         "tags": [
           "SalesReps"
         ],
+        "summary": "Update a sales rep",
+        "description": "Updates an existing sales representative by their unique identifier.",
+        "operationId": "updateSalesRep",
         "parameters": [
           {
             "name": "id",
@@ -1500,6 +1608,9 @@
         "tags": [
           "SalesReps"
         ],
+        "summary": "Delete a sales rep",
+        "description": "Deletes a sales representative by their unique identifier.",
+        "operationId": "deleteSalesRep",
         "parameters": [
           {
             "name": "id",
@@ -1527,6 +1638,9 @@
         "tags": [
           "SalesReps"
         ],
+        "summary": "Get sales reps by region",
+        "description": "Retrieves all sales representatives in a given region.",
+        "operationId": "getSalesRepsByRegion",
         "parameters": [
           {
             "name": "region",
@@ -1973,25 +2087,32 @@
   },
   "tags": [
     {
-      "name": "Chat"
+      "name": "Chat",
+      "description": "AI-powered chat operations"
     },
     {
-      "name": "Customers"
+      "name": "Customers",
+      "description": "Customer management operations"
     },
     {
-      "name": "OrderItems"
+      "name": "OrderItems",
+      "description": "Order item management operations"
     },
     {
-      "name": "Products"
+      "name": "Products",
+      "description": "Product catalog operations"
     },
     {
-      "name": "SalesFacts"
+      "name": "SalesFacts",
+      "description": "Aggregated sales fact queries"
     },
     {
-      "name": "SalesOrders"
+      "name": "SalesOrders",
+      "description": "Sales order management operations"
     },
     {
-      "name": "SalesReps"
+      "name": "SalesReps",
+      "description": "Sales representative management operations"
     }
   ]
 }
