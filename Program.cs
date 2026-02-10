@@ -1,7 +1,10 @@
 using Azure.AI.Projects;
 using Azure.Identity;
+using Azure.Storage.Blobs;
+using Microsoft.Azure.Cosmos;
 using Microsoft.EntityFrameworkCore;
 using SalesAPI.Models;
+using SalesAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +44,29 @@ builder.Services.AddCors(options =>
 
 // Add HttpClientFactory for Chat proxy
 builder.Services.AddHttpClient();
+
+// Register Azure Blob Storage service
+var blobConnectionString = builder.Configuration["AzureBlobStorage:ConnectionString"]
+    ?? throw new InvalidOperationException("AzureBlobStorage:ConnectionString is not configured.");
+var blobContainerName = builder.Configuration["AzureBlobStorage:ContainerName"]
+    ?? throw new InvalidOperationException("AzureBlobStorage:ContainerName is not configured.");
+
+builder.Services.AddSingleton(_ =>
+    new BlobContainerClient(blobConnectionString, blobContainerName));
+builder.Services.AddSingleton<BlobStorageService>();
+
+// Register Azure Cosmos DB service
+var cosmosConnectionString = builder.Configuration["CosmosDb:ConnectionString"]
+    ?? throw new InvalidOperationException("CosmosDb:ConnectionString is not configured.");
+var cosmosDatabaseName = builder.Configuration["CosmosDb:DatabaseName"]
+    ?? throw new InvalidOperationException("CosmosDb:DatabaseName is not configured.");
+var cosmosContainerName = builder.Configuration["CosmosDb:ContainerName"]
+    ?? throw new InvalidOperationException("CosmosDb:ContainerName is not configured.");
+
+builder.Services.AddSingleton(_ =>
+    new CosmosClient(cosmosConnectionString));
+builder.Services.AddSingleton(sp =>
+    new CosmosDbService(sp.GetRequiredService<CosmosClient>(), cosmosDatabaseName, cosmosContainerName));
 
 // Configure Entity Framework with SQL Server
 builder.Services.AddDbContext<SalesDbContext>(options =>

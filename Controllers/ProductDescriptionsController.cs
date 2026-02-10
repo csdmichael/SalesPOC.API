@@ -1,0 +1,56 @@
+using Microsoft.AspNetCore.Mvc;
+using SalesAPI.Services;
+
+namespace SalesAPI.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class ProductDescriptionsController : ControllerBase
+{
+    private readonly CosmosDbService _cosmosService;
+
+    public ProductDescriptionsController(CosmosDbService cosmosService)
+    {
+        _cosmosService = cosmosService;
+    }
+
+    /// <summary>
+    /// GET: api/ProductDescriptions
+    /// Retrieves all product descriptions from CosmosDB.
+    /// </summary>
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var descriptions = await _cosmosService.GetAllProductDescriptionsAsync();
+        return Ok(descriptions);
+    }
+
+    /// <summary>
+    /// GET: api/ProductDescriptions/{productId}
+    /// Retrieves a product description by its ID (e.g. "Chip-100").
+    /// </summary>
+    [HttpGet("{productId}")]
+    public async Task<IActionResult> GetById(string productId)
+    {
+        var description = await _cosmosService.GetProductDescriptionByIdAsync(productId);
+
+        if (description is null)
+            return NotFound(new { message = $"No product description found for '{productId}'." });
+
+        return Ok(description);
+    }
+
+    /// <summary>
+    /// GET: api/ProductDescriptions/search?q=chip
+    /// Searches product descriptions by partial ID match.
+    /// </summary>
+    [HttpGet("search")]
+    public async Task<IActionResult> Search([FromQuery] string q)
+    {
+        if (string.IsNullOrWhiteSpace(q))
+            return BadRequest(new { message = "Query parameter 'q' is required." });
+
+        var results = await _cosmosService.SearchProductDescriptionsAsync(q);
+        return Ok(results);
+    }
+}

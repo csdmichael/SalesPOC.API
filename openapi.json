@@ -1683,6 +1683,235 @@
           }
         }
       }
+    },
+    "/api/ProductDocuments": {
+      "get": {
+        "tags": [
+          "ProductDocuments"
+        ],
+        "summary": "Get all product documents",
+        "description": "Lists all documents across all products in the Azure Blob Storage container.",
+        "operationId": "getAllProductDocuments",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDocument"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProductDocuments/products": {
+      "get": {
+        "tags": [
+          "ProductDocuments"
+        ],
+        "summary": "Get product names",
+        "description": "Returns a list of distinct product names found in the blob container.",
+        "operationId": "getProductNames",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProductDocuments/by-product/{productName}": {
+      "get": {
+        "tags": [
+          "ProductDocuments"
+        ],
+        "summary": "Get documents by product",
+        "description": "Lists all documents for a specific product (e.g. Chip-1). Each product typically has: Engineering DataSheet, Marketing Brief, Sales One Pager.",
+        "operationId": "getDocumentsByProduct",
+        "parameters": [
+          {
+            "name": "productName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The product name to filter by (e.g. Chip-1)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDocument"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No documents found for the specified product"
+          }
+        }
+      }
+    },
+    "/api/ProductDocuments/download": {
+      "get": {
+        "tags": [
+          "ProductDocuments"
+        ],
+        "summary": "Download a document",
+        "description": "Downloads a specific document by its full blob name from Azure Blob Storage.",
+        "operationId": "downloadProductDocument",
+        "parameters": [
+          {
+            "name": "blobName",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The full blob name of the document to download"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The document file",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "blobName query parameter is required"
+          },
+          "404": {
+            "description": "Blob not found"
+          }
+        }
+      }
+    },
+    "/api/ProductDescriptions": {
+      "get": {
+        "tags": [
+          "ProductDescriptions"
+        ],
+        "summary": "Get all product descriptions",
+        "description": "Retrieves all product descriptions from CosmosDB.",
+        "operationId": "getAllProductDescriptions",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDescription"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ProductDescriptions/{productId}": {
+      "get": {
+        "tags": [
+          "ProductDescriptions"
+        ],
+        "summary": "Get product description by ID",
+        "description": "Retrieves a product description by its ID (e.g. Chip-100).",
+        "operationId": "getProductDescriptionById",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The product ID (e.g. Chip-100)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDescription"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No product description found for the specified ID"
+          }
+        }
+      }
+    },
+    "/api/ProductDescriptions/search": {
+      "get": {
+        "tags": [
+          "ProductDescriptions"
+        ],
+        "summary": "Search product descriptions",
+        "description": "Searches product descriptions by partial ID match (case-insensitive).",
+        "operationId": "searchProductDescriptions",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The search term to match against product IDs"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDescription"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Query parameter q is required"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2082,6 +2311,54 @@
             ]
           }
         }
+      },
+      "ProductDocument": {
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string",
+            "description": "The full blob name / path of the document"
+          },
+          "productName": {
+            "type": "string",
+            "description": "The product name this document belongs to"
+          },
+          "documentType": {
+            "type": "string",
+            "description": "The type of document: Engineering DataSheet, Marketing Brief, Sales One Pager, or Other"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64",
+            "description": "File size in bytes"
+          },
+          "contentType": {
+            "type": "string",
+            "description": "The MIME content type of the document"
+          },
+          "lastModified": {
+            "type": ["null", "string"],
+            "format": "date-time",
+            "description": "The last modified timestamp"
+          },
+          "url": {
+            "type": "string",
+            "description": "The direct URL to the blob"
+          }
+        }
+      },
+      "ProductDescription": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The product identifier (e.g. chip-1, Chip-100)"
+          },
+          "description": {
+            "type": "string",
+            "description": "The full product description text"
+          }
+        }
       }
     }
   },
@@ -2113,6 +2390,14 @@
     {
       "name": "SalesReps",
       "description": "Sales representative management operations"
+    },
+    {
+      "name": "ProductDocuments",
+      "description": "Product document operations for Azure Blob Storage"
+    },
+    {
+      "name": "ProductDescriptions",
+      "description": "Product description operations from CosmosDB"
     }
   ]
 }
