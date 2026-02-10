@@ -1,906 +1,1569 @@
-{
-  "swagger": "2.0",
+﻿{
+  "openapi": "3.1.1",
   "info": {
-    "title": "SalesAPI",
-    "description": "Sales API for managing customers, products, orders, and sales representatives",
+    "title": "SalesAPI | v1",
     "version": "1.0.0"
   },
-  "host": "salespoc-api.azurewebsites.net",
-  "basePath": "/api",
-  "schemes": ["https"],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  "servers": [
+    {
+      "url": "http://localhost:5107/"
+    }
+  ],
   "paths": {
-    "/Customers": {
-      "get": {
-        "tags": ["Customers"],
-        "operationId": "Customers_GetAll",
-        "summary": "Get all customers",
+    "/api/Chat": {
+      "post": {
+        "tags": [
+          "Chat"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Customer"
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Customers": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Customer"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Customer"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Customer"
+                  }
+                }
               }
             }
           }
         }
       },
       "post": {
-        "tags": ["Customers"],
-        "operationId": "Customers_Create",
-        "summary": "Create a new customer",
-        "parameters": [
-          {
-            "name": "customer",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Customer"
-            }
-          }
+        "tags": [
+          "Customers"
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Customer"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Customer"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Customer"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Customer"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
             }
           }
         }
       }
     },
-    "/Customers/{id}": {
+    "/api/Customers/{id}": {
       "get": {
-        "tags": ["Customers"],
-        "operationId": "Customers_GetById",
-        "summary": "Get customer by ID",
+        "tags": [
+          "Customers"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "integer",
-            "format": "int32"
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Customer"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
             }
-          },
-          "404": {
-            "description": "Customer not found"
           }
         }
       },
       "put": {
-        "tags": ["Customers"],
-        "operationId": "Customers_Update",
-        "summary": "Update a customer",
+        "tags": [
+          "Customers"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "customer",
-            "in": "body",
-            "required": true,
             "schema": {
-              "$ref": "#/definitions/Customer"
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Customer"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Customer"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Customer"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "404": {
-            "description": "Customer not found"
+          "200": {
+            "description": "OK"
           }
         }
       },
       "delete": {
-        "tags": ["Customers"],
-        "operationId": "Customers_Delete",
-        "summary": "Delete a customer",
+        "tags": [
+          "Customers"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "integer",
-            "format": "int32"
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "404": {
-            "description": "Customer not found"
+          "200": {
+            "description": "OK"
           }
         }
       }
     },
-    "/Products": {
+    "/api/OrderItems": {
       "get": {
-        "tags": ["Products"],
-        "operationId": "Products_GetAll",
-        "summary": "Get all products",
+        "tags": [
+          "OrderItems"
+        ],
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Product"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderItem"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderItem"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderItem"
+                  }
+                }
               }
             }
           }
         }
       },
       "post": {
-        "tags": ["Products"],
-        "operationId": "Products_Create",
-        "summary": "Create a new product",
-        "parameters": [
-          {
-            "name": "product",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Product"
-            }
-          }
+        "tags": [
+          "OrderItems"
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderItem"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderItem"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderItem"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Product"
-            }
-          }
-        }
-      }
-    },
-    "/Products/{id}": {
-      "get": {
-        "tags": ["Products"],
-        "operationId": "Products_GetById",
-        "summary": "Get product by ID",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Product"
-            }
-          },
-          "404": {
-            "description": "Product not found"
-          }
-        }
-      },
-      "put": {
-        "tags": ["Products"],
-        "operationId": "Products_Update",
-        "summary": "Update a product",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "product",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Product"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "404": {
-            "description": "Product not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["Products"],
-        "operationId": "Products_Delete",
-        "summary": "Delete a product",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "404": {
-            "description": "Product not found"
-          }
-        }
-      }
-    },
-    "/Products/category/{category}": {
-      "get": {
-        "tags": ["Products"],
-        "operationId": "Products_GetByCategory",
-        "summary": "Get products by category",
-        "parameters": [
-          {
-            "name": "category",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Product"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderItem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderItem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderItem"
+                }
               }
             }
           }
         }
       }
     },
-    "/OrderItems": {
+    "/api/OrderItems/{id}": {
       "get": {
-        "tags": ["OrderItems"],
-        "operationId": "OrderItems_GetAll",
-        "summary": "Get all order items",
+        "tags": [
+          "OrderItems"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/OrderItem"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderItem"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderItem"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderItem"
+                }
               }
             }
           }
         }
       },
-      "post": {
-        "tags": ["OrderItems"],
-        "operationId": "OrderItems_Create",
-        "summary": "Create a new order item",
-        "parameters": [
-          {
-            "name": "orderItem",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/OrderItem"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OrderItem"
-            }
-          }
-        }
-      }
-    },
-    "/OrderItems/{id}": {
-      "get": {
-        "tags": ["OrderItems"],
-        "operationId": "OrderItems_GetById",
-        "summary": "Get order item by ID",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OrderItem"
-            }
-          },
-          "404": {
-            "description": "Order item not found"
-          }
-        }
-      },
       "put": {
-        "tags": ["OrderItems"],
-        "operationId": "OrderItems_Update",
-        "summary": "Update an order item",
+        "tags": [
+          "OrderItems"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "orderItem",
-            "in": "body",
-            "required": true,
             "schema": {
-              "$ref": "#/definitions/OrderItem"
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderItem"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderItem"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderItem"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "404": {
-            "description": "Order item not found"
+          "200": {
+            "description": "OK"
           }
         }
       },
       "delete": {
-        "tags": ["OrderItems"],
-        "operationId": "OrderItems_Delete",
-        "summary": "Delete an order item",
+        "tags": [
+          "OrderItems"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "integer",
-            "format": "int32"
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
           }
         ],
         "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "404": {
-            "description": "Order item not found"
+          "200": {
+            "description": "OK"
           }
         }
       }
     },
-    "/OrderItems/order/{orderId}": {
+    "/api/OrderItems/order/{orderId}": {
       "get": {
-        "tags": ["OrderItems"],
-        "operationId": "OrderItems_GetByOrderId",
-        "summary": "Get order items by order ID",
+        "tags": [
+          "OrderItems"
+        ],
         "parameters": [
           {
             "name": "orderId",
             "in": "path",
             "required": true,
-            "type": "integer",
-            "format": "int32"
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/OrderItem"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderItem"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderItem"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrderItem"
+                  }
+                }
               }
             }
           }
         }
       }
     },
-    "/SalesOrders": {
+    "/api/Products": {
       "get": {
-        "tags": ["SalesOrders"],
-        "operationId": "SalesOrders_GetAll",
-        "summary": "Get all sales orders",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/SalesOrder"
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["SalesOrders"],
-        "operationId": "SalesOrders_Create",
-        "summary": "Create a new sales order",
-        "parameters": [
-          {
-            "name": "salesOrder",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SalesOrder"
-            }
-          }
+        "tags": [
+          "Products"
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SalesOrder"
-            }
-          }
-        }
-      }
-    },
-    "/SalesOrders/{id}": {
-      "get": {
-        "tags": ["SalesOrders"],
-        "operationId": "SalesOrders_GetById",
-        "summary": "Get sales order by ID",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SalesOrder"
-            }
-          },
-          "404": {
-            "description": "Sales order not found"
-          }
-        }
-      },
-      "put": {
-        "tags": ["SalesOrders"],
-        "operationId": "SalesOrders_Update",
-        "summary": "Update a sales order",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "salesOrder",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SalesOrder"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "404": {
-            "description": "Sales order not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["SalesOrders"],
-        "operationId": "SalesOrders_Delete",
-        "summary": "Delete a sales order",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "404": {
-            "description": "Sales order not found"
-          }
-        }
-      }
-    },
-    "/SalesOrders/customer/{customerId}": {
-      "get": {
-        "tags": ["SalesOrders"],
-        "operationId": "SalesOrders_GetByCustomerId",
-        "summary": "Get sales orders by customer ID",
-        "parameters": [
-          {
-            "name": "customerId",
-            "in": "path",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/SalesOrder"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/SalesOrders/salesrep/{salesRepId}": {
-      "get": {
-        "tags": ["SalesOrders"],
-        "operationId": "SalesOrders_GetBySalesRepId",
-        "summary": "Get sales orders by sales rep ID",
-        "parameters": [
-          {
-            "name": "salesRepId",
-            "in": "path",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/SalesOrder"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/SalesReps": {
-      "get": {
-        "tags": ["SalesReps"],
-        "operationId": "SalesReps_GetAll",
-        "summary": "Get all sales representatives",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/SalesRep"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
               }
             }
           }
         }
       },
       "post": {
-        "tags": ["SalesReps"],
-        "operationId": "SalesReps_Create",
-        "summary": "Create a new sales representative",
-        "parameters": [
-          {
-            "name": "salesRep",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SalesRep"
-            }
-          }
+        "tags": [
+          "Products"
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SalesRep"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
             }
           }
         }
       }
     },
-    "/SalesReps/{id}": {
+    "/api/Products/{id}": {
       "get": {
-        "tags": ["SalesReps"],
-        "operationId": "SalesReps_GetById",
-        "summary": "Get sales representative by ID",
+        "tags": [
+          "Products"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "integer",
-            "format": "int32"
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SalesRep"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
             }
-          },
-          "404": {
-            "description": "Sales representative not found"
           }
         }
       },
       "put": {
-        "tags": ["SalesReps"],
-        "operationId": "SalesReps_Update",
-        "summary": "Update a sales representative",
+        "tags": [
+          "Products"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "salesRep",
-            "in": "body",
-            "required": true,
             "schema": {
-              "$ref": "#/definitions/SalesRep"
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "404": {
-            "description": "Sales representative not found"
+          "200": {
+            "description": "OK"
           }
         }
       },
       "delete": {
-        "tags": ["SalesReps"],
-        "operationId": "SalesReps_Delete",
-        "summary": "Delete a sales representative",
+        "tags": [
+          "Products"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "integer",
-            "format": "int32"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "404": {
-            "description": "Sales representative not found"
-          }
-        }
-      }
-    },
-    "/SalesReps/region/{region}": {
-      "get": {
-        "tags": ["SalesReps"],
-        "operationId": "SalesReps_GetByRegion",
-        "summary": "Get sales representatives by region",
-        "parameters": [
-          {
-            "name": "region",
-            "in": "path",
-            "required": true,
-            "type": "string"
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/SalesRep"
-              }
-            }
+            "description": "OK"
           }
         }
       }
     },
-    "/SalesFacts": {
+    "/api/Products/category/{category}": {
       "get": {
-        "tags": ["SalesFacts"],
-        "operationId": "SalesFacts_GetAll",
-        "summary": "Get all sales facts",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/VwSalesFact"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/SalesFacts/customer/{customerName}": {
-      "get": {
-        "tags": ["SalesFacts"],
-        "operationId": "SalesFacts_GetByCustomerName",
-        "summary": "Get sales facts by customer name",
-        "parameters": [
-          {
-            "name": "customerName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
+        "tags": [
+          "Products"
         ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/VwSalesFact"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/SalesFacts/product/{productName}": {
-      "get": {
-        "tags": ["SalesFacts"],
-        "operationId": "SalesFacts_GetByProductName",
-        "summary": "Get sales facts by product name",
-        "parameters": [
-          {
-            "name": "productName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/VwSalesFact"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/SalesFacts/salesrep/{repName}": {
-      "get": {
-        "tags": ["SalesFacts"],
-        "operationId": "SalesFacts_GetByRepName",
-        "summary": "Get sales facts by sales rep name",
-        "parameters": [
-          {
-            "name": "repName",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/VwSalesFact"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/SalesFacts/region/{region}": {
-      "get": {
-        "tags": ["SalesFacts"],
-        "operationId": "SalesFacts_GetByRegion",
-        "summary": "Get sales facts by region",
-        "parameters": [
-          {
-            "name": "region",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/VwSalesFact"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/SalesFacts/category/{category}": {
-      "get": {
-        "tags": ["SalesFacts"],
-        "operationId": "SalesFacts_GetByCategory",
-        "summary": "Get sales facts by product category",
         "parameters": [
           {
             "name": "category",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SalesFacts": {
+      "get": {
+        "tags": [
+          "SalesFacts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SalesFacts/customer/{customerName}": {
+      "get": {
+        "tags": [
+          "SalesFacts"
+        ],
+        "parameters": [
+          {
+            "name": "customerName",
+            "in": "path",
+            "required": true,
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/VwSalesFact"
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SalesFacts/product/{productName}": {
+      "get": {
+        "tags": [
+          "SalesFacts"
+        ],
+        "parameters": [
+          {
+            "name": "productName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SalesFacts/salesrep/{repName}": {
+      "get": {
+        "tags": [
+          "SalesFacts"
+        ],
+        "parameters": [
+          {
+            "name": "repName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SalesFacts/region/{region}": {
+      "get": {
+        "tags": [
+          "SalesFacts"
+        ],
+        "parameters": [
+          {
+            "name": "region",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SalesFacts/category/{category}": {
+      "get": {
+        "tags": [
+          "SalesFacts"
+        ],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VwSalesFact"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SalesOrders": {
+      "get": {
+        "tags": [
+          "SalesOrders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesOrder"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesOrder"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesOrder"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "SalesOrders"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesOrder"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesOrder"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesOrder"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesOrder"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesOrder"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesOrder"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SalesOrders/{id}": {
+      "get": {
+        "tags": [
+          "SalesOrders"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesOrder"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesOrder"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesOrder"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "SalesOrders"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesOrder"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesOrder"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesOrder"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "SalesOrders"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/SalesOrders/customer/{customerId}": {
+      "get": {
+        "tags": [
+          "SalesOrders"
+        ],
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesOrder"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesOrder"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesOrder"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SalesOrders/salesrep/{salesRepId}": {
+      "get": {
+        "tags": [
+          "SalesOrders"
+        ],
+        "parameters": [
+          {
+            "name": "salesRepId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesOrder"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesOrder"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesOrder"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SalesReps": {
+      "get": {
+        "tags": [
+          "SalesReps"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesRep"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesRep"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesRep"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "SalesReps"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesRep"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesRep"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesRep"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesRep"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesRep"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesRep"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SalesReps/{id}": {
+      "get": {
+        "tags": [
+          "SalesReps"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesRep"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesRep"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesRep"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "SalesReps"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesRep"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesRep"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalesRep"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "SalesReps"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/SalesReps/region/{region}": {
+      "get": {
+        "tags": [
+          "SalesReps"
+        ],
+        "parameters": [
+          {
+            "name": "region",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesRep"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesRep"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SalesRep"
+                  }
+                }
               }
             }
           }
@@ -908,260 +1571,427 @@
       }
     }
   },
-  "definitions": {
-    "Customer": {
-      "type": "object",
-      "properties": {
-        "customerId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "customerName": {
-          "type": "string"
-        },
-        "customerType": {
-          "type": "string",
-          "x-nullable": true
-        },
-        "industry": {
-          "type": "string",
-          "x-nullable": true
-        },
-        "country": {
-          "type": "string",
-          "x-nullable": true
-        },
-        "state": {
-          "type": "string",
-          "x-nullable": true
-        },
-        "city": {
-          "type": "string",
-          "x-nullable": true
-        },
-        "annualRevenueUsd": {
-          "type": "number",
-          "format": "double",
-          "x-nullable": true
-        },
-        "createdDate": {
-          "type": "string",
-          "format": "date-time",
-          "x-nullable": true
+  "components": {
+    "schemas": {
+      "ChatRequest": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          }
         }
       },
-      "required": ["customerName"]
-    },
-    "Product": {
-      "type": "object",
-      "properties": {
-        "productId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "productName": {
-          "type": "string"
-        },
-        "productCategory": {
-          "type": "string",
-          "x-nullable": true
-        },
-        "processNodeNm": {
-          "type": "integer",
-          "format": "int32",
-          "x-nullable": true
-        },
-        "packageType": {
-          "type": "string",
-          "x-nullable": true
-        },
-        "unitPriceUsd": {
-          "type": "number",
-          "format": "double"
-        },
-        "lifecycleStatus": {
-          "type": "string",
-          "x-nullable": true
-        },
-        "createdDate": {
-          "type": "string",
-          "format": "date-time",
-          "x-nullable": true
+      "Customer": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerType": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "industry": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "country": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "state": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "city": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "annualRevenueUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "createdDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "salesOrders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SalesOrder"
+            }
+          }
         }
       },
-      "required": ["productName", "unitPriceUsd"]
-    },
-    "OrderItem": {
-      "type": "object",
-      "properties": {
-        "orderItemId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "orderId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "productId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "quantity": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "unitPriceUsd": {
-          "type": "number",
-          "format": "double"
-        },
-        "lineTotalUsd": {
-          "type": "number",
-          "format": "double",
-          "x-nullable": true
+      "OrderItem": {
+        "type": "object",
+        "properties": {
+          "orderItemId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "orderId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "productId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "quantity": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "unitPriceUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "lineTotalUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "order": {
+            "$ref": "#/components/schemas/SalesOrder"
+          },
+          "product": {
+            "$ref": "#/components/schemas/Product"
+          }
         }
       },
-      "required": ["orderId", "productId", "quantity", "unitPriceUsd"]
-    },
-    "SalesOrder": {
-      "type": "object",
-      "properties": {
-        "orderId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "customerId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "salesRepId": {
-          "type": "integer",
-          "format": "int32",
-          "x-nullable": true
-        },
-        "orderDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "orderStatus": {
-          "type": "string",
-          "x-nullable": true
-        },
-        "totalAmountUsd": {
-          "type": "number",
-          "format": "double",
-          "x-nullable": true
-        },
-        "currency": {
-          "type": "string",
-          "x-nullable": true
+      "Product": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "productCategory": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "processNodeNm": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "packageType": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "unitPriceUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "lifecycleStatus": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "createdDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "orderItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            }
+          }
         }
       },
-      "required": ["customerId", "orderDate"]
-    },
-    "SalesRep": {
-      "type": "object",
-      "properties": {
-        "salesRepId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "repName": {
-          "type": "string"
-        },
-        "region": {
-          "type": "string",
-          "x-nullable": true
-        },
-        "email": {
-          "type": "string",
-          "x-nullable": true
-        },
-        "hireDate": {
-          "type": "string",
-          "format": "date",
-          "x-nullable": true
+      "SalesOrder": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "customerId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "salesRepId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "orderDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "orderStatus": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "totalAmountUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "currency": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "customer": {
+            "$ref": "#/components/schemas/Customer"
+          },
+          "orderItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderItem"
+            }
+          },
+          "salesRep": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/SalesRep"
+              }
+            ]
+          }
         }
       },
-      "required": ["repName"]
-    },
-    "VwSalesFact": {
-      "type": "object",
-      "properties": {
-        "orderId": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "orderDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "customerName": {
-          "type": "string"
-        },
-        "customerType": {
-          "type": "string",
-          "x-nullable": true
-        },
-        "productName": {
-          "type": "string"
-        },
-        "productCategory": {
-          "type": "string",
-          "x-nullable": true
-        },
-        "processNodeNm": {
-          "type": "integer",
-          "format": "int32",
-          "x-nullable": true
-        },
-        "quantity": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "unitPriceUsd": {
-          "type": "number",
-          "format": "double"
-        },
-        "lineTotalUsd": {
-          "type": "number",
-          "format": "double",
-          "x-nullable": true
-        },
-        "repName": {
-          "type": "string",
-          "x-nullable": true
-        },
-        "region": {
-          "type": "string",
-          "x-nullable": true
+      "SalesRep": {
+        "type": "object",
+        "properties": {
+          "salesRepId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "repName": {
+            "type": "string"
+          },
+          "region": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "email": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "hireDate": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "salesOrders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SalesOrder"
+            }
+          }
+        }
+      },
+      "VwSalesFact": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "orderDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerType": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "productName": {
+            "type": "string"
+          },
+          "productCategory": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "processNodeNm": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "quantity": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "unitPriceUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "lineTotalUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "repName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "region": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
         }
       }
     }
   },
   "tags": [
     {
-      "name": "Customers",
-      "description": "Customer management operations"
+      "name": "Chat"
     },
     {
-      "name": "Products",
-      "description": "Product catalog operations"
+      "name": "Customers"
     },
     {
-      "name": "OrderItems",
-      "description": "Order line item operations"
+      "name": "OrderItems"
     },
     {
-      "name": "SalesOrders",
-      "description": "Sales order operations"
+      "name": "Products"
     },
     {
-      "name": "SalesReps",
-      "description": "Sales representative operations"
+      "name": "SalesFacts"
     },
     {
-      "name": "SalesFacts",
-      "description": "Sales analytics view operations"
+      "name": "SalesOrders"
+    },
+    {
+      "name": "SalesReps"
     }
   ]
 }

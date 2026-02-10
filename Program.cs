@@ -10,7 +10,11 @@ var projectEndpoint = builder.Configuration["AzureAgent:Endpoint"]
     ?? throw new InvalidOperationException("AzureAgent:Endpoint is not configured.");
 
 builder.Services.AddSingleton(_ =>
-    new AIProjectClient(new Uri(projectEndpoint), new DefaultAzureCredential()));
+    new AIProjectClient(new Uri(projectEndpoint),
+        new DefaultAzureCredential(new DefaultAzureCredentialOptions
+        {
+            TenantId = builder.Configuration["AzureAgent:TenantId"]
+        })));
 
 // Add services to the container.
 builder.Services.AddControllers()
@@ -46,6 +50,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "SalesAPI v1");
+    });
 }
 
 app.UseHttpsRedirection();

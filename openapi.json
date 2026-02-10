@@ -1,4 +1,4 @@
-{
+﻿{
   "openapi": "3.1.1",
   "info": {
     "title": "SalesAPI | v1",
@@ -6,10 +6,42 @@
   },
   "servers": [
     {
-      "url": "https://salespoc-api.azurewebsites.net/"
+      "url": "http://localhost:5107/"
     }
   ],
   "paths": {
+    "/api/Chat": {
+      "post": {
+        "tags": [
+          "Chat"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Customers": {
       "get": {
         "tags": [
@@ -1541,6 +1573,14 @@
   },
   "components": {
     "schemas": {
+      "ChatRequest": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          }
+        }
+      },
       "Customer": {
         "type": "object",
         "properties": {
@@ -1932,6 +1972,9 @@
     }
   },
   "tags": [
+    {
+      "name": "Chat"
+    },
     {
       "name": "Customers"
     },
