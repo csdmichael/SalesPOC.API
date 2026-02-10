@@ -1,7 +1,16 @@
+using Azure.AI.Projects;
+using Azure.Identity;
 using Microsoft.EntityFrameworkCore;
 using SalesAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Register Azure AI Project client for the Chat agent
+var projectEndpoint = builder.Configuration["AzureAgent:Endpoint"]
+    ?? throw new InvalidOperationException("AzureAgent:Endpoint is not configured.");
+
+builder.Services.AddSingleton(_ =>
+    new AIProjectClient(new Uri(projectEndpoint), new DefaultAzureCredential()));
 
 // Add services to the container.
 builder.Services.AddControllers()

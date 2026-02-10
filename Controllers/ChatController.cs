@@ -1,6 +1,9 @@
+using Azure.AI.Projects;
+using Azure.AI.Projects.OpenAI;
 using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using System.Text.Json;
+using OpenAI.Responses;
+
+#pragma warning disable OPENAI001
 
 namespace SalesAPI.Controllers;
 
@@ -8,18 +11,17 @@ namespace SalesAPI.Controllers;
 [ApiController]
 public class ChatController : ControllerBase
 {
+    private readonly AIProjectClient _projectClient;
     private readonly IConfiguration _configuration;
-    private readonly IHttpClientFactory _httpClientFactory;
 
-    public ChatController(IConfiguration configuration, IHttpClientFactory httpClientFactory)
+    public ChatController(AIProjectClient projectClient, IConfiguration configuration)
     {
+        _projectClient = projectClient;
         _configuration = configuration;
-        _httpClientFactory = httpClientFactory;
     }
 
     /// <summary>
-    /// Proxies a natural language question to the Azure AI Foundry agent.
-    /// Configure "AzureAgent:Endpoint" and "AzureAgent:ApiKey" in appsettings.json.
+    /// Sends a natural language question to the Azure AI Foundry agent and returns its response.
     /// </summary>
     [HttpPost]
     public async Task<IActionResult> PostQuestion([FromBody] ChatRequest request)
@@ -27,59 +29,23 @@ public class ChatController : ControllerBase
         if (string.IsNullOrWhiteSpace(request.Question))
             return BadRequest(new { error = "Question is required." });
 
-        var endpoint = _configuration["AzureAgent:Endpoint"];
-        var apiKey = _configuration["AzureAgent:ApiKey"];
-
-        if (string.IsNullOrEmpty(endpoint))
-        {
-            // Fallback: return a mock response if the agent is not configured
-            return Ok(new ChatResponse
-            {
-                Reply = $"[Agent not configured] You asked: \"{request.Question}\". " +
-                        "Please configure AzureAgent:Endpoint and AzureAgent:ApiKey in appsettings.json " +
-                        "to connect to the Arrow Sales Agent on Azure AI Foundry."
-            });
-        }
-
         try
         {
-            var client = _httpClientFactory.CreateClient();
-            if (!string.IsNullOrEmpty(apiKey))
-            {
-                client.DefaultRequestHeaders.Add("api-key", apiKey);
-            }
+            var agentName = _configuration["AzureAgent:AgentName"]
+                ?? throw new InvalidOperationException("AzureAgent:AgentName is not configured.");
 
-            var payload = new
-            {
-                messages = new[]
-                {
-                    new { role = "user", content = request.Question }
-                }
-            };
+            // Retrieve the agent by name
+            AgentRecord agentRecord = _projectClient.Agents.GetAgent(agentName);
 
-            var json = JsonSerializer.Serialize(payload);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            // Get a Responses API client scoped to this agent
+            ProjectResponsesClient responseClient =
+                _projectClient.OpenAI.GetProjectResponsesClientForAgent(agentRecord);
 
-            var response = await client.PostAsync(endpoint, content);
-            var responseBody = await response.Content.ReadAsStringAsync();
+            // Call the agent (runs async on the thread pool so the request stays non-blocking)
+            ResponseResult response = await Task.Run(
+                () => responseClient.CreateResponse(request.Question));
 
-            if (response.IsSuccessStatusCode)
-            {
-                // Parse the agent response - adapt based on actual response format
-                using var doc = JsonDocument.Parse(responseBody);
-                var reply = doc.RootElement
-                    .GetProperty("choices")[0]
-                    .GetProperty("message")
-                    .GetProperty("content")
-                    .GetString();
-
-                return Ok(new ChatResponse { Reply = reply ?? "No response from agent." });
-            }
-
-            return StatusCode((int)response.StatusCode, new ChatResponse
-            {
-                Reply = $"Agent returned error: {response.StatusCode}"
-            });
+            return Ok(new ChatResponse { Reply = response.GetOutputText() });
         }
         catch (Exception ex)
         {
