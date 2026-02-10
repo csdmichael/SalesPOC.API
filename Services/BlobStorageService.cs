@@ -19,27 +19,12 @@ public class BlobStorageService
     /// </summary>
     public async Task<List<ProductDocument>> GetDocumentsByProductAsync(string productName)
     {
-        var documents = new List<ProductDocument>();
+        var allDocuments = await GetAllDocumentsAsync();
 
-        // Search for blobs whose path/name contains the product name (case-insensitive)
-        await foreach (BlobItem blob in _containerClient.GetBlobsAsync(BlobTraits.None, BlobStates.None, productName, CancellationToken.None))
-        {
-            var blobClient = _containerClient.GetBlobClient(blob.Name);
-            var docType = InferDocumentType(blob.Name);
-
-            documents.Add(new ProductDocument
-            {
-                FileName = blob.Name,
-                ProductName = productName,
-                DocumentType = docType,
-                Size = blob.Properties.ContentLength ?? 0,
-                ContentType = blob.Properties.ContentType ?? "application/octet-stream",
-                LastModified = blob.Properties.LastModified,
-                Url = blobClient.Uri.ToString()
-            });
-        }
-
-        return documents;
+        // Filter by inferred product name (case-insensitive)
+        return allDocuments
+            .Where(d => d.ProductName.Equals(productName, StringComparison.OrdinalIgnoreCase))
+            .ToList();
     }
 
     /// <summary>
