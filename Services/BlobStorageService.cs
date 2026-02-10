@@ -130,16 +130,18 @@ public class BlobStorageService
     /// </summary>
     private static string InferProductName(string blobName)
     {
-        // If blob is in a subfolder, use the first folder segment as product name
+        // Use the filename (after last '/') to extract the product name
+        // e.g. "Engineering-Datasheets/Chip-101_Engineering_Datasheet.docx" → "Chip-101"
+        var fileName = Path.GetFileNameWithoutExtension(blobName);
         if (blobName.Contains('/'))
         {
-            return blobName.Split('/')[0];
+            fileName = Path.GetFileNameWithoutExtension(blobName.Split('/').Last());
         }
 
-        // Otherwise try to extract product name from underscore/dash-delimited filename
-        // e.g. "Chip-1_Engineering_DataSheet.pdf" → "Chip-1"
+        // Extract product name from underscore/space-delimited filename
+        // e.g. "Chip-101_Engineering_Datasheet" → "Chip-101"
         var separators = new[] { '_', ' ' };
-        var parts = Path.GetFileNameWithoutExtension(blobName).Split(separators, 2);
+        var parts = fileName.Split(separators, 2);
         return parts.Length > 0 ? parts[0] : blobName;
     }
 }
