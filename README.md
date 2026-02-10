@@ -11,6 +11,36 @@ SalesPOC.API is a modern sales management system that demonstrates:
 - OpenAPI/Swagger documentation
 - CORS support for Angular frontend integration
 
+## Setup required
+
+# Define Variables
+SUBSCRIPTION_ID="86b37969-9445-49cf-b03f-d8866235171c"
+RESOURCE_GROUP="ai-myaacoub"
+AI_ACCOUNT_NAME="001-ai-poc"
+APP_SERVICE_NAME="salespoc-api"
+
+# 1. Enable Managed Identity and capture the ID
+PRINCIPAL_ID=$(az webapp identity assign --name "$APP_SERVICE_NAME" --resource-group "$RESOURCE_GROUP" --query principalId --output tsv)
+
+# 2. Verify the ID is not empty
+if [ -z "$PRINCIPAL_ID" ]; then
+    echo "Error: Failed to retrieve Principal ID. Check if the App Service exists."
+else
+    echo "Principal ID retrieved: $PRINCIPAL_ID"
+fi
+
+# Construct the resource scope
+SCOPE="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.CognitiveServices/accounts/$AI_ACCOUNT_NAME"
+
+# 3. Assign the "Azure AI Developer" role
+az role assignment create --assignee-object-id "$PRINCIPAL_ID" --role "Azure AI Developer" --scope "$SCOPE" --assignee-principal-type "ServicePrincipal"
+
+# 4. Assign the "Azure AI User" role 
+az role assignment create --assignee-object-id "$PRINCIPAL_ID" --role "Azure AI User" --scope "$SCOPE" --assignee-principal-type "ServicePrincipal"
+
+# 5. Assign the "Cognitive Services OpenAI User" role 
+az role assignment create --assignee-object-id "$PRINCIPAL_ID" --role "Cognitive Services OpenAI User" --scope "$SCOPE" --assignee-principal-type "ServicePrincipal"
+
 ## Technology Stack
 
 - **Framework**: ASP.NET Core 10.0
