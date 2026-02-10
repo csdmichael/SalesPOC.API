@@ -65,6 +65,22 @@ variable "sql_admin_password" {
   sensitive   = true
 }
 
+variable "azure_agent_endpoint" {
+  description = "Azure AI Foundry project endpoint URL"
+  type        = string
+}
+
+variable "azure_agent_tenant_id" {
+  description = "Azure AD tenant ID for the AI agent"
+  type        = string
+}
+
+variable "azure_agent_name" {
+  description = "Name of the Azure AI agent"
+  type        = string
+  default     = "arrow-sales-agent"
+}
+
 # Resource Group
 resource "azurerm_resource_group" "main" {
   name     = var.resource_group_name
@@ -113,7 +129,10 @@ resource "azurerm_linux_web_app" "main" {
   app_settings = {
     "ASPNETCORE_ENVIRONMENT"                    = "Production"
     "WEBSITE_RUN_FROM_PACKAGE"                  = "1"
-    "ApplicationInsights__ConnectionString"    = azurerm_application_insights.main.connection_string
+    "ApplicationInsights__ConnectionString"     = azurerm_application_insights.main.connection_string
+    "AzureAgent__Endpoint"                      = var.azure_agent_endpoint
+    "AzureAgent__TenantId"                      = var.azure_agent_tenant_id
+    "AzureAgent__AgentName"                     = var.azure_agent_name
   }
 
   connection_string {

@@ -13,7 +13,12 @@ builder.Services.AddSingleton(_ =>
     new AIProjectClient(new Uri(projectEndpoint),
         new DefaultAzureCredential(new DefaultAzureCredentialOptions
         {
-            TenantId = builder.Configuration["AzureAgent:TenantId"]
+            TenantId = builder.Configuration["AzureAgent:TenantId"],
+            ExcludeVisualStudioCredential = true,
+            ExcludeVisualStudioCodeCredential = true,
+            ExcludeAzureDeveloperCliCredential = true,
+            ExcludeInteractiveBrowserCredential = true,
+            ExcludeSharedTokenCacheCredential = true
         })));
 
 // Add services to the container.

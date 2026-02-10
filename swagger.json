@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:5107/"
+      "url": "https://salespoc-api.azurewebsites.net/"
     }
   ],
   "paths": {

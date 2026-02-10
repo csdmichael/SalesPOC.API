@@ -9,3 +9,8 @@ sql_server_name       = "sql-salespoc"
 sql_database_name     = "SalesDb"
 sql_admin_login       = "sqladmin"
 sql_admin_password    = "YourSecurePassword123!"  # Change this to a secure password
+
+# Azure AI Foundry settings
+azure_agent_endpoint  = "https://your-ai-service.services.ai.azure.com/api/projects/your-project"
+azure_agent_tenant_id = "your-tenant-id-here"
+azure_agent_name      = "arrow-sales-agent"
