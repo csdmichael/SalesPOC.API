@@ -1,4 +1,4 @@
-﻿{
+{
   "openapi": "3.1.1",
   "info": {
     "title": "SalesAPI | v1",
@@ -489,6 +489,128 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/ProductDescriptions": {
+      "get": {
+        "tags": [
+          "ProductDescriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ProductDescriptions/{productId}": {
+      "get": {
+        "tags": [
+          "ProductDescriptions"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ProductDescriptions/search": {
+      "get": {
+        "tags": [
+          "ProductDescriptions"
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ProductDocuments": {
+      "get": {
+        "tags": [
+          "ProductDocuments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ProductDocuments/products": {
+      "get": {
+        "tags": [
+          "ProductDocuments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ProductDocuments/by-product/{productName}": {
+      "get": {
+        "tags": [
+          "ProductDocuments"
+        ],
+        "parameters": [
+          {
+            "name": "productName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ProductDocuments/download": {
+      "get": {
+        "tags": [
+          "ProductDocuments"
+        ],
+        "parameters": [
+          {
+            "name": "blobName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -1569,210 +1691,6 @@
           }
         }
       }
-    },
-    "/api/ProductDocuments": {
-      "get": {
-        "tags": [
-          "ProductDocuments"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProductDocument"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/ProductDocuments/products": {
-      "get": {
-        "tags": [
-          "ProductDocuments"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/ProductDocuments/by-product/{productName}": {
-      "get": {
-        "tags": [
-          "ProductDocuments"
-        ],
-        "parameters": [
-          {
-            "name": "productName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProductDocument"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/ProductDocuments/download": {
-      "get": {
-        "tags": [
-          "ProductDocuments"
-        ],
-        "parameters": [
-          {
-            "name": "blobName",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/ProductDescriptions": {
-      "get": {
-        "tags": [
-          "ProductDescriptions"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProductDescription"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/ProductDescriptions/{productId}": {
-      "get": {
-        "tags": [
-          "ProductDescriptions"
-        ],
-        "parameters": [
-          {
-            "name": "productId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductDescription"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/api/ProductDescriptions/search": {
-      "get": {
-        "tags": [
-          "ProductDescriptions"
-        ],
-        "parameters": [
-          {
-            "name": "q",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProductDescription"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
     }
   },
   "components": {
@@ -2172,45 +2090,6 @@
             ]
           }
         }
-      },
-      "ProductDocument": {
-        "type": "object",
-        "properties": {
-          "fileName": {
-            "type": "string"
-          },
-          "productName": {
-            "type": "string"
-          },
-          "documentType": {
-            "type": "string"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "contentType": {
-            "type": "string"
-          },
-          "lastModified": {
-            "type": ["null", "string"],
-            "format": "date-time"
-          },
-          "url": {
-            "type": "string"
-          }
-        }
-      },
-      "ProductDescription": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          }
-        }
       }
     }
   },
@@ -2225,6 +2104,12 @@
       "name": "OrderItems"
     },
     {
+      "name": "ProductDescriptions"
+    },
+    {
+      "name": "ProductDocuments"
+    },
+    {
       "name": "Products"
     },
     {
@@ -2235,12 +2120,6 @@
     },
     {
       "name": "SalesReps"
-    },
-    {
-      "name": "ProductDocuments"
-    },
-    {
-      "name": "ProductDescriptions"
     }
   ]
 }

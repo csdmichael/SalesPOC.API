@@ -1,12 +1,9 @@
-﻿{
+{
   "openapi": "3.1.1",
   "info": {
-    "title": "SalesAPI",
-    "summary": "Sales REST API for managing customers, products, orders, and sales data.",
-    "description": "A RESTful API for the Sales POC application. Provides CRUD operations for customers, products, sales orders, order items, and sales representatives, as well as read-only access to aggregated sales facts.",
+    "title": "SalesAPI | v1",
     "version": "1.0.0"
   },
-  "jsonSchemaDialect": "https://spec.openapis.org/oas/3.1/dialect/base",
   "servers": [
     {
       "url": "https://salespoc-api.azurewebsites.net/"
@@ -18,9 +15,6 @@
         "tags": [
           "Chat"
         ],
-        "summary": "Send a chat message",
-        "description": "Sends a question to the AI chat endpoint and returns a response.",
-        "operationId": "postChat",
         "requestBody": {
           "content": {
             "application/json": {
@@ -53,9 +47,6 @@
         "tags": [
           "Customers"
         ],
-        "summary": "Get all customers",
-        "description": "Retrieves a list of all customers.",
-        "operationId": "getCustomers",
         "responses": {
           "200": {
             "description": "OK",
@@ -92,9 +83,6 @@
         "tags": [
           "Customers"
         ],
-        "summary": "Create a customer",
-        "description": "Creates a new customer record.",
-        "operationId": "createCustomer",
         "requestBody": {
           "content": {
             "application/json": {
@@ -144,9 +132,6 @@
         "tags": [
           "Customers"
         ],
-        "summary": "Get a customer by ID",
-        "description": "Retrieves a single customer by their unique identifier.",
-        "operationId": "getCustomerById",
         "parameters": [
           {
             "name": "id",
@@ -189,9 +174,6 @@
         "tags": [
           "Customers"
         ],
-        "summary": "Update a customer",
-        "description": "Updates an existing customer by their unique identifier.",
-        "operationId": "updateCustomer",
         "parameters": [
           {
             "name": "id",
@@ -237,9 +219,6 @@
         "tags": [
           "Customers"
         ],
-        "summary": "Delete a customer",
-        "description": "Deletes a customer by their unique identifier.",
-        "operationId": "deleteCustomer",
         "parameters": [
           {
             "name": "id",
@@ -267,9 +246,6 @@
         "tags": [
           "OrderItems"
         ],
-        "summary": "Get all order items",
-        "description": "Retrieves a list of all order items.",
-        "operationId": "getOrderItems",
         "responses": {
           "200": {
             "description": "OK",
@@ -306,9 +282,6 @@
         "tags": [
           "OrderItems"
         ],
-        "summary": "Create an order item",
-        "description": "Creates a new order item.",
-        "operationId": "createOrderItem",
         "requestBody": {
           "content": {
             "application/json": {
@@ -358,9 +331,6 @@
         "tags": [
           "OrderItems"
         ],
-        "summary": "Get an order item by ID",
-        "description": "Retrieves a single order item by its unique identifier.",
-        "operationId": "getOrderItemById",
         "parameters": [
           {
             "name": "id",
@@ -403,9 +373,6 @@
         "tags": [
           "OrderItems"
         ],
-        "summary": "Update an order item",
-        "description": "Updates an existing order item by its unique identifier.",
-        "operationId": "updateOrderItem",
         "parameters": [
           {
             "name": "id",
@@ -451,9 +418,6 @@
         "tags": [
           "OrderItems"
         ],
-        "summary": "Delete an order item",
-        "description": "Deletes an order item by its unique identifier.",
-        "operationId": "deleteOrderItem",
         "parameters": [
           {
             "name": "id",
@@ -481,9 +445,6 @@
         "tags": [
           "OrderItems"
         ],
-        "summary": "Get order items by order ID",
-        "description": "Retrieves all order items for a given order.",
-        "operationId": "getOrderItemsByOrderId",
         "parameters": [
           {
             "name": "orderId",
@@ -532,14 +493,133 @@
         }
       }
     },
+    "/api/ProductDescriptions": {
+      "get": {
+        "tags": [
+          "ProductDescriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ProductDescriptions/{productId}": {
+      "get": {
+        "tags": [
+          "ProductDescriptions"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ProductDescriptions/search": {
+      "get": {
+        "tags": [
+          "ProductDescriptions"
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ProductDocuments": {
+      "get": {
+        "tags": [
+          "ProductDocuments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ProductDocuments/products": {
+      "get": {
+        "tags": [
+          "ProductDocuments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ProductDocuments/by-product/{productName}": {
+      "get": {
+        "tags": [
+          "ProductDocuments"
+        ],
+        "parameters": [
+          {
+            "name": "productName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ProductDocuments/download": {
+      "get": {
+        "tags": [
+          "ProductDocuments"
+        ],
+        "parameters": [
+          {
+            "name": "blobName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Products": {
       "get": {
         "tags": [
           "Products"
         ],
-        "summary": "Get all products",
-        "description": "Retrieves a list of all products.",
-        "operationId": "getProducts",
         "responses": {
           "200": {
             "description": "OK",
@@ -576,9 +656,6 @@
         "tags": [
           "Products"
         ],
-        "summary": "Create a product",
-        "description": "Creates a new product record.",
-        "operationId": "createProduct",
         "requestBody": {
           "content": {
             "application/json": {
@@ -628,9 +705,6 @@
         "tags": [
           "Products"
         ],
-        "summary": "Get a product by ID",
-        "description": "Retrieves a single product by its unique identifier.",
-        "operationId": "getProductById",
         "parameters": [
           {
             "name": "id",
@@ -673,9 +747,6 @@
         "tags": [
           "Products"
         ],
-        "summary": "Update a product",
-        "description": "Updates an existing product by its unique identifier.",
-        "operationId": "updateProduct",
         "parameters": [
           {
             "name": "id",
@@ -721,9 +792,6 @@
         "tags": [
           "Products"
         ],
-        "summary": "Delete a product",
-        "description": "Deletes a product by its unique identifier.",
-        "operationId": "deleteProduct",
         "parameters": [
           {
             "name": "id",
@@ -751,9 +819,6 @@
         "tags": [
           "Products"
         ],
-        "summary": "Get products by category",
-        "description": "Retrieves all products in a given category.",
-        "operationId": "getProductsByCategory",
         "parameters": [
           {
             "name": "category",
@@ -802,9 +867,6 @@
         "tags": [
           "SalesFacts"
         ],
-        "summary": "Get all sales facts",
-        "description": "Retrieves all aggregated sales fact records.",
-        "operationId": "getSalesFacts",
         "responses": {
           "200": {
             "description": "OK",
@@ -843,9 +905,6 @@
         "tags": [
           "SalesFacts"
         ],
-        "summary": "Get sales facts by customer name",
-        "description": "Retrieves sales facts filtered by customer name.",
-        "operationId": "getSalesFactsByCustomer",
         "parameters": [
           {
             "name": "customerName",
@@ -894,9 +953,6 @@
         "tags": [
           "SalesFacts"
         ],
-        "summary": "Get sales facts by product name",
-        "description": "Retrieves sales facts filtered by product name.",
-        "operationId": "getSalesFactsByProduct",
         "parameters": [
           {
             "name": "productName",
@@ -945,9 +1001,6 @@
         "tags": [
           "SalesFacts"
         ],
-        "summary": "Get sales facts by sales rep name",
-        "description": "Retrieves sales facts filtered by sales representative name.",
-        "operationId": "getSalesFactsByRep",
         "parameters": [
           {
             "name": "repName",
@@ -996,9 +1049,6 @@
         "tags": [
           "SalesFacts"
         ],
-        "summary": "Get sales facts by region",
-        "description": "Retrieves sales facts filtered by region.",
-        "operationId": "getSalesFactsByRegion",
         "parameters": [
           {
             "name": "region",
@@ -1047,9 +1097,6 @@
         "tags": [
           "SalesFacts"
         ],
-        "summary": "Get sales facts by category",
-        "description": "Retrieves sales facts filtered by product category.",
-        "operationId": "getSalesFactsByCategory",
         "parameters": [
           {
             "name": "category",
@@ -1098,9 +1145,6 @@
         "tags": [
           "SalesOrders"
         ],
-        "summary": "Get all sales orders",
-        "description": "Retrieves a list of all sales orders.",
-        "operationId": "getSalesOrders",
         "responses": {
           "200": {
             "description": "OK",
@@ -1137,9 +1181,6 @@
         "tags": [
           "SalesOrders"
         ],
-        "summary": "Create a sales order",
-        "description": "Creates a new sales order.",
-        "operationId": "createSalesOrder",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1189,9 +1230,6 @@
         "tags": [
           "SalesOrders"
         ],
-        "summary": "Get a sales order by ID",
-        "description": "Retrieves a single sales order by its unique identifier.",
-        "operationId": "getSalesOrderById",
         "parameters": [
           {
             "name": "id",
@@ -1234,9 +1272,6 @@
         "tags": [
           "SalesOrders"
         ],
-        "summary": "Update a sales order",
-        "description": "Updates an existing sales order by its unique identifier.",
-        "operationId": "updateSalesOrder",
         "parameters": [
           {
             "name": "id",
@@ -1282,9 +1317,6 @@
         "tags": [
           "SalesOrders"
         ],
-        "summary": "Delete a sales order",
-        "description": "Deletes a sales order by its unique identifier.",
-        "operationId": "deleteSalesOrder",
         "parameters": [
           {
             "name": "id",
@@ -1312,9 +1344,6 @@
         "tags": [
           "SalesOrders"
         ],
-        "summary": "Get sales orders by customer ID",
-        "description": "Retrieves all sales orders for a given customer.",
-        "operationId": "getSalesOrdersByCustomer",
         "parameters": [
           {
             "name": "customerId",
@@ -1368,9 +1397,6 @@
         "tags": [
           "SalesOrders"
         ],
-        "summary": "Get sales orders by sales rep ID",
-        "description": "Retrieves all sales orders for a given sales representative.",
-        "operationId": "getSalesOrdersBySalesRep",
         "parameters": [
           {
             "name": "salesRepId",
@@ -1424,9 +1450,6 @@
         "tags": [
           "SalesReps"
         ],
-        "summary": "Get all sales reps",
-        "description": "Retrieves a list of all sales representatives.",
-        "operationId": "getSalesReps",
         "responses": {
           "200": {
             "description": "OK",
@@ -1463,9 +1486,6 @@
         "tags": [
           "SalesReps"
         ],
-        "summary": "Create a sales rep",
-        "description": "Creates a new sales representative record.",
-        "operationId": "createSalesRep",
         "requestBody": {
           "content": {
             "application/json": {
@@ -1515,9 +1535,6 @@
         "tags": [
           "SalesReps"
         ],
-        "summary": "Get a sales rep by ID",
-        "description": "Retrieves a single sales representative by their unique identifier.",
-        "operationId": "getSalesRepById",
         "parameters": [
           {
             "name": "id",
@@ -1560,9 +1577,6 @@
         "tags": [
           "SalesReps"
         ],
-        "summary": "Update a sales rep",
-        "description": "Updates an existing sales representative by their unique identifier.",
-        "operationId": "updateSalesRep",
         "parameters": [
           {
             "name": "id",
@@ -1608,9 +1622,6 @@
         "tags": [
           "SalesReps"
         ],
-        "summary": "Delete a sales rep",
-        "description": "Deletes a sales representative by their unique identifier.",
-        "operationId": "deleteSalesRep",
         "parameters": [
           {
             "name": "id",
@@ -1638,9 +1649,6 @@
         "tags": [
           "SalesReps"
         ],
-        "summary": "Get sales reps by region",
-        "description": "Retrieves all sales representatives in a given region.",
-        "operationId": "getSalesRepsByRegion",
         "parameters": [
           {
             "name": "region",
@@ -1680,235 +1688,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/ProductDocuments": {
-      "get": {
-        "tags": [
-          "ProductDocuments"
-        ],
-        "summary": "Get all product documents",
-        "description": "Lists all documents across all products in the Azure Blob Storage container.",
-        "operationId": "getAllProductDocuments",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProductDocument"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/ProductDocuments/products": {
-      "get": {
-        "tags": [
-          "ProductDocuments"
-        ],
-        "summary": "Get product names",
-        "description": "Returns a list of distinct product names found in the blob container.",
-        "operationId": "getProductNames",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/ProductDocuments/by-product/{productName}": {
-      "get": {
-        "tags": [
-          "ProductDocuments"
-        ],
-        "summary": "Get documents by product",
-        "description": "Lists all documents for a specific product (e.g. Chip-1). Each product typically has: Engineering DataSheet, Marketing Brief, Sales One Pager.",
-        "operationId": "getDocumentsByProduct",
-        "parameters": [
-          {
-            "name": "productName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The product name to filter by (e.g. Chip-1)"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProductDocument"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No documents found for the specified product"
-          }
-        }
-      }
-    },
-    "/api/ProductDocuments/download": {
-      "get": {
-        "tags": [
-          "ProductDocuments"
-        ],
-        "summary": "Download a document",
-        "description": "Downloads a specific document by its full blob name from Azure Blob Storage.",
-        "operationId": "downloadProductDocument",
-        "parameters": [
-          {
-            "name": "blobName",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The full blob name of the document to download"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The document file",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "blobName query parameter is required"
-          },
-          "404": {
-            "description": "Blob not found"
-          }
-        }
-      }
-    },
-    "/api/ProductDescriptions": {
-      "get": {
-        "tags": [
-          "ProductDescriptions"
-        ],
-        "summary": "Get all product descriptions",
-        "description": "Retrieves all product descriptions from CosmosDB.",
-        "operationId": "getAllProductDescriptions",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProductDescription"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/ProductDescriptions/{productId}": {
-      "get": {
-        "tags": [
-          "ProductDescriptions"
-        ],
-        "summary": "Get product description by ID",
-        "description": "Retrieves a product description by its ID (e.g. Chip-100).",
-        "operationId": "getProductDescriptionById",
-        "parameters": [
-          {
-            "name": "productId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The product ID (e.g. Chip-100)"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductDescription"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No product description found for the specified ID"
-          }
-        }
-      }
-    },
-    "/api/ProductDescriptions/search": {
-      "get": {
-        "tags": [
-          "ProductDescriptions"
-        ],
-        "summary": "Search product descriptions",
-        "description": "Searches product descriptions by partial ID match (case-insensitive).",
-        "operationId": "searchProductDescriptions",
-        "parameters": [
-          {
-            "name": "q",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The search term to match against product IDs"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ProductDescription"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Query parameter q is required"
           }
         }
       }
@@ -2311,93 +2090,36 @@
             ]
           }
         }
-      },
-      "ProductDocument": {
-        "type": "object",
-        "properties": {
-          "fileName": {
-            "type": "string",
-            "description": "The full blob name / path of the document"
-          },
-          "productName": {
-            "type": "string",
-            "description": "The product name this document belongs to"
-          },
-          "documentType": {
-            "type": "string",
-            "description": "The type of document: Engineering DataSheet, Marketing Brief, Sales One Pager, or Other"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int64",
-            "description": "File size in bytes"
-          },
-          "contentType": {
-            "type": "string",
-            "description": "The MIME content type of the document"
-          },
-          "lastModified": {
-            "type": ["null", "string"],
-            "format": "date-time",
-            "description": "The last modified timestamp"
-          },
-          "url": {
-            "type": "string",
-            "description": "The direct URL to the blob"
-          }
-        }
-      },
-      "ProductDescription": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "The product identifier (e.g. chip-1, Chip-100)"
-          },
-          "description": {
-            "type": "string",
-            "description": "The full product description text"
-          }
-        }
       }
     }
   },
   "tags": [
     {
-      "name": "Chat",
-      "description": "AI-powered chat operations"
+      "name": "Chat"
     },
     {
-      "name": "Customers",
-      "description": "Customer management operations"
+      "name": "Customers"
     },
     {
-      "name": "OrderItems",
-      "description": "Order item management operations"
+      "name": "OrderItems"
     },
     {
-      "name": "Products",
-      "description": "Product catalog operations"
+      "name": "ProductDescriptions"
     },
     {
-      "name": "SalesFacts",
-      "description": "Aggregated sales fact queries"
+      "name": "ProductDocuments"
     },
     {
-      "name": "SalesOrders",
-      "description": "Sales order management operations"
+      "name": "Products"
     },
     {
-      "name": "SalesReps",
-      "description": "Sales representative management operations"
+      "name": "SalesFacts"
     },
     {
-      "name": "ProductDocuments",
-      "description": "Product document operations for Azure Blob Storage"
+      "name": "SalesOrders"
     },
     {
-      "name": "ProductDescriptions",
-      "description": "Product description operations from CosmosDB"
+      "name": "SalesReps"
     }
   ]
 }
