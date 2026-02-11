@@ -65,4 +65,5 @@ public class ChatRequest
 public class ChatResponse
 {
     public string Reply { get; set; } = string.Empty;
+    public List<string>? Citations { get; set; }
 }
