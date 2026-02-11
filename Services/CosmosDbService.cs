@@ -20,9 +20,19 @@ public class CosmosDbService
     {
         try
         {
-            var response = await _container.ReadItemAsync<ProductDescription>(
-                productId, new PartitionKey(productId));
-            return response.Resource;
+            // Use a query to find by id, avoiding partition key mismatch issues
+            var queryDef = new QueryDefinition("SELECT * FROM c WHERE c.id = @id")
+                .WithParameter("@id", productId);
+
+            var query = _container.GetItemQueryIterator<ProductDescription>(queryDef);
+
+            if (query.HasMoreResults)
+            {
+                var response = await query.ReadNextAsync();
+                return response.FirstOrDefault();
+            }
+
+            return null;
         }
         catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
