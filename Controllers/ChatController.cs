@@ -45,7 +45,14 @@ public class ChatController : ControllerBase
             ResponseResult response = await Task.Run(
                 () => responseClient.CreateResponse(request.Question));
 
-            return Ok(new ChatResponse { Reply = response.GetOutputText() });
+            // Extract citations from response annotations
+            var citations = ExtractCitations(response);
+
+            return Ok(new ChatResponse
+            {
+                Reply = response.GetOutputText(),
+                Citations = citations.Count > 0 ? citations : null
+            });
         }
         catch (Exception ex)
         {
@@ -54,6 +61,67 @@ public class ChatController : ControllerBase
                 Reply = $"Error communicating with the AI agent: {ex.Message}"
             });
         }
+    }
+
+    /// <summary>
+    /// Extracts citation information from the agent response output items.
+    /// Supports file citations, URL citations, and container file citations.
+    /// </summary>
+    private static List<Citation> ExtractCitations(ResponseResult response)
+    {
+        var citations = new List<Citation>();
+
+        foreach (var item in response.OutputItems)
+        {
+            if (item is not MessageResponseItem message)
+                continue;
+
+            foreach (var part in message.Content)
+            {
+                var annotations = part.OutputTextAnnotations;
+                if (annotations is null)
+                    continue;
+
+                foreach (var annotation in annotations)
+                {
+                    switch (annotation)
+                    {
+                        case FileCitationMessageAnnotation fileCitation:
+                            citations.Add(new Citation
+                            {
+                                Type = "file",
+                                Title = fileCitation.Filename,
+                                FileId = fileCitation.FileId
+                            });
+                            break;
+
+                        case UriCitationMessageAnnotation uriCitation:
+                            citations.Add(new Citation
+                            {
+                                Type = "url",
+                                Title = uriCitation.Title,
+                                Url = uriCitation.Uri?.ToString()
+                            });
+                            break;
+
+                        case ContainerFileCitationMessageAnnotation containerCitation:
+                            citations.Add(new Citation
+                            {
+                                Type = "container_file",
+                                Title = containerCitation.Filename,
+                                FileId = containerCitation.FileId
+                            });
+                            break;
+                    }
+                }
+            }
+        }
+
+        // Deduplicate by title + fileId/url
+        return citations
+            .GroupBy(c => $"{c.Type}|{c.Title}|{c.FileId}|{c.Url}")
+            .Select(g => g.First())
+            .ToList();
     }
 }
 
@@ -65,5 +133,13 @@ public class ChatRequest
 public class ChatResponse
 {
     public string Reply { get; set; } = string.Empty;
-    public List<string>? Citations { get; set; }
+    public List<Citation>? Citations { get; set; }
+}
+
+public class Citation
+{
+    public string Type { get; set; } = string.Empty;
+    public string? Title { get; set; }
+    public string? Url { get; set; }
+    public string? FileId { get; set; }
 }
