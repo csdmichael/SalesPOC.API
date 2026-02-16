@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using SalesAPI.Models;
 using SalesAPI.Services;
 
 namespace SalesAPI.Controllers;
@@ -23,6 +24,39 @@ public class ProductDocumentsController : ControllerBase
     {
         var documents = await _blobService.GetAllDocumentsAsync();
         return Ok(documents);
+    }
+
+    /// <summary>
+    /// GET: api/ProductDocuments/paged?pageSize=10&pageNumber=1
+    /// Lists paged documents across all products in the blob container.
+    /// </summary>
+    [HttpGet("paged")]
+    public async Task<ActionResult<PagedResponse<ProductDocument>>> GetAllDocumentsPaged([FromQuery] int pageSize, [FromQuery] int pageNumber = 1)
+    {
+        if (pageSize <= 0)
+            return BadRequest(new { message = "pageSize must be greater than 0." });
+
+        if (pageNumber <= 0)
+            return BadRequest(new { message = "pageNumber must be greater than 0." });
+
+        var documents = await _blobService.GetAllDocumentsAsync();
+        var totalRecords = documents.Count;
+        var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+        var items = documents
+            .OrderBy(d => d.FileName)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        return Ok(new PagedResponse<ProductDocument>
+        {
+            Items = items,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            TotalRecords = totalRecords,
+            TotalPages = totalPages
+        });
     }
 
     /// <summary>

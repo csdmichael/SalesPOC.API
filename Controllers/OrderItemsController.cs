@@ -24,6 +24,40 @@ public class OrderItemsController : ControllerBase
             .ToListAsync();
     }
 
+    // GET: api/OrderItems/paged?pageSize=10&pageNumber=1
+    [HttpGet("paged")]
+    public async Task<ActionResult<PagedResponse<OrderItem>>> GetOrderItemsPaged([FromQuery] int pageSize, [FromQuery] int pageNumber = 1)
+    {
+        if (pageSize <= 0)
+        {
+            return BadRequest(new { message = "pageSize must be greater than 0." });
+        }
+
+        if (pageNumber <= 0)
+        {
+            return BadRequest(new { message = "pageNumber must be greater than 0." });
+        }
+
+        var totalRecords = await _context.OrderItems.CountAsync();
+        var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+        var items = await _context.OrderItems
+            .Include(oi => oi.Product)
+            .OrderBy(oi => oi.OrderItemId)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return Ok(new PagedResponse<OrderItem>
+        {
+            Items = items,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            TotalRecords = totalRecords,
+            TotalPages = totalPages
+        });
+    }
+
     // GET: api/OrderItems/5
     [HttpGet("{id}")]
     public async Task<ActionResult<OrderItem>> GetOrderItem(int id)

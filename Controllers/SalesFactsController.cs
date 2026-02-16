@@ -22,6 +22,40 @@ public class SalesFactsController : ControllerBase
         return await _context.VwSalesFacts.ToListAsync();
     }
 
+    // GET: api/SalesFacts/paged?pageSize=10&pageNumber=1
+    [HttpGet("paged")]
+    public async Task<ActionResult<PagedResponse<VwSalesFact>>> GetSalesFactsPaged([FromQuery] int pageSize, [FromQuery] int pageNumber = 1)
+    {
+        if (pageSize <= 0)
+        {
+            return BadRequest(new { message = "pageSize must be greater than 0." });
+        }
+
+        if (pageNumber <= 0)
+        {
+            return BadRequest(new { message = "pageNumber must be greater than 0." });
+        }
+
+        var totalRecords = await _context.VwSalesFacts.CountAsync();
+        var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+        var items = await _context.VwSalesFacts
+            .OrderBy(sf => sf.OrderId)
+            .ThenBy(sf => sf.ProductName)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return Ok(new PagedResponse<VwSalesFact>
+        {
+            Items = items,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            TotalRecords = totalRecords,
+            TotalPages = totalPages
+        });
+    }
+
     // GET: api/SalesFacts/customer/{customerName}
     [HttpGet("customer/{customerName}")]
     public async Task<ActionResult<IEnumerable<VwSalesFact>>> GetSalesFactsByCustomer(string customerName)

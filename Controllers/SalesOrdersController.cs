@@ -27,6 +27,43 @@ public class SalesOrdersController : ControllerBase
             .ToListAsync();
     }
 
+    // GET: api/SalesOrders/paged?pageSize=10&pageNumber=1
+    [HttpGet("paged")]
+    public async Task<ActionResult<PagedResponse<SalesOrder>>> GetSalesOrdersPaged([FromQuery] int pageSize, [FromQuery] int pageNumber = 1)
+    {
+        if (pageSize <= 0)
+        {
+            return BadRequest(new { message = "pageSize must be greater than 0." });
+        }
+
+        if (pageNumber <= 0)
+        {
+            return BadRequest(new { message = "pageNumber must be greater than 0." });
+        }
+
+        var totalRecords = await _context.SalesOrders.CountAsync();
+        var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+        var items = await _context.SalesOrders
+            .Include(o => o.Customer)
+            .Include(o => o.SalesRep)
+            .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+            .OrderBy(o => o.OrderId)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return Ok(new PagedResponse<SalesOrder>
+        {
+            Items = items,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            TotalRecords = totalRecords,
+            TotalPages = totalPages
+        });
+    }
+
     // GET: api/SalesOrders/5
     [HttpGet("{id}")]
     public async Task<ActionResult<SalesOrder>> GetSalesOrder(int id)
