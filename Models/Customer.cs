@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SalesAPI.Models;
 
@@ -23,5 +24,6 @@ public partial class Customer
 
     public DateTime? CreatedDate { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<SalesOrder> SalesOrders { get; set; } = new List<SalesOrder>();
 }
