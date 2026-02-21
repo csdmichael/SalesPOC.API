@@ -1,5 +1,9 @@
 # SalesPOC.API
 
+## Main project
+
+- SalesPOC UI: https://github.com/csdmichael/SalesPOC.UI
+
 A comprehensive REST API for Sales Management built with ASP.NET Core 10.0 and Entity Framework Core. This proof-of-concept application provides endpoints for managing customers, products, sales orders, and sales representatives, with integrated Azure AI capabilities for natural language queries.
 
 ## Project Overview
