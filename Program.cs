@@ -77,10 +77,13 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+app.MapOpenApi();
+app.MapGet("/openapi.json", () => Results.Redirect("/openapi/v1.json", permanent: false));
+app.MapGet("/swagger.json", () => Results.Redirect("/openapi/v1.json", permanent: false));
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", "SalesAPI v1");
