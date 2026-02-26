@@ -84,6 +84,11 @@ var app = builder.Build();
 app.MapOpenApi();
 app.MapGet("/openapi.json", () => Results.Redirect("/openapi/v1.json", permanent: false));
 app.MapGet("/swagger.json", () => Results.Redirect("/openapi/v1.json", permanent: false));
+app.MapGet("/v1/openapi.json", () => Results.Redirect("/openapi/v1.json", permanent: false));
+app.MapGet("/v1/swagger.json", () => Results.Redirect("/openapi/v1.json", permanent: false));
+app.MapGet("/v1/swagger/v1/swagger.json", () => Results.Redirect("/openapi/v1.json", permanent: false));
+app.MapGet("/v1/v1/swagger.json", () => Results.Redirect("/openapi/v1.json", permanent: false));
+app.MapGet("/v1/openapi", () => Results.Redirect("/openapi/v1.json", permanent: false));
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
