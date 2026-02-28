@@ -34,6 +34,66 @@
         }
       }
     },
+    "/v1/openapi.json": {
+      "get": {
+        "tags": [
+          "SalesAPI"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/swagger.json": {
+      "get": {
+        "tags": [
+          "SalesAPI"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/swagger/v1/swagger.json": {
+      "get": {
+        "tags": [
+          "SalesAPI"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/v1/swagger.json": {
+      "get": {
+        "tags": [
+          "SalesAPI"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/openapi": {
+      "get": {
+        "tags": [
+          "SalesAPI"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Chat": {
       "post": {
         "tags": [
@@ -297,6 +357,742 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/DealStrategy/getCustomerSummary/{customerId}": {
+      "get": {
+        "tags": [
+          "DealStrategy"
+        ],
+        "summary": "Get customer summary",
+        "description": "Returns account profile, order volume, revenue, average order value, and top product categories for a customer.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerSummaryResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerSummaryResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerSummaryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DealStrategy/getCustomerOrderTrends/{customerId}": {
+      "get": {
+        "tags": [
+          "DealStrategy"
+        ],
+        "summary": "Get customer order trends",
+        "description": "Returns monthly order count and revenue trend points for the requested customer and time range (for example 90d, 6m, 1y).",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "timeRange",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "180d"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerOrderTrendResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerOrderTrendResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerOrderTrendResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DealStrategy/getCustomerProductMix/{customerId}": {
+      "get": {
+        "tags": [
+          "DealStrategy"
+        ],
+        "summary": "Get customer product mix",
+        "description": "Returns spend distribution by product category and top purchased products for the customer.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerProductMixResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerProductMixResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerProductMixResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DealStrategy/getRegionalPerformance/{regionId}": {
+      "get": {
+        "tags": [
+          "DealStrategy"
+        ],
+        "summary": "Get regional performance",
+        "description": "Returns aggregate order and revenue performance for a region, including top reps.",
+        "parameters": [
+          {
+            "name": "regionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegionalPerformanceResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegionalPerformanceResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegionalPerformanceResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DealStrategy/getRepPerformance/{repId}": {
+      "get": {
+        "tags": [
+          "DealStrategy"
+        ],
+        "summary": "Get sales rep performance",
+        "description": "Returns pipeline and win metrics for a sales rep, including top revenue customers.",
+        "parameters": [
+          {
+            "name": "repId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepPerformanceResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepPerformanceResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepPerformanceResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DealStrategy/calculateDealRisk/{customerId}": {
+      "get": {
+        "tags": [
+          "DealStrategy"
+        ],
+        "summary": "Calculate deal risk",
+        "description": "Calculates a heuristic risk score and signal list for an account based on recency, trend, and product concentration.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DealRiskResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DealRiskResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DealRiskResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DealStrategy/identifyCrossSellOpportunities/{customerId}": {
+      "get": {
+        "tags": [
+          "DealStrategy"
+        ],
+        "summary": "Identify cross-sell opportunities",
+        "description": "Finds products not yet purchased by the customer but commonly purchased by peer customers.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrossSellResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrossSellResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrossSellResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DealStrategy/generateExecutiveSummary/{customerId}": {
+      "get": {
+        "tags": [
+          "DealStrategy"
+        ],
+        "summary": "Generate executive summary",
+        "description": "Generates an account-level strategic narrative using summary metrics, deal risk, and top cross-sell recommendations.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutiveSummaryResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutiveSummaryResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutiveSummaryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DealStrategy/createFollowUpTask/{customerId}": {
+      "post": {
+        "tags": [
+          "DealStrategy"
+        ],
+        "summary": "Create follow-up task",
+        "description": "Creates a suggested follow-up task payload with generated priority and due date.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FollowUpTaskRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FollowUpTaskRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FollowUpTaskRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/FollowUpTaskResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FollowUpTaskResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FollowUpTaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DealStrategy/draftCustomerEmail/{customerId}": {
+      "post": {
+        "tags": [
+          "DealStrategy"
+        ],
+        "summary": "Draft customer email",
+        "description": "Generates a draft outbound email aligned to the provided strategy and account opportunities.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DraftEmailRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DraftEmailRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DraftEmailRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DraftEmailResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DraftEmailResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DraftEmailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -2031,11 +2827,85 @@
   },
   "components": {
     "schemas": {
+      "CategorySpend": {
+        "required": [
+          "category",
+          "amount"
+        ],
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "amount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          }
+        }
+      },
       "ChatRequest": {
         "type": "object",
         "properties": {
           "question": {
             "type": "string"
+          }
+        }
+      },
+      "CrossSellOpportunity": {
+        "required": [
+          "productId",
+          "productName",
+          "productCategory",
+          "peerPurchaseCount",
+          "avgPeerUnitPriceUsd",
+          "rationale"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "productCategory": {
+            "type": "string",
+            "nullable": true
+          },
+          "peerPurchaseCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "avgPeerUnitPriceUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "rationale": {
+            "type": "string"
+          }
+        }
+      },
+      "CrossSellResponse": {
+        "required": [
+          "customerId",
+          "customerName",
+          "opportunities"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "opportunities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CrossSellOpportunity"
+            }
           }
         }
       },
@@ -2081,6 +2951,318 @@
           }
         }
       },
+      "CustomerOrderTrendResponse": {
+        "required": [
+          "customerId",
+          "customerName",
+          "timeRange",
+          "points",
+          "trendDirection"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "timeRange": {
+            "type": "string"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderTrendPoint"
+            }
+          },
+          "trendDirection": {
+            "type": "string"
+          }
+        }
+      },
+      "CustomerProductMixResponse": {
+        "required": [
+          "customerId",
+          "customerName",
+          "totalAmount",
+          "categories",
+          "topProducts"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "totalAmount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductMixCategory"
+            }
+          },
+          "topProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductMixItem"
+            }
+          }
+        }
+      },
+      "CustomerRevenue": {
+        "required": [
+          "customerId",
+          "revenue",
+          "orderCount"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "revenue": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "orderCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          }
+        }
+      },
+      "CustomerSummaryResponse": {
+        "required": [
+          "customerId",
+          "customerName",
+          "customerType",
+          "industry",
+          "country",
+          "state",
+          "city",
+          "totalOrders",
+          "totalRevenueUsd",
+          "averageOrderValueUsd",
+          "lastOrderDate",
+          "topCategories"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerType": {
+            "type": "string",
+            "nullable": true
+          },
+          "industry": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalOrders": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "totalRevenueUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "averageOrderValueUsd": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "lastOrderDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "topCategories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategorySpend"
+            }
+          }
+        }
+      },
+      "DealRiskResponse": {
+        "required": [
+          "customerId",
+          "customerName",
+          "riskScore",
+          "riskLevel",
+          "signals"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "riskScore": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "riskLevel": {
+            "type": "string"
+          },
+          "signals": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DraftEmailRequest": {
+        "type": "object",
+        "properties": {
+          "strategy": {
+            "type": "string"
+          }
+        }
+      },
+      "DraftEmailResponse": {
+        "required": [
+          "customerId",
+          "customerName",
+          "subject",
+          "body"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "ExecutiveSummaryResponse": {
+        "required": [
+          "customerId",
+          "customerName",
+          "narrative",
+          "risk",
+          "topCrossSellOpportunities"
+        ],
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "narrative": {
+            "type": "string"
+          },
+          "risk": {
+            "$ref": "#/components/schemas/DealRiskResponse"
+          },
+          "topCrossSellOpportunities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CrossSellOpportunity"
+            }
+          }
+        }
+      },
+      "FollowUpTaskRequest": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          }
+        }
+      },
+      "FollowUpTaskResponse": {
+        "required": [
+          "taskId",
+          "customerId",
+          "customerName",
+          "action",
+          "priority",
+          "createdUtc",
+          "dueUtc",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string"
+          },
+          "customerId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
+          "createdUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dueUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
       "OrderItem": {
         "type": "object",
         "properties": {
@@ -2111,6 +3293,33 @@
           },
           "product": {
             "$ref": "#/components/schemas/Product"
+          }
+        }
+      },
+      "OrderTrendPoint": {
+        "required": [
+          "month",
+          "orderCount",
+          "revenue",
+          "averageOrderValue"
+        ],
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string",
+            "format": "date"
+          },
+          "orderCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "revenue": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "averageOrderValue": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
           }
         }
       },
@@ -2408,6 +3617,180 @@
           }
         }
       },
+      "ProductMixCategory": {
+        "required": [
+          "category",
+          "amount",
+          "sharePercent",
+          "lineCount"
+        ],
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "amount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "sharePercent": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "lineCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          }
+        }
+      },
+      "ProductMixItem": {
+        "required": [
+          "productId",
+          "productName",
+          "amount",
+          "sharePercent",
+          "totalQuantity"
+        ],
+        "type": "object",
+        "properties": {
+          "productId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "productName": {
+            "type": "string"
+          },
+          "amount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "sharePercent": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "totalQuantity": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          }
+        }
+      },
+      "RegionalPerformanceResponse": {
+        "required": [
+          "regionId",
+          "totalOrders",
+          "totalRevenue",
+          "distinctCustomers",
+          "activeSalesReps",
+          "topReps"
+        ],
+        "type": "object",
+        "properties": {
+          "regionId": {
+            "type": "string"
+          },
+          "totalOrders": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "totalRevenue": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "distinctCustomers": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "activeSalesReps": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "topReps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RepPerformanceSnapshot"
+            }
+          }
+        }
+      },
+      "RepPerformanceResponse": {
+        "required": [
+          "repId",
+          "repName",
+          "region",
+          "totalOrders",
+          "totalRevenue",
+          "averageDealSize",
+          "winRatePercent",
+          "topCustomers"
+        ],
+        "type": "object",
+        "properties": {
+          "repId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "repName": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalOrders": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "totalRevenue": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "averageDealSize": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "winRatePercent": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "topCustomers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerRevenue"
+            }
+          }
+        }
+      },
+      "RepPerformanceSnapshot": {
+        "required": [
+          "repId",
+          "repName",
+          "orderCount",
+          "totalRevenue",
+          "averageDealSize"
+        ],
+        "type": "object",
+        "properties": {
+          "repId": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "repName": {
+            "type": "string"
+          },
+          "orderCount": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "format": "int32"
+          },
+          "totalRevenue": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          },
+          "averageDealSize": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "format": "double"
+          }
+        }
+      },
       "SalesOrder": {
         "type": "object",
         "properties": {
@@ -2551,6 +3934,9 @@
     },
     {
       "name": "Customers"
+    },
+    {
+      "name": "DealStrategy"
     },
     {
       "name": "OrderItems"

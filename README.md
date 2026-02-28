@@ -92,6 +92,7 @@ SalesPOC.API/
 ├── Controllers/               # API Controllers
 │   ├── ChatController.cs     # Azure AI chat endpoint
 │   ├── CustomersController.cs # Customer CRUD operations
+│   ├── DealStrategyController.cs # Deal strategy analytics and action tools
 │   ├── OrderItemsController.cs # Order items management
 │   ├── ProductsController.cs  # Product catalog management
 │   ├── SalesFactsController.cs # Sales analytics (read-only view)
@@ -216,6 +217,39 @@ SalesPOC.API/
 ```json
 {
   "reply": "Based on the data, Q1 sales total..."
+}
+```
+
+### Deal Strategy API (`/api/DealStrategy`)
+
+*Purpose-built APIs for the Deal Strategy Agent (account analysis + action generation)*
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/DealStrategy/getCustomerSummary/{customerId}` | Customer profile, order, revenue, and category snapshot |
+| GET | `/api/DealStrategy/getCustomerOrderTrends/{customerId}?timeRange=180d` | Monthly trend points for orders and revenue |
+| GET | `/api/DealStrategy/getCustomerProductMix/{customerId}` | Category and top-product spend mix |
+| GET | `/api/DealStrategy/getRegionalPerformance/{regionId}` | Region-wide performance and top reps |
+| GET | `/api/DealStrategy/getRepPerformance/{repId}` | Individual rep performance metrics |
+| GET | `/api/DealStrategy/calculateDealRisk/{customerId}` | Heuristic risk score and risk signals |
+| GET | `/api/DealStrategy/identifyCrossSellOpportunities/{customerId}` | Suggested cross-sell products from peer patterns |
+| GET | `/api/DealStrategy/generateExecutiveSummary/{customerId}` | Narrative account summary with priorities |
+| POST | `/api/DealStrategy/createFollowUpTask/{customerId}` | Create follow-up task payload from action text |
+| POST | `/api/DealStrategy/draftCustomerEmail/{customerId}` | Generate draft account email from strategy text |
+
+**Action request examples:**
+
+`POST /api/DealStrategy/createFollowUpTask/42`
+```json
+{
+   "action": "Schedule a QBR to review decline in the last 90 days and propose recovery plan"
+}
+```
+
+`POST /api/DealStrategy/draftCustomerEmail/42`
+```json
+{
+   "strategy": "Position premium package bundle for Q2 renewal and align on adoption milestones"
 }
 ```
 
