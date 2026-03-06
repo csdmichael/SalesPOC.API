@@ -13,6 +13,8 @@ namespace SalesAPI.Controllers;
 [ApiController]
 public class ChatController : ControllerBase
 {
+    private const int MaxQuestionLength = 4000;
+
     private readonly AIProjectClient _projectClient;
     private readonly IConfiguration _configuration;
 
@@ -30,6 +32,15 @@ public class ChatController : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(request.Question))
             return BadRequest(new { error = "Question is required." });
+
+        if (request.Question.Length > MaxQuestionLength)
+        {
+            return BadRequest(new ChatResponse
+            {
+                Reply = $"Question is too long. Please keep it under {MaxQuestionLength} characters.",
+                Citations = null
+            });
+        }
 
         try
         {
@@ -69,6 +80,15 @@ public class ChatController : ControllerBase
             return StatusCode(503, new ChatResponse
             {
                 Reply = "Sorry, I could not reach the AI assistant right now. Access to the AI project was denied.",
+                Citations = null
+            });
+        }
+        catch (RequestFailedException ex) when (ex.Status == 400 &&
+            ex.Message.Contains("context_length_exceeded", StringComparison.OrdinalIgnoreCase))
+        {
+            return BadRequest(new ChatResponse
+            {
+                Reply = "Your request is too large for the AI model context window. Please shorten your prompt and try again.",
                 Citations = null
             });
         }
