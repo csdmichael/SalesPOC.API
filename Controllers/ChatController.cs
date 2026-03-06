@@ -1,5 +1,7 @@
 using Azure.AI.Projects;
 using Azure.AI.Projects.OpenAI;
+using Azure;
+using Azure.Identity;
 using Microsoft.AspNetCore.Mvc;
 using OpenAI.Responses;
 
@@ -52,6 +54,30 @@ public class ChatController : ControllerBase
             {
                 Reply = response.GetOutputText(),
                 Citations = citations.Count > 0 ? citations : null
+            });
+        }
+        catch (AuthenticationFailedException)
+        {
+            return StatusCode(503, new ChatResponse
+            {
+                Reply = "Sorry, I could not reach the AI assistant right now. Please sign in to Azure (az login) and try again.",
+                Citations = null
+            });
+        }
+        catch (RequestFailedException ex) when (ex.Status == 401 || ex.Status == 403)
+        {
+            return StatusCode(503, new ChatResponse
+            {
+                Reply = "Sorry, I could not reach the AI assistant right now. Access to the AI project was denied.",
+                Citations = null
+            });
+        }
+        catch (RequestFailedException ex)
+        {
+            return StatusCode(503, new ChatResponse
+            {
+                Reply = $"Sorry, I could not reach the AI assistant right now (service status: {ex.Status}).",
+                Citations = null
             });
         }
         catch (Exception ex)

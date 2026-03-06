@@ -13,17 +13,27 @@ var builder = WebApplication.CreateBuilder(args);
 var projectEndpoint = builder.Configuration["AzureAgent:Endpoint"]
     ?? throw new InvalidOperationException("AzureAgent:Endpoint is not configured.");
 
+var credentialOptions = new DefaultAzureCredentialOptions();
+var tenantId = builder.Configuration["AzureAgent:TenantId"];
+
+if (!string.IsNullOrWhiteSpace(tenantId))
+{
+    credentialOptions.TenantId = tenantId;
+}
+
+// Keep developer-friendly credential sources in Development so local auth works.
+if (!builder.Environment.IsDevelopment())
+{
+    credentialOptions.ExcludeVisualStudioCredential = true;
+    credentialOptions.ExcludeVisualStudioCodeCredential = true;
+    credentialOptions.ExcludeAzureDeveloperCliCredential = true;
+    credentialOptions.ExcludeAzureCliCredential = true;
+    credentialOptions.ExcludeInteractiveBrowserCredential = true;
+}
+
 builder.Services.AddSingleton(_ =>
     new AIProjectClient(new Uri(projectEndpoint),
-        new DefaultAzureCredential(new DefaultAzureCredentialOptions
-        {
-            TenantId = builder.Configuration["AzureAgent:TenantId"],
-            ExcludeVisualStudioCredential = true,
-            ExcludeVisualStudioCodeCredential = true,
-            ExcludeAzureDeveloperCliCredential = true,
-            ExcludeInteractiveBrowserCredential = true,
-            ExcludeSharedTokenCacheCredential = true
-        })));
+        new DefaultAzureCredential(credentialOptions)));
 
 // Add services to the container.
 builder.Services.AddControllers()
