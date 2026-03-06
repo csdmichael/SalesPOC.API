@@ -17,11 +17,13 @@ public class ChatController : ControllerBase
 
     private readonly AIProjectClient _projectClient;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<ChatController> _logger;
 
-    public ChatController(AIProjectClient projectClient, IConfiguration configuration)
+    public ChatController(AIProjectClient projectClient, IConfiguration configuration, ILogger<ChatController> logger)
     {
         _projectClient = projectClient;
         _configuration = configuration;
+        _logger = logger;
     }
 
     /// <summary>
@@ -67,8 +69,9 @@ public class ChatController : ControllerBase
                 Citations = citations.Count > 0 ? citations : null
             });
         }
-        catch (AuthenticationFailedException)
+        catch (AuthenticationFailedException ex)
         {
+            _logger.LogError(ex, "Azure authentication failed. Run 'az login' to refresh credentials.");
             return StatusCode(503, new ChatResponse
             {
                 Reply = "Sorry, I could not reach the AI assistant right now. Please sign in to Azure (az login) and try again.",
@@ -77,6 +80,7 @@ public class ChatController : ControllerBase
         }
         catch (RequestFailedException ex) when (ex.Status == 401 || ex.Status == 403)
         {
+            _logger.LogError(ex, "Access denied to AI project. Status={Status}", ex.Status);
             return StatusCode(503, new ChatResponse
             {
                 Reply = "Sorry, I could not reach the AI assistant right now. Access to the AI project was denied.",
@@ -86,6 +90,7 @@ public class ChatController : ControllerBase
         catch (RequestFailedException ex) when (ex.Status == 400 &&
             ex.Message.Contains("context_length_exceeded", StringComparison.OrdinalIgnoreCase))
         {
+            _logger.LogWarning(ex, "Context length exceeded. Status={Status}", ex.Status);
             return BadRequest(new ChatResponse
             {
                 Reply = "Your request is too large for the AI model context window. Please shorten your prompt and try again.",
@@ -94,6 +99,8 @@ public class ChatController : ControllerBase
         }
         catch (RequestFailedException ex)
         {
+            _logger.LogError(ex, "Azure AI request failed. Status={Status}, ErrorCode={ErrorCode}, Message={Message}",
+                ex.Status, ex.ErrorCode, ex.Message);
             return StatusCode(503, new ChatResponse
             {
                 Reply = $"Sorry, I could not reach the AI assistant right now (service status: {ex.Status}).",
@@ -102,6 +109,7 @@ public class ChatController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Unexpected error communicating with AI agent.");
             return StatusCode(500, new ChatResponse
             {
                 Reply = $"Error communicating with the AI agent: {ex.Message}"
