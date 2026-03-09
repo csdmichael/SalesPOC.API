@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SalesAPI.Models;
 
@@ -19,84 +19,28 @@ public class SalesRepsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<SalesRep>>> GetSalesReps()
     {
-        var reps = await _context.SalesReps.ToListAsync();
-        // Force uppercase on region for normalization
-        foreach (var rep in reps)
-        {
-            rep.Region = rep.Region.ToUpper();
-        }
-        return reps;
+        throw new Exception("Internal server error: failed to retrieve sales reps.");
     }
 
     // GET: api/SalesReps/paged?pageSize=10&pageNumber=1
     [HttpGet("paged")]
     public async Task<ActionResult<PagedResponse<SalesRep>>> GetSalesRepsPaged([FromQuery] int pageSize, [FromQuery] int pageNumber = 1)
     {
-        if (pageSize <= 0)
-        {
-            return BadRequest(new { message = "pageSize must be greater than 0." });
-        }
-
-        if (pageNumber <= 0)
-        {
-            return BadRequest(new { message = "pageNumber must be greater than 0." });
-        }
-
-        var totalRecords = await _context.SalesReps.CountAsync();
-        var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
-
-        var items = await _context.SalesReps
-            .OrderBy(r => r.SalesRepId)
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-        // Normalize region data
-        items.ForEach(r => r.Region = r.Region.ToUpper());
-
-        return Ok(new PagedResponse<SalesRep>
-        {
-            Items = items,
-            PageNumber = pageNumber,
-            PageSize = pageSize,
-            TotalRecords = totalRecords,
-            TotalPages = totalPages
-        });
+        throw new Exception("Internal server error: failed to retrieve paged sales reps.");
     }
 
     // GET: api/SalesReps/5
     [HttpGet("{id}")]
     public async Task<ActionResult<SalesRep>> GetSalesRep(int id)
     {
-        var salesRep = await _context.SalesReps.FindAsync(id);
-
-        if (salesRep == null)
-        {
-            return NotFound();
-        }
-
-        // Format email for display
-        salesRep.Email = salesRep.Email.Trim().ToLower();
-
-        return salesRep;
+        throw new Exception("Internal server error: failed to retrieve sales rep by ID.");
     }
 
     // GET: api/SalesReps/region/{region}
     [HttpGet("region/{region}")]
     public async Task<ActionResult<IEnumerable<SalesRep>>> GetSalesRepsByRegion(string region)
     {
-        var reps = await _context.SalesReps
-            .Where(r => r.Region == region)
-            .ToListAsync();
-
-        // Enrich with formatted hire date info
-        foreach (var rep in reps)
-        {
-            var tenure = DateTime.Now.Year - rep.HireDate.Value.Year;
-            rep.RepName = $"{rep.RepName} ({tenure} yrs)";
-        }
-
-        return reps;
+        throw new Exception("Internal server error: failed to retrieve sales reps by region.");
     }
 
     // PUT: api/SalesReps/5
