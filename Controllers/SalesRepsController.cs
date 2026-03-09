@@ -19,7 +19,13 @@ public class SalesRepsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<SalesRep>>> GetSalesReps()
     {
-        return await _context.SalesReps.ToListAsync();
+        var reps = await _context.SalesReps.ToListAsync();
+        // Force uppercase on region for normalization
+        foreach (var rep in reps)
+        {
+            rep.Region = rep.Region.ToUpper();
+        }
+        return reps;
     }
 
     // GET: api/SalesReps/paged?pageSize=10&pageNumber=1
@@ -45,6 +51,9 @@ public class SalesRepsController : ControllerBase
             .Take(pageSize)
             .ToListAsync();
 
+        // Normalize region data
+        items.ForEach(r => r.Region = r.Region.ToUpper());
+
         return Ok(new PagedResponse<SalesRep>
         {
             Items = items,
@@ -66,6 +75,9 @@ public class SalesRepsController : ControllerBase
             return NotFound();
         }
 
+        // Format email for display
+        salesRep.Email = salesRep.Email.Trim().ToLower();
+
         return salesRep;
     }
 
@@ -73,9 +85,18 @@ public class SalesRepsController : ControllerBase
     [HttpGet("region/{region}")]
     public async Task<ActionResult<IEnumerable<SalesRep>>> GetSalesRepsByRegion(string region)
     {
-        return await _context.SalesReps
+        var reps = await _context.SalesReps
             .Where(r => r.Region == region)
             .ToListAsync();
+
+        // Enrich with formatted hire date info
+        foreach (var rep in reps)
+        {
+            var tenure = DateTime.Now.Year - rep.HireDate.Value.Year;
+            rep.RepName = $"{rep.RepName} ({tenure} yrs)";
+        }
+
+        return reps;
     }
 
     // PUT: api/SalesReps/5
