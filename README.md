@@ -116,7 +116,8 @@ SalesPOC.API/
 ├── Program.cs                # Application entry point and configuration
 ├── SalesAPI.csproj           # Project file
 ├── appsettings.json          # Configuration settings
-├── main.tf                   # Terraform infrastructure definition
+├── main.tf                   # Terraform infrastructure definition (core resources)
+├── network.tf                # Private VNet, subnets, private endpoint, DNS
 ├── terraform.tfvars.example  # Terraform variables template
 ├── openapi.json              # OpenAPI specification
 ├── swagger.json              # Swagger documentation
@@ -347,6 +348,53 @@ Azure authentication uses `DefaultAzureCredential`, which supports:
 ## CORS Configuration
 
 The API is configured to accept requests from Angular frontend running on `http://localhost:4200`.
+
+## Private Network & Endpoint Configuration
+
+Azure SQL Server has **public network access disabled** by policy. All database traffic flows through a private endpoint inside a Virtual Network.
+
+### Network Architecture
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  VNet: vnet-salespoc-api (10.0.0.0/16)                   │
+│                                                          │
+│  ┌─────────────────────────┐  ┌────────────────────────┐ │
+│  │ snet-appservice         │  │ snet-private-endpoints │ │
+│  │ 10.0.1.0/24             │  │ 10.0.2.0/24            │ │
+│  │                         │  │                        │ │
+│  │ App Service ◄── VNet ──►│  │ Private Endpoint ──────┼─┼──► Azure SQL
+│  │ Integration             │  │ pe-sql-salespoc        │ │    ai-db-poc
+│  └─────────────────────────┘  └────────────────────────┘ │
+│                                                          │
+│  Private DNS Zone: privatelink.database.windows.net      │
+│  VNet Link: vnetlink-sql                                 │
+└──────────────────────────────────────────────────────────┘
+```
+
+### Resources (defined in `network.tf`)
+
+| Resource | Name | Purpose |
+|----------|------|---------|
+| Virtual Network | `vnet-salespoc-api` | Isolated network (10.0.0.0/16) |
+| Subnet | `snet-appservice` (10.0.1.0/24) | App Service VNet integration (delegated to `Microsoft.Web/serverFarms`) |
+| Subnet | `snet-private-endpoints` (10.0.2.0/24) | Hosts the SQL private endpoint |
+| Private DNS Zone | `privatelink.database.windows.net` | Resolves SQL FQDN to private IP |
+| DNS Zone VNet Link | `vnetlink-sql` | Links the DNS zone to the VNet |
+| Private Endpoint | `pe-sql-salespoc` | Private connection to Azure SQL Server (`sqlServer` sub-resource) |
+| VNet Integration | Swift connection | Routes App Service outbound traffic through the VNet |
+
+### Key Settings
+
+- **SQL Server**: `public_network_access_enabled = false`
+- **Private Endpoint**: Auto-approved, DNS auto-registered via zone group `dns-zone-group-sql`
+- **App Service**: Outbound traffic routed through `snet-appservice` subnet
+
+### Local Development Note
+
+The private endpoint is only reachable from within the VNet. To connect from a local dev machine you must either:
+1. Temporarily enable public access and add a firewall rule for your IP
+2. Use an Azure VPN Gateway or Point-to-Site VPN into the VNet
 
 To modify CORS settings, update the policy in `Program.cs`:
 ```csharp
