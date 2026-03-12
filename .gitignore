@@ -46,3 +46,8 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
+
+# Logs
+logs/
+*.log
+appservice-logs/

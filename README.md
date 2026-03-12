@@ -15,6 +15,20 @@ SalesPOC.API is a modern sales management system that demonstrates:
 - OpenAPI/Swagger documentation
 - CORS support for Angular frontend integration
 
+## Prerequisites
+
+### Grant the App Service Managed Identity access to the SQL Database
+
+Connect to the `ai-db-poc` database as an AAD admin and run:
+
+```sql
+CREATE USER [salespoc-api] FROM EXTERNAL PROVIDER;
+ALTER ROLE db_datareader ADD MEMBER [salespoc-api];
+ALTER ROLE db_datawriter ADD MEMBER [salespoc-api];
+```
+
+### Assign Azure AI roles to the Managed Identity
+
 ## Setup required
 
 # Define Variables
