@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SalesAPI.Models;
 
@@ -19,28 +19,63 @@ public class SalesRepsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<SalesRep>>> GetSalesReps()
     {
-        throw new Exception("Internal server error: failed to retrieve sales reps.");
+        return await _context.SalesReps.ToListAsync();
     }
 
     // GET: api/SalesReps/paged?pageSize=10&pageNumber=1
     [HttpGet("paged")]
     public async Task<ActionResult<PagedResponse<SalesRep>>> GetSalesRepsPaged([FromQuery] int pageSize, [FromQuery] int pageNumber = 1)
     {
-        throw new Exception("Internal server error: failed to retrieve paged sales reps.");
+        if (pageSize <= 0)
+        {
+            return BadRequest(new { message = "pageSize must be greater than 0." });
+        }
+
+        if (pageNumber <= 0)
+        {
+            return BadRequest(new { message = "pageNumber must be greater than 0." });
+        }
+
+        var totalRecords = await _context.SalesReps.CountAsync();
+        var totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+        var items = await _context.SalesReps
+            .OrderBy(r => r.SalesRepId)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return Ok(new PagedResponse<SalesRep>
+        {
+            Items = items,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            TotalRecords = totalRecords,
+            TotalPages = totalPages
+        });
     }
 
     // GET: api/SalesReps/5
     [HttpGet("{id}")]
     public async Task<ActionResult<SalesRep>> GetSalesRep(int id)
     {
-        throw new Exception("Internal server error: failed to retrieve sales rep by ID.");
+        var salesRep = await _context.SalesReps.FindAsync(id);
+
+        if (salesRep == null)
+        {
+            return NotFound();
+        }
+
+        return salesRep;
     }
 
     // GET: api/SalesReps/region/{region}
     [HttpGet("region/{region}")]
     public async Task<ActionResult<IEnumerable<SalesRep>>> GetSalesRepsByRegion(string region)
     {
-        throw new Exception("Internal server error: failed to retrieve sales reps by region.");
+        return await _context.SalesReps
+            .Where(r => r.Region == region)
+            .ToListAsync();
     }
 
     // PUT: api/SalesReps/5
