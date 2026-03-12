@@ -79,7 +79,7 @@ builder.Services.AddSingleton(_ =>
 builder.Services.AddSingleton(sp =>
     new CosmosDbService(sp.GetRequiredService<CosmosClient>(), cosmosDatabaseName, cosmosContainerName));
 
-// Configure Entity Framework with SQL Server
+// Configure Entity Framework with SQL Server (Azure AD authentication)
 builder.Services.AddDbContext<SalesDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
