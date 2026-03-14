@@ -56,26 +56,29 @@ builder.Services.AddCors(options =>
 // Add HttpClientFactory for Chat proxy
 builder.Services.AddHttpClient();
 
-// Register Azure Blob Storage service
-var blobConnectionString = builder.Configuration["AzureBlobStorage:ConnectionString"]
-    ?? throw new InvalidOperationException("AzureBlobStorage:ConnectionString is not configured.");
+// Register Azure Blob Storage service (Azure AD auth – key-based auth is disabled on this account)
+var blobServiceUri = builder.Configuration["AzureBlobStorage:ServiceUri"]
+    ?? throw new InvalidOperationException("AzureBlobStorage:ServiceUri is not configured.");
 var blobContainerName = builder.Configuration["AzureBlobStorage:ContainerName"]
     ?? throw new InvalidOperationException("AzureBlobStorage:ContainerName is not configured.");
 
+var credential = new DefaultAzureCredential(credentialOptions);
+
 builder.Services.AddSingleton(_ =>
-    new BlobContainerClient(blobConnectionString, blobContainerName));
+    new BlobServiceClient(new Uri(blobServiceUri), credential)
+        .GetBlobContainerClient(blobContainerName));
 builder.Services.AddSingleton<BlobStorageService>();
 
-// Register Azure Cosmos DB service
-var cosmosConnectionString = builder.Configuration["CosmosDb:ConnectionString"]
-    ?? throw new InvalidOperationException("CosmosDb:ConnectionString is not configured.");
+// Register Azure Cosmos DB service (Azure AD auth – local auth is disabled on this account)
+var cosmosAccountEndpoint = builder.Configuration["CosmosDb:AccountEndpoint"]
+    ?? throw new InvalidOperationException("CosmosDb:AccountEndpoint is not configured.");
 var cosmosDatabaseName = builder.Configuration["CosmosDb:DatabaseName"]
     ?? throw new InvalidOperationException("CosmosDb:DatabaseName is not configured.");
 var cosmosContainerName = builder.Configuration["CosmosDb:ContainerName"]
     ?? throw new InvalidOperationException("CosmosDb:ContainerName is not configured.");
 
 builder.Services.AddSingleton(_ =>
-    new CosmosClient(cosmosConnectionString));
+    new CosmosClient(cosmosAccountEndpoint, credential));
 builder.Services.AddSingleton(sp =>
     new CosmosDbService(sp.GetRequiredService<CosmosClient>(), cosmosDatabaseName, cosmosContainerName));
 
