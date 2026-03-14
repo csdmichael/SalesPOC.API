@@ -437,26 +437,28 @@ All data sources — Azure SQL Server, Cosmos DB, and Blob Storage — have **pu
 
 ### Network Architecture
 
+The App Service is in `West US 2`, so the VNet and private endpoints are also in `West US 2`. (A legacy VNet `vnet-salespoc` exists in `westus` with older PEs; the active networking uses `vnet-salespoc-westus2`.)
+
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
-│  VNet: vnet-salespoc-api (10.0.0.0/16)                               │
+│  VNet: vnet-salespoc-westus2 (10.1.0.0/16)  [West US 2]             │
 │                                                                      │
 │  ┌───────────────────────┐  ┌──────────────────────────────────────┐ │
 │  │ snet-appservice        │  │ snet-private-endpoints              │ │
-│  │ 10.0.1.0/24            │  │ 10.0.2.0/24                        │ │
+│  │ 10.1.1.0/24            │  │ 10.1.2.0/24                        │ │
 │  │                        │  │                                    │ │
-│  │ App Service ◄── VNet   │  │ pe-sql-salespoc    ────────────────┼─┼──► Azure SQL
+│  │ App Service ◄── VNet   │  │ pe-sql-westus2     ────────────────┼─┼──► Azure SQL
 │  │ Integration            │  │                                    │ │    ai-db-poc
-│  │                        │  │ pe-cosmos-salespoc  ───────────────┼─┼──► Cosmos DB
+│  │ (requires B1+ SKU)     │  │ pe-cosmos-westus2   ───────────────┼─┼──► Cosmos DB
 │  │                        │  │                                    │ │    cosmos-ai-poc
-│  │                        │  │ pe-blob-salespoc    ───────────────┼─┼──► Blob Storage
+│  │                        │  │ pe-blob-westus2     ───────────────┼─┼──► Blob Storage
 │  │                        │  │                                    │ │    aistoragemyaacoub
 │  └───────────────────────┘  └──────────────────────────────────────┘ │
 │                                                                      │
-│  Private DNS Zones:                                                  │
-│    privatelink.database.windows.net   (vnetlink-sql)                 │
-│    privatelink.documents.azure.com    (vnetlink-cosmos)              │
-│    privatelink.blob.core.windows.net  (vnetlink-blob)                │
+│  Private DNS Zones (linked to this VNet):                            │
+│    privatelink.database.windows.net                                  │
+│    privatelink.documents.azure.com                                   │
+│    privatelink.blob.core.windows.net                                 │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -464,21 +466,22 @@ All data sources — Azure SQL Server, Cosmos DB, and Blob Storage — have **pu
 
 | Resource | Name | Purpose |
 |----------|------|---------|
-| Virtual Network | `vnet-salespoc-api` | Isolated network (10.0.0.0/16) |
-| Subnet | `snet-appservice` (10.0.1.0/24) | App Service VNet integration (delegated to `Microsoft.Web/serverFarms`) |
-| Subnet | `snet-private-endpoints` (10.0.2.0/24) | Hosts all private endpoints |
-| Private Endpoint | `pe-sql-salespoc` | Private connection to Azure SQL Server (`sqlServer` sub-resource) |
-| Private Endpoint | `pe-cosmos-salespoc` | Private connection to Cosmos DB (`Sql` sub-resource) |
-| Private Endpoint | `pe-blob-salespoc` | Private connection to Blob Storage (`blob` sub-resource) |
+| Virtual Network | `vnet-salespoc-westus2` | Isolated network (10.1.0.0/16) in West US 2 |
+| Subnet | `snet-appservice` (10.1.1.0/24) | App Service VNet integration (delegated to `Microsoft.Web/serverFarms`) |
+| Subnet | `snet-private-endpoints` (10.1.2.0/24) | Hosts all private endpoints |
+| Private Endpoint | `pe-sql-westus2` | Private connection to Azure SQL Server (`sqlServer` sub-resource) |
+| Private Endpoint | `pe-cosmos-westus2` | Private connection to Cosmos DB (`Sql` sub-resource) |
+| Private Endpoint | `pe-blob-westus2` | Private connection to Blob Storage (`blob` sub-resource) |
 
-> **Note:** Private DNS zones (`privatelink.database.windows.net`, `privatelink.documents.azure.com`, `privatelink.blob.core.windows.net`) and their VNet links must be created separately by a principal with the required `Microsoft.Network/privateDnsZones` permissions. They are not managed by this Terraform module.
+> **Note:** Private DNS zones and their VNet links are created separately (one-time CLI commands). They are not managed by this Terraform module. See the DNS zone groups attached to each PE for automatic A-record registration.
 
 ### Key Settings
 
 - **SQL Server**: `public_network_access_enabled = false`
-- **Cosmos DB**: Public network access disabled; private endpoint via `pe-cosmos-salespoc`
-- **Blob Storage**: Public network access disabled; private endpoint via `pe-blob-salespoc`
+- **Cosmos DB**: Public network access disabled; private endpoint via `pe-cosmos-westus2`
+- **Blob Storage**: Public network access disabled; private endpoint via `pe-blob-westus2`
 - **App Service**: `WEBSITE_VNET_ROUTE_ALL = 1` — all outbound traffic routed through VNet
+- **App Service Plan**: VNet integration requires **Basic (B1) or higher** SKU (Free/Shared not supported)
 - **Private Endpoints**: Auto-approved via `is_manual_connection = false`
 
 ### CI/CD Pipeline
@@ -491,37 +494,73 @@ The GitHub Actions workflow (`main_salespoc-api.yml`) has three jobs:
 
 ### RBAC Pre-requisites
 
-Before deploying, the GitHub Actions service principal (or whoever runs Terraform) needs these Azure permissions:
+The following roles have been granted. Re-run these commands if provisioning a new environment.
 
-| Action | Required Role | Scope |
-|--------|--------------|-------|
-| Create/manage VNet, subnets, private endpoints, DNS | **Network Contributor** | Resource group `rg-salespoc-api` |
-| Auto-approve private endpoint to Cosmos DB | **Network Contributor** | Resource group `ai-myaacoub` |
-| Auto-approve private endpoint to Storage Account | **Network Contributor** | Resource group `ai-myaacoub` |
+#### GitHub Actions Service Principal (`oidc-msi-8949`)
 
-> Resource IDs for Cosmos DB and Storage are constructed from variable names, so **Reader** on `ai-myaacoub` is **not** required.
-
-Grant roles to the service principal used by GitHub Actions (replace `<SP_OBJECT_ID>` with the Github App OIDC service principal object ID):
+| Role | Scope |
+|------|-------|
+| **Contributor** | Resource group `ai-myaacoub` |
+| **Network Contributor** | Resource group `ai-myaacoub` |
+| **Private DNS Zone Contributor** | Resource group `ai-myaacoub` |
+| **Website Contributor** | `SalesPOC-API` App Service |
 
 ```bash
 SUBSCRIPTION_ID="86b37969-9445-49cf-b03f-d8866235171c"
+SP_OBJECT_ID="<SP_OBJECT_ID>"  # GitHub Actions OIDC service principal
 
-# Network Contributor on the API resource group (VNet, subnets, endpoints, DNS)
 az role assignment create \
-  --assignee-object-id "<SP_OBJECT_ID>" \
-  --role "Network Contributor" \
-  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/rg-salespoc-api" \
+  --assignee-object-id "$SP_OBJECT_ID" \
+  --role "Contributor" \
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/ai-myaacoub" \
   --assignee-principal-type "ServicePrincipal"
 
-# Network Contributor on ai-myaacoub RG (to auto-approve private endpoint connections)
 az role assignment create \
-  --assignee-object-id "<SP_OBJECT_ID>" \
+  --assignee-object-id "$SP_OBJECT_ID" \
   --role "Network Contributor" \
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/ai-myaacoub" \
+  --assignee-principal-type "ServicePrincipal"
+
+az role assignment create \
+  --assignee-object-id "$SP_OBJECT_ID" \
+  --role "Private DNS Zone Contributor" \
   --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/ai-myaacoub" \
   --assignee-principal-type "ServicePrincipal"
 ```
 
-> **Tip:** If using OIDC federated credentials, the service principal already has `id-token: write` in the workflow. The roles above are additive Azure RBAC assignments.
+#### App Service Managed Identity (`SalesPOC-API`)
+
+| Role | Scope |
+|------|-------|
+| **Storage Blob Data Reader** | Storage account `aistoragemyaacoub` |
+| **Cosmos DB Built-in Data Contributor** | Cosmos DB `cosmos-ai-poc` (via `az cosmosdb sql role assignment`) |
+| **Azure AI Developer** | AI account `001-ai-poc` |
+| **Cognitive Services OpenAI User** | AI account `001-ai-poc` |
+| **Azure AI User** | AI account `001-ai-poc` |
+
+```bash
+PRINCIPAL_ID=$(az webapp identity show --name "SalesPOC-API" --resource-group "ai-myaacoub" --query principalId -o tsv)
+
+# Storage Blob Data Reader
+az role assignment create \
+  --assignee-object-id "$PRINCIPAL_ID" \
+  --role "Storage Blob Data Reader" \
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/ai-myaacoub/providers/Microsoft.Storage/storageAccounts/aistoragemyaacoub" \
+  --assignee-principal-type "ServicePrincipal"
+
+# Cosmos DB Built-in Data Contributor (Cosmos-specific RBAC, not Azure RBAC)
+az cosmosdb sql role assignment create \
+  --account-name cosmos-ai-poc \
+  --resource-group "ai-myaacoub" \
+  --role-definition-id "00000000-0000-0000-0000-000000000002" \
+  --principal-id "$PRINCIPAL_ID" \
+  --scope "/"
+
+# SQL Database — run this T-SQL as an AAD admin connected to ai-db-poc:
+# CREATE USER [SalesPOC-API] FROM EXTERNAL PROVIDER;
+# ALTER ROLE db_datareader ADD MEMBER [SalesPOC-API];
+# ALTER ROLE db_datawriter ADD MEMBER [SalesPOC-API];
+```
 
 ### Local Development Note
 

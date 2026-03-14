@@ -1,12 +1,12 @@
 # Example Terraform variables file
 # Copy this file to terraform.tfvars and fill in the values
 
-resource_group_name   = "rg-salespoc-api"
-location              = "East US"
-app_service_plan_name = "asp-salespoc-api"
-app_service_name      = "salespoc-api"
-sql_server_name       = "sql-salespoc"
-sql_database_name     = "SalesDb"
+resource_group_name   = "ai-myaacoub"
+location              = "West US 2"
+app_service_plan_name = "ASP-aimyaacoub-87dc"
+app_service_name      = "SalesPOC-API"
+sql_server_name       = "ai-db-poc"
+sql_database_name     = "ai-db-poc"
 sql_admin_login       = "sqladmin"
 sql_admin_password    = "YourSecurePassword123!"  # Change this to a secure password
 
@@ -15,10 +15,10 @@ azure_agent_endpoint  = "https://your-ai-service.services.ai.azure.com/api/proje
 azure_agent_tenant_id = "your-tenant-id-here"
 azure_agent_name      = "arrow-sales-agent"
 
-# Private networking — existing resources in ai-myaacoub RG
-network_resource_group_name = "ai-myaacoub"
-cosmos_db_account_name      = "cosmos-ai-poc"
-storage_account_name        = "aistoragemyaacoub"
-blob_container_name         = "semiconductor-product-documents"
-cosmos_database_name        = "sales"
-cosmos_container_name       = "products"
+# Private networking
+vnet_name               = "vnet-salespoc-westus2"
+cosmos_db_account_name  = "cosmos-ai-poc"
+storage_account_name    = "aistoragemyaacoub"
+blob_container_name     = "semiconductor-product-documents"
+cosmos_database_name    = "sales"
+cosmos_container_name   = "products"

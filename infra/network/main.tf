@@ -25,19 +25,19 @@ provider "azurerm" {
 variable "resource_group_name" {
   description = "Resource group where the VNet and endpoints are created"
   type        = string
-  default     = "rg-salespoc-api"
+  default     = "ai-myaacoub"
 }
 
 variable "location" {
   description = "Azure region"
   type        = string
-  default     = "East US"
+  default     = "West US 2"
 }
 
 variable "sql_server_name" {
   description = "Name of the SQL Server (for private endpoint)"
   type        = string
-  default     = "sql-salespoc"
+  default     = "ai-db-poc"
 }
 
 variable "cosmos_db_account_name" {
@@ -52,11 +52,7 @@ variable "storage_account_name" {
   default     = "aistoragemyaacoub"
 }
 
-variable "network_resource_group_name" {
-  description = "Resource group that contains the Cosmos DB and Storage accounts"
-  type        = string
-  default     = "ai-myaacoub"
-}
+
 
 # =============================================================================
 # Data sources & locals
@@ -66,8 +62,8 @@ data "azurerm_client_config" "current" {}
 
 locals {
   sql_server_id      = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Sql/servers/${var.sql_server_name}"
-  cosmos_account_id  = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.network_resource_group_name}/providers/Microsoft.DocumentDB/databaseAccounts/${var.cosmos_db_account_name}"
-  storage_account_id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.network_resource_group_name}/providers/Microsoft.Storage/storageAccounts/${var.storage_account_name}"
+  cosmos_account_id  = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.DocumentDB/databaseAccounts/${var.cosmos_db_account_name}"
+  storage_account_id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Storage/storageAccounts/${var.storage_account_name}"
 }
 
 # =============================================================================
@@ -75,10 +71,10 @@ locals {
 # =============================================================================
 
 resource "azurerm_virtual_network" "main" {
-  name                = "vnet-salespoc-api"
+  name                = "vnet-salespoc-westus2"
   resource_group_name = var.resource_group_name
   location            = var.location
-  address_space       = ["10.0.0.0/16"]
+  address_space       = ["10.1.0.0/16"]
 
   tags = {
     environment = "production"
@@ -94,7 +90,7 @@ resource "azurerm_subnet" "app_service" {
   name                 = "snet-appservice"
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = ["10.0.1.0/24"]
+  address_prefixes     = ["10.1.1.0/24"]
 
   delegation {
     name = "appservice-delegation"
@@ -109,7 +105,7 @@ resource "azurerm_subnet" "private_endpoints" {
   name                 = "snet-private-endpoints"
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = ["10.0.2.0/24"]
+  address_prefixes     = ["10.1.2.0/24"]
 }
 
 # =============================================================================
@@ -123,13 +119,13 @@ resource "azurerm_subnet" "private_endpoints" {
 # =============================================================================
 
 resource "azurerm_private_endpoint" "sql" {
-  name                = "pe-sql-salespoc"
+  name                = "pe-sql-westus2"
   resource_group_name = var.resource_group_name
   location            = var.location
   subnet_id           = azurerm_subnet.private_endpoints.id
 
   private_service_connection {
-    name                           = "psc-sql-salespoc"
+    name                           = "psc-sql-westus2"
     private_connection_resource_id = local.sql_server_id
     subresource_names              = ["sqlServer"]
     is_manual_connection           = false
@@ -142,13 +138,13 @@ resource "azurerm_private_endpoint" "sql" {
 }
 
 resource "azurerm_private_endpoint" "cosmos" {
-  name                = "pe-cosmos-salespoc"
+  name                = "pe-cosmos-westus2"
   resource_group_name = var.resource_group_name
   location            = var.location
   subnet_id           = azurerm_subnet.private_endpoints.id
 
   private_service_connection {
-    name                           = "psc-cosmos-salespoc"
+    name                           = "psc-cosmos-westus2"
     private_connection_resource_id = local.cosmos_account_id
     subresource_names              = ["Sql"]
     is_manual_connection           = false
@@ -161,13 +157,13 @@ resource "azurerm_private_endpoint" "cosmos" {
 }
 
 resource "azurerm_private_endpoint" "blob" {
-  name                = "pe-blob-salespoc"
+  name                = "pe-blob-westus2"
   resource_group_name = var.resource_group_name
   location            = var.location
   subnet_id           = azurerm_subnet.private_endpoints.id
 
   private_service_connection {
-    name                           = "psc-blob-salespoc"
+    name                           = "psc-blob-westus2"
     private_connection_resource_id = local.storage_account_id
     subresource_names              = ["blob"]
     is_manual_connection           = false

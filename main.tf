@@ -22,37 +22,37 @@ data "azurerm_client_config" "current" {}
 variable "resource_group_name" {
   description = "Name of the resource group"
   type        = string
-  default     = "rg-salespoc-api"
+  default     = "ai-myaacoub"
 }
 
 variable "location" {
   description = "Azure region for resources"
   type        = string
-  default     = "East US"
+  default     = "West US 2"
 }
 
 variable "app_service_plan_name" {
   description = "Name of the App Service Plan"
   type        = string
-  default     = "asp-salespoc-api"
+  default     = "ASP-aimyaacoub-87dc"
 }
 
 variable "app_service_name" {
   description = "Name of the App Service (must be globally unique)"
   type        = string
-  default     = "salespoc-api"
+  default     = "SalesPOC-API"
 }
 
 variable "sql_server_name" {
   description = "Name of the SQL Server"
   type        = string
-  default     = "sql-salespoc"
+  default     = "ai-db-poc"
 }
 
 variable "sql_database_name" {
   description = "Name of the SQL Database"
   type        = string
-  default     = "SalesDb"
+  default     = "ai-db-poc"
 }
 
 variable "sql_admin_login" {
@@ -120,7 +120,7 @@ variable "storage_account_name" {
 variable "vnet_name" {
   description = "Name of the VNet (managed by infra/network)"
   type        = string
-  default     = "vnet-salespoc-api"
+  default     = "vnet-salespoc-westus2"
 }
 
 variable "app_service_subnet_name" {
