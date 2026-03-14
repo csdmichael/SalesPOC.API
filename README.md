@@ -437,6 +437,8 @@ All data sources — Azure SQL Server, Cosmos DB, and Blob Storage — have **pu
 
 ### Network Architecture
 
+![Private VNet Architecture](docs/Private%20VNET.png)
+
 The App Service is in `West US 2`, so the VNet and private endpoints are also in `West US 2`. (A legacy VNet `vnet-salespoc` exists in `westus` with older PEs; the active networking uses `vnet-salespoc-westus2`.)
 
 ```
@@ -472,8 +474,11 @@ The App Service is in `West US 2`, so the VNet and private endpoints are also in
 | Private Endpoint | `pe-sql-westus2` | Private connection to Azure SQL Server (`sqlServer` sub-resource) |
 | Private Endpoint | `pe-cosmos-westus2` | Private connection to Cosmos DB (`Sql` sub-resource) |
 | Private Endpoint | `pe-blob-westus2` | Private connection to Blob Storage (`blob` sub-resource) |
+| DNS Zone Group | `pe-sql-westus2/default` | Links `pe-sql-westus2` → `privatelink.database.windows.net` (auto-registers A record for `ai-db-poc`) |
+| DNS Zone Group | `pe-cosmos-westus2/default` | Links `pe-cosmos-westus2` → `privatelink.documents.azure.com` (auto-registers A records for `cosmos-ai-poc`) |
+| DNS Zone Group | `pe-blob-westus2/default` | Links `pe-blob-westus2` → `privatelink.blob.core.windows.net` (auto-registers A record for `aistoragemyaacoub`) |
 
-> **Note:** Private DNS zones and their VNet links are created separately (one-time CLI commands). They are not managed by this Terraform module. See the DNS zone groups attached to each PE for automatic A-record registration.
+> **Note:** Private DNS zones and their VNet links are created separately (one-time CLI commands) and are not managed by Terraform. The DNS zone groups above are attached to each private endpoint so that A records are **automatically registered** in the corresponding private DNS zone. Without zone groups, the App Service cannot resolve the private endpoint FQDNs through the VNet.
 
 ### Key Settings
 
