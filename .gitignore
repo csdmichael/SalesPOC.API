@@ -47,7 +47,12 @@ override.tf.json
 *_override.tf
 *_override.tf.json
 
+# Publish output
+publish/
+
 # Logs
 logs/
 *.log
 appservice-logs/
+webapp-logs/
+webapp-logs.zip

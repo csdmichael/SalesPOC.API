@@ -59,6 +59,53 @@ az role assignment create --assignee-object-id "$PRINCIPAL_ID" --role "Azure AI 
 # 5. Assign the "Cognitive Services OpenAI User" role 
 az role assignment create --assignee-object-id "$PRINCIPAL_ID" --role "Cognitive Services OpenAI User" --scope "$SCOPE" --assignee-principal-type "ServicePrincipal"
 
+### Assign Azure Blob Storage roles to the Managed Identity
+
+Key-based authentication is disabled on the storage account. The API uses `DefaultAzureCredential` with `ServiceUri` instead of a connection string.
+
+```bash
+# Assign "Storage Blob Data Reader" to the App Service managed identity
+az role assignment create \
+  --assignee-object-id "$PRINCIPAL_ID" \
+  --role "Storage Blob Data Reader" \
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Storage/storageAccounts/aistoragemyaacoub" \
+  --assignee-principal-type "ServicePrincipal"
+```
+
+### Assign Azure Cosmos DB roles to the Managed Identity
+
+Local (key-based) authentication is disabled on the Cosmos DB account. The API uses `DefaultAzureCredential` with `AccountEndpoint` instead of a connection string.
+
+```bash
+# Assign "Cosmos DB Built-in Data Reader" (includes readMetadata, container read, and item read)
+az cosmosdb sql role assignment create \
+  --account-name cosmos-ai-poc \
+  --resource-group "$RESOURCE_GROUP" \
+  --role-definition-id "00000000-0000-0000-0000-000000000002" \
+  --principal-id "$PRINCIPAL_ID" \
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.DocumentDB/databaseAccounts/cosmos-ai-poc"
+```
+
+### Enable public network access (if needed for local development)
+
+Both the storage account and Cosmos DB account may have public network access disabled by default. To test locally:
+
+```bash
+# Enable public network access on the storage account
+az storage account update \
+  --name aistoragemyaacoub \
+  --resource-group "$RESOURCE_GROUP" \
+  --public-network-access Enabled
+
+# Enable public network access on Cosmos DB
+az cosmosdb update \
+  --name cosmos-ai-poc \
+  --resource-group "$RESOURCE_GROUP" \
+  --public-network-access ENABLED
+```
+
+> **Note:** The Cosmos DB client is configured with `ConnectionMode.Gateway` to avoid direct-mode IP firewall issues. Re-disable public access after testing locally if required by policy.
+
 ## Technology Stack
 
 - **Framework**: ASP.NET Core 10.0
@@ -108,6 +155,8 @@ SalesPOC.API/
 │   ├── CustomersController.cs # Customer CRUD operations
 │   ├── DealStrategyController.cs # Deal strategy analytics and action tools
 │   ├── OrderItemsController.cs # Order items management
+│   ├── ProductDescriptionsController.cs # Cosmos DB product descriptions
+│   ├── ProductDocumentsController.cs # Blob Storage product documents
 │   ├── ProductsController.cs  # Product catalog management
 │   ├── SalesFactsController.cs # Sales analytics (read-only view)
 │   ├── SalesOrdersController.cs # Sales order management
@@ -116,11 +165,18 @@ SalesPOC.API/
 ├── Models/                    # Data Models
 │   ├── Customer.cs           # Customer entity
 │   ├── OrderItem.cs          # Order line item entity
+│   ├── PagedResponse.cs      # Paged response wrapper
 │   ├── Product.cs            # Product entity
+│   ├── ProductDescription.cs # Cosmos DB product description entity
+│   ├── ProductDocument.cs    # Blob Storage product document entity
 │   ├── SalesDbContext.cs     # EF Core database context
 │   ├── SalesOrder.cs         # Sales order entity
 │   ├── SalesRep.cs           # Sales representative entity
 │   └── VwSalesFact.cs        # Sales fact view entity (analytics)
+│
+├── Services/                  # Service Layer
+│   ├── BlobStorageService.cs  # Azure Blob Storage document operations
+│   └── CosmosDbService.cs     # Azure Cosmos DB product description operations
 │
 ├── Properties/                # Application properties
 │   └── launchSettings.json   # Development launch settings
@@ -291,7 +347,16 @@ The OpenAPI specification is also available at:
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=...;Database=...;User Id=...;Password=...;"
+    "DefaultConnection": "Server=...;Database=...;Encrypt=True;Authentication=Active Directory Default;"
+  },
+  "AzureBlobStorage": {
+    "ServiceUri": "https://<storage-account>.blob.core.windows.net",
+    "ContainerName": "<blob-container-name>"
+  },
+  "CosmosDb": {
+    "AccountEndpoint": "https://<cosmos-account>.documents.azure.com:443/",
+    "DatabaseName": "<database-name>",
+    "ContainerName": "<container-name>"
   },
   "AzureAgent": {
     "Endpoint": "https://your-ai-project.services.ai.azure.com/api/projects/...",
