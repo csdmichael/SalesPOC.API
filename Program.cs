@@ -78,7 +78,10 @@ var cosmosContainerName = builder.Configuration["CosmosDb:ContainerName"]
     ?? throw new InvalidOperationException("CosmosDb:ContainerName is not configured.");
 
 builder.Services.AddSingleton(_ =>
-    new CosmosClient(cosmosAccountEndpoint, credential));
+    new CosmosClient(cosmosAccountEndpoint, credential, new CosmosClientOptions
+    {
+        ConnectionMode = ConnectionMode.Gateway
+    }));
 builder.Services.AddSingleton(sp =>
     new CosmosDbService(sp.GetRequiredService<CosmosClient>(), cosmosDatabaseName, cosmosContainerName));
 
