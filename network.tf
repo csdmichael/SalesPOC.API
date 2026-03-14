@@ -240,16 +240,6 @@ resource "azurerm_private_endpoint" "blob" {
 }
 
 # =============================================================================
-# App Service VNet Integration
-# =============================================================================
-
-# VNet integration for App Service (outbound traffic goes through VNet)
-resource "azurerm_app_service_virtual_network_swift_connection" "main" {
-  app_service_id = azurerm_linux_web_app.main.id
-  subnet_id      = azurerm_subnet.app_service.id
-}
-
-# =============================================================================
 # Outputs
 # =============================================================================
 
