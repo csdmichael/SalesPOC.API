@@ -430,25 +430,31 @@ The API is configured to accept requests from Angular frontend running on `http:
 
 ## Private Network & Endpoint Configuration
 
-Azure SQL Server has **public network access disabled** by policy. All database traffic flows through a private endpoint inside a Virtual Network.
+All data sources — Azure SQL Server, Cosmos DB, and Blob Storage — have **public network access disabled**. All traffic flows through private endpoints inside a shared Virtual Network. The networking resources are defined in `network.tf` and deployed as a separate GitHub Actions job (`deploy-networking`).
 
 ### Network Architecture
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│  VNet: vnet-salespoc-api (10.0.0.0/16)                   │
-│                                                          │
-│  ┌─────────────────────────┐  ┌────────────────────────┐ │
-│  │ snet-appservice         │  │ snet-private-endpoints │ │
-│  │ 10.0.1.0/24             │  │ 10.0.2.0/24            │ │
-│  │                         │  │                        │ │
-│  │ App Service ◄── VNet ──►│  │ Private Endpoint ──────┼─┼──► Azure SQL
-│  │ Integration             │  │ pe-sql-salespoc        │ │    ai-db-poc
-│  └─────────────────────────┘  └────────────────────────┘ │
-│                                                          │
-│  Private DNS Zone: privatelink.database.windows.net      │
-│  VNet Link: vnetlink-sql                                 │
-└──────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│  VNet: vnet-salespoc-api (10.0.0.0/16)                               │
+│                                                                      │
+│  ┌───────────────────────┐  ┌──────────────────────────────────────┐ │
+│  │ snet-appservice        │  │ snet-private-endpoints              │ │
+│  │ 10.0.1.0/24            │  │ 10.0.2.0/24                        │ │
+│  │                        │  │                                    │ │
+│  │ App Service ◄── VNet   │  │ pe-sql-salespoc    ────────────────┼─┼──► Azure SQL
+│  │ Integration            │  │                                    │ │    ai-db-poc
+│  │                        │  │ pe-cosmos-salespoc  ───────────────┼─┼──► Cosmos DB
+│  │                        │  │                                    │ │    cosmos-ai-poc
+│  │                        │  │ pe-blob-salespoc    ───────────────┼─┼──► Blob Storage
+│  │                        │  │                                    │ │    aistoragemyaacoub
+│  └───────────────────────┘  └──────────────────────────────────────┘ │
+│                                                                      │
+│  Private DNS Zones:                                                  │
+│    privatelink.database.windows.net   (vnetlink-sql)                 │
+│    privatelink.documents.azure.com    (vnetlink-cosmos)              │
+│    privatelink.blob.core.windows.net  (vnetlink-blob)                │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Resources (defined in `network.tf`)
@@ -457,21 +463,77 @@ Azure SQL Server has **public network access disabled** by policy. All database 
 |----------|------|---------|
 | Virtual Network | `vnet-salespoc-api` | Isolated network (10.0.0.0/16) |
 | Subnet | `snet-appservice` (10.0.1.0/24) | App Service VNet integration (delegated to `Microsoft.Web/serverFarms`) |
-| Subnet | `snet-private-endpoints` (10.0.2.0/24) | Hosts the SQL private endpoint |
+| Subnet | `snet-private-endpoints` (10.0.2.0/24) | Hosts all private endpoints |
 | Private DNS Zone | `privatelink.database.windows.net` | Resolves SQL FQDN to private IP |
-| DNS Zone VNet Link | `vnetlink-sql` | Links the DNS zone to the VNet |
+| Private DNS Zone | `privatelink.documents.azure.com` | Resolves Cosmos DB FQDN to private IP |
+| Private DNS Zone | `privatelink.blob.core.windows.net` | Resolves Blob Storage FQDN to private IP |
+| DNS Zone VNet Link | `vnetlink-sql` | Links SQL DNS zone to the VNet |
+| DNS Zone VNet Link | `vnetlink-cosmos` | Links Cosmos DB DNS zone to the VNet |
+| DNS Zone VNet Link | `vnetlink-blob` | Links Blob Storage DNS zone to the VNet |
 | Private Endpoint | `pe-sql-salespoc` | Private connection to Azure SQL Server (`sqlServer` sub-resource) |
+| Private Endpoint | `pe-cosmos-salespoc` | Private connection to Cosmos DB (`Sql` sub-resource) |
+| Private Endpoint | `pe-blob-salespoc` | Private connection to Blob Storage (`blob` sub-resource) |
 | VNet Integration | Swift connection | Routes App Service outbound traffic through the VNet |
 
 ### Key Settings
 
 - **SQL Server**: `public_network_access_enabled = false`
-- **Private Endpoint**: Auto-approved, DNS auto-registered via zone group `dns-zone-group-sql`
-- **App Service**: Outbound traffic routed through `snet-appservice` subnet
+- **Cosmos DB**: Public network access disabled; private endpoint via `pe-cosmos-salespoc`
+- **Blob Storage**: Public network access disabled; private endpoint via `pe-blob-salespoc`
+- **App Service**: `WEBSITE_VNET_ROUTE_ALL = 1` — all outbound traffic routed through VNet
+- **Private Endpoints**: Auto-approved, DNS auto-registered via zone groups
+
+### CI/CD Pipeline
+
+The GitHub Actions workflow (`main_salespoc-api.yml`) has three jobs:
+
+1. **build** — Compiles and publishes the .NET app
+2. **deploy-networking** — Runs `terraform plan` and `terraform apply` targeting only the `network.tf` resources (VNet, subnets, private endpoints, DNS zones)
+3. **deploy** — Deploys the application to Azure App Service (depends on both `build` and `deploy-networking`)
+
+### RBAC Pre-requisites
+
+Before deploying, the GitHub Actions service principal (or whoever runs Terraform) needs these Azure permissions:
+
+| Action | Required Role | Scope |
+|--------|--------------|-------|
+| Create/manage VNet, subnets, private endpoints | **Network Contributor** | Resource group `rg-salespoc-api` |
+| Create private endpoint to Cosmos DB | **Network Contributor** | Resource group `ai-myaacoub` (for cross-RG private link approval) |
+| Create private endpoint to Storage Account | **Network Contributor** | Resource group `ai-myaacoub` (for cross-RG private link approval) |
+| Read Cosmos DB / Storage Account resource IDs | **Reader** | Resource group `ai-myaacoub` |
+
+Grant roles to the service principal used by GitHub Actions (replace `<SP_OBJECT_ID>` with the Github App OIDC service principal object ID):
+
+```bash
+SUBSCRIPTION_ID="86b37969-9445-49cf-b03f-d8866235171c"
+
+# Network Contributor on the API resource group (VNet, subnets, endpoints, DNS)
+az role assignment create \
+  --assignee-object-id "<SP_OBJECT_ID>" \
+  --role "Network Contributor" \
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/rg-salespoc-api" \
+  --assignee-principal-type "ServicePrincipal"
+
+# Reader on ai-myaacoub RG (so Terraform can look up Cosmos DB and Storage Account IDs)
+az role assignment create \
+  --assignee-object-id "<SP_OBJECT_ID>" \
+  --role "Reader" \
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/ai-myaacoub" \
+  --assignee-principal-type "ServicePrincipal"
+
+# Network Contributor on ai-myaacoub RG (to auto-approve private endpoint connections)
+az role assignment create \
+  --assignee-object-id "<SP_OBJECT_ID>" \
+  --role "Network Contributor" \
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/ai-myaacoub" \
+  --assignee-principal-type "ServicePrincipal"
+```
+
+> **Tip:** If using OIDC federated credentials, the service principal already has `id-token: write` in the workflow. The roles above are additive Azure RBAC assignments.
 
 ### Local Development Note
 
-The private endpoint is only reachable from within the VNet. To connect from a local dev machine you must either:
+The private endpoints are only reachable from within the VNet. To connect from a local dev machine you must either:
 1. Temporarily enable public access and add a firewall rule for your IP
 2. Use an Azure VPN Gateway or Point-to-Site VPN into the VNet
 
@@ -485,8 +547,21 @@ policy.WithOrigins("http://localhost:4200")
 ## Deployment
 
 Terraform configuration is included for Azure deployment:
-- `main.tf`: Infrastructure as Code definition
+- `main.tf`: Core infrastructure (App Service, SQL Server, App Insights)
+- `network.tf`: Private VNet, subnets, private endpoints for SQL/Cosmos DB/Blob Storage, DNS zones
 - `terraform.tfvars.example`: Template for deployment variables
+
+### GitHub Actions Workflow
+
+The CI/CD pipeline (`.github/workflows/main_salespoc-api.yml`) runs three jobs:
+
+| Job | Runner | Purpose |
+|-----|--------|---------|
+| `build` | `windows-latest` | Build & publish .NET 10 app |
+| `deploy-networking` | `ubuntu-latest` | Terraform apply for VNet + private endpoints |
+| `deploy` | `windows-latest` | Deploy app to Azure App Service |
+
+`deploy-networking` and `deploy` both depend on `build`; `deploy` also waits for `deploy-networking` to finish so that the private endpoints are in place before the app starts.
 
 ## License
 

@@ -14,3 +14,11 @@ sql_admin_password    = "YourSecurePassword123!"  # Change this to a secure pass
 azure_agent_endpoint  = "https://your-ai-service.services.ai.azure.com/api/projects/your-project"
 azure_agent_tenant_id = "your-tenant-id-here"
 azure_agent_name      = "arrow-sales-agent"
+
+# Private networking — existing resources in ai-myaacoub RG
+network_resource_group_name = "ai-myaacoub"
+cosmos_db_account_name      = "cosmos-ai-poc"
+storage_account_name        = "aistoragemyaacoub"
+blob_container_name         = "semiconductor-product-documents"
+cosmos_database_name        = "sales"
+cosmos_container_name       = "products"

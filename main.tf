@@ -81,6 +81,24 @@ variable "azure_agent_name" {
   default     = "arrow-sales-agent"
 }
 
+variable "blob_container_name" {
+  description = "Name of the Blob Storage container"
+  type        = string
+  default     = "semiconductor-product-documents"
+}
+
+variable "cosmos_database_name" {
+  description = "Name of the Cosmos DB database"
+  type        = string
+  default     = "sales"
+}
+
+variable "cosmos_container_name" {
+  description = "Name of the Cosmos DB container"
+  type        = string
+  default     = "products"
+}
+
 # Resource Group
 resource "azurerm_resource_group" "main" {
   name     = var.resource_group_name
@@ -129,10 +147,16 @@ resource "azurerm_linux_web_app" "main" {
   app_settings = {
     "ASPNETCORE_ENVIRONMENT"                    = "Production"
     "WEBSITE_RUN_FROM_PACKAGE"                  = "1"
+    "WEBSITE_VNET_ROUTE_ALL"                    = "1"
     "ApplicationInsights__ConnectionString"     = azurerm_application_insights.main.connection_string
     "AzureAgent__Endpoint"                      = var.azure_agent_endpoint
     "AzureAgent__TenantId"                      = var.azure_agent_tenant_id
     "AzureAgent__AgentName"                     = var.azure_agent_name
+    "AzureBlobStorage__ServiceUri"              = "https://${var.storage_account_name}.blob.core.windows.net"
+    "AzureBlobStorage__ContainerName"           = var.blob_container_name
+    "CosmosDb__AccountEndpoint"                 = "https://${var.cosmos_db_account_name}.documents.azure.com:443/"
+    "CosmosDb__DatabaseName"                    = var.cosmos_database_name
+    "CosmosDb__ContainerName"                   = var.cosmos_container_name
   }
 
   connection_string {
