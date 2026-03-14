@@ -113,7 +113,7 @@ az cosmosdb update \
 - **AI Integration**: Azure AI Projects SDK
 - **Authentication**: Azure DefaultAzureCredential
 - **API Documentation**: OpenAPI 3.0 with Swagger UI
-- **Infrastructure**: Terraform support for Azure deployment
+- **Infrastructure**: Terraform with Azure Storage remote backend for idempotent deployments
 
 ## Architecture
 
@@ -186,11 +186,11 @@ SalesPOC.API/
 ├── Program.cs                # Application entry point and configuration
 ├── SalesAPI.csproj           # Project file
 ├── appsettings.json          # Configuration settings
-├── main.tf                   # Terraform infrastructure definition (core resources)
+├── main.tf                   # Terraform infrastructure definition (core resources, azurerm remote backend)
 ├── network.tf                # Pointer — networking moved to infra/network/
 ├── infra/
 │   └── network/
-│       └── main.tf           # Private VNet, subnets, private endpoints, DNS (separate root module)
+│       └── main.tf           # Private VNet, subnets, private endpoints (separate root module, azurerm remote backend)
 ├── terraform.tfvars.example  # Terraform variables template
 ├── openapi.json              # OpenAPI specification
 ├── swagger.json              # Swagger documentation
@@ -479,6 +479,8 @@ The App Service is in `West US 2`, so the VNet and private endpoints are also in
 | DNS Zone Group | `pe-blob-westus2/default` | Links `pe-blob-westus2` → `privatelink.blob.core.windows.net` (auto-registers A record for `aistoragemyaacoub`) |
 
 > **Note:** Private DNS zones and their VNet links are created separately (one-time CLI commands) and are not managed by Terraform. The DNS zone groups above are attached to each private endpoint so that A records are **automatically registered** in the corresponding private DNS zone. Without zone groups, the App Service cannot resolve the private endpoint FQDNs through the VNet.
+>
+> The Terraform private endpoint resources use `lifecycle { ignore_changes = [private_dns_zone_group] }` to prevent drift from DNS zone groups configured outside Terraform.
 
 ### Key Settings
 
@@ -508,6 +510,7 @@ The following roles have been granted. Re-run these commands if provisioning a n
 | **Contributor** | Resource group `ai-myaacoub` |
 | **Network Contributor** | Resource group `ai-myaacoub` |
 | **Private DNS Zone Contributor** | Resource group `ai-myaacoub` |
+| **Storage Blob Data Contributor** | Storage account `tfstatesalespoc` (Terraform remote state) |
 | **Website Contributor** | `SalesPOC-API` App Service |
 
 ```bash
@@ -530,6 +533,13 @@ az role assignment create \
   --assignee-object-id "$SP_OBJECT_ID" \
   --role "Private DNS Zone Contributor" \
   --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/ai-myaacoub" \
+  --assignee-principal-type "ServicePrincipal"
+
+# Storage Blob Data Contributor on tfstate storage account (for Terraform remote state)
+az role assignment create \
+  --assignee-object-id "$SP_OBJECT_ID" \
+  --role "Storage Blob Data Contributor" \
+  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/ai-myaacoub/providers/Microsoft.Storage/storageAccounts/tfstatesalespoc" \
   --assignee-principal-type "ServicePrincipal"
 ```
 
@@ -584,8 +594,31 @@ policy.WithOrigins("http://localhost:4200")
 
 Terraform configuration is included for Azure deployment:
 - `main.tf`: Core infrastructure (App Service, SQL Server, App Insights)
-- `infra/network/main.tf`: Private VNet, subnets, private endpoints for SQL/Cosmos DB/Blob Storage, DNS zones (separate Terraform root module)
+- `infra/network/main.tf`: Private VNet, subnets, private endpoints for SQL/Cosmos DB/Blob Storage (separate Terraform root module)
 - `terraform.tfvars.example`: Template for deployment variables
+
+### Terraform Remote State
+
+Both Terraform root modules use an **Azure Storage remote backend** to persist state between runs, making deployments idempotent. State is stored in the dedicated storage account `tfstatesalespoc`:
+
+| Root Module | State Key | Purpose |
+|---|---|---|
+| `main.tf` | `app.terraform.tfstate` | App Service, SQL Server, App Insights |
+| `infra/network/main.tf` | `network.terraform.tfstate` | VNet, subnets, private endpoints |
+
+Backend configuration (both modules):
+```hcl
+backend "azurerm" {
+  resource_group_name  = "ai-myaacoub"
+  storage_account_name = "tfstatesalespoc"
+  container_name       = "tfstate"
+  key                  = "<module>.terraform.tfstate"
+  use_oidc             = true   # OIDC auth in CI/CD
+  use_azuread_auth     = true   # Azure AD auth (shared key access is disabled)
+}
+```
+
+> **Local development**: Override OIDC when running locally by passing `-backend-config="use_oidc=false"` to `terraform init`. Azure CLI credentials will be used instead.
 
 ### GitHub Actions Workflow
 

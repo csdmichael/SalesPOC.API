@@ -11,6 +11,15 @@ terraform {
     }
   }
   required_version = ">= 1.11"
+
+  backend "azurerm" {
+    resource_group_name  = "ai-myaacoub"
+    storage_account_name = "tfstatesalespoc"
+    container_name       = "tfstate"
+    key                  = "network.terraform.tfstate"
+    use_oidc             = true
+    use_azuread_auth     = true
+  }
 }
 
 provider "azurerm" {
@@ -131,6 +140,10 @@ resource "azurerm_private_endpoint" "sql" {
     is_manual_connection           = false
   }
 
+  lifecycle {
+    ignore_changes = [private_dns_zone_group]
+  }
+
   tags = {
     environment = "production"
     application = "SalesAPI"
@@ -150,6 +163,10 @@ resource "azurerm_private_endpoint" "cosmos" {
     is_manual_connection           = false
   }
 
+  lifecycle {
+    ignore_changes = [private_dns_zone_group]
+  }
+
   tags = {
     environment = "production"
     application = "SalesAPI"
@@ -167,6 +184,10 @@ resource "azurerm_private_endpoint" "blob" {
     private_connection_resource_id = local.storage_account_id
     subresource_names              = ["blob"]
     is_manual_connection           = false
+  }
+
+  lifecycle {
+    ignore_changes = [private_dns_zone_group]
   }
 
   tags = {

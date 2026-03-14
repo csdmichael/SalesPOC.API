@@ -9,6 +9,15 @@ terraform {
     }
   }
   required_version = ">= 1.11"
+
+  backend "azurerm" {
+    resource_group_name  = "ai-myaacoub"
+    storage_account_name = "tfstatesalespoc"
+    container_name       = "tfstate"
+    key                  = "app.terraform.tfstate"
+    use_oidc             = true
+    use_azuread_auth     = true
+  }
 }
 
 provider "azurerm" {
