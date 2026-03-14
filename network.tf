@@ -4,7 +4,7 @@
 # Resources: SQL Server, Cosmos DB, Blob Storage private endpoints
 # =============================================================================
 
-# ---------- Variables for existing resources (data sources) ------------------
+# ---------- Variables for existing resources ---------------------------------
 
 variable "cosmos_db_account_name" {
   description = "Name of the existing Cosmos DB account"
@@ -19,21 +19,18 @@ variable "storage_account_name" {
 }
 
 variable "network_resource_group_name" {
-  description = "Resource group for the shared network resources"
+  description = "Resource group that contains the Cosmos DB and Storage accounts"
   type        = string
   default     = "ai-myaacoub"
 }
 
-# ---------- Data sources for existing resources ------------------------------
+# ---------- Construct resource IDs (avoids Reader role on ai-myaacoub) -------
 
-data "azurerm_cosmosdb_account" "main" {
-  name                = var.cosmos_db_account_name
-  resource_group_name = var.network_resource_group_name
-}
+data "azurerm_client_config" "current" {}
 
-data "azurerm_storage_account" "main" {
-  name                = var.storage_account_name
-  resource_group_name = var.network_resource_group_name
+locals {
+  cosmos_account_id  = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.network_resource_group_name}/providers/Microsoft.DocumentDB/databaseAccounts/${var.cosmos_db_account_name}"
+  storage_account_id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.network_resource_group_name}/providers/Microsoft.Storage/storageAccounts/${var.storage_account_name}"
 }
 
 # =============================================================================
@@ -198,7 +195,7 @@ resource "azurerm_private_endpoint" "cosmos" {
 
   private_service_connection {
     name                           = "psc-cosmos-salespoc"
-    private_connection_resource_id = data.azurerm_cosmosdb_account.main.id
+    private_connection_resource_id = local.cosmos_account_id
     subresource_names              = ["Sql"]
     is_manual_connection           = false
   }
@@ -223,7 +220,7 @@ resource "azurerm_private_endpoint" "blob" {
 
   private_service_connection {
     name                           = "psc-blob-salespoc"
-    private_connection_resource_id = data.azurerm_storage_account.main.id
+    private_connection_resource_id = local.storage_account_id
     subresource_names              = ["blob"]
     is_manual_connection           = false
   }
