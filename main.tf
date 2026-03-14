@@ -217,7 +217,7 @@ resource "azurerm_mssql_server" "main" {
   version                           = "12.0"
   administrator_login               = var.sql_admin_login
   administrator_login_password_wo   = var.sql_admin_password
-  administrator_login_password_wo_version = 1
+  administrator_login_password_wo_version = var.sql_admin_password != null ? 1 : null
   minimum_tls_version               = "1.2"
   public_network_access_enabled     = false
 
