@@ -58,6 +58,11 @@ variable "network_resource_group_name" {
   default     = "ai-myaacoub"
 }
 
+variable "github_actions_sp_object_id" {
+  description = "Object ID of the GitHub Actions OIDC service principal. Used to grant Network Contributor so Terraform can manage VNet resources. Must be pre-assigned by an Owner/User-Access-Administrator — this resource manages the assignment idempotently after the first bootstrap. Pass via TF_VAR_github_actions_sp_object_id or a tfvars file."
+  type        = string
+}
+
 # =============================================================================
 # Data sources & locals
 # =============================================================================
@@ -177,6 +182,32 @@ resource "azurerm_private_endpoint" "blob" {
     environment = "production"
     application = "SalesAPI"
   }
+}
+
+# =============================================================================
+# RBAC: GitHub Actions service principal — Network Contributor
+#
+# The service principal that runs this Terraform module needs
+# Microsoft.Network/* (Network Contributor) on both resource groups so it can
+# create/read the VNet, subnets, and private endpoints.
+#
+# BOOTSTRAP NOTE: azurerm_role_assignment requires
+# Microsoft.Authorization/roleAssignments/write (Owner or User Access
+# Administrator). On the very first run, an admin must grant these assignments
+# manually (or run terraform apply with Owner-level credentials) before the
+# GitHub Actions service principal can apply the rest of this module.
+# =============================================================================
+
+resource "azurerm_role_assignment" "github_actions_network_contributor_api_rg" {
+  scope                = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}"
+  role_definition_name = "Network Contributor"
+  principal_id         = var.github_actions_sp_object_id
+}
+
+resource "azurerm_role_assignment" "github_actions_network_contributor_shared_rg" {
+  scope                = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.network_resource_group_name}"
+  role_definition_name = "Network Contributor"
+  principal_id         = var.github_actions_sp_object_id
 }
 
 # =============================================================================

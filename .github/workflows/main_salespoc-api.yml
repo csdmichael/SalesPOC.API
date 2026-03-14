@@ -69,6 +69,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZUREAPPSERVICE_TENANTID_D4FC4F94681D43C8AB58C91AA83E7CBC }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_11B676DD4E9E44A1B73D9FB026565040 }}
           ARM_USE_OIDC: true
+          TF_VAR_github_actions_sp_object_id: ${{ secrets.AZUREAPPSERVICE_SP_OBJECT_ID }}
 
       - name: Terraform Apply (networking)
         working-directory: infra/network
@@ -78,6 +79,7 @@ jobs:
           ARM_TENANT_ID: ${{ secrets.AZUREAPPSERVICE_TENANTID_D4FC4F94681D43C8AB58C91AA83E7CBC }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_11B676DD4E9E44A1B73D9FB026565040 }}
           ARM_USE_OIDC: true
+          TF_VAR_github_actions_sp_object_id: ${{ secrets.AZUREAPPSERVICE_SP_OBJECT_ID }}
 
   deploy:
     runs-on: windows-latest

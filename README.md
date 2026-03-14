@@ -506,25 +506,30 @@ Before deploying, the GitHub Actions service principal (or whoever runs Terrafor
 
 > Resource IDs for Cosmos DB and Storage are constructed from variable names, so **Reader** on `ai-myaacoub` is **not** required.
 
-Grant roles to the service principal used by GitHub Actions (replace `<SP_OBJECT_ID>` with the Github App OIDC service principal object ID):
+These role assignments are now managed as Terraform resources in `infra/network/main.tf` (`azurerm_role_assignment.github_actions_network_contributor_api_rg` and `azurerm_role_assignment.github_actions_network_contributor_shared_rg`). The service principal object ID is supplied at runtime via the `AZUREAPPSERVICE_SP_OBJECT_ID` GitHub Actions secret, which is passed as the `TF_VAR_github_actions_sp_object_id` environment variable in the workflow.
+
+> **Bootstrap requirement:** `azurerm_role_assignment` requires `Microsoft.Authorization/roleAssignments/write` (Owner or User Access Administrator). On the **very first deployment**, an administrator must run the commands below (or run `terraform apply` with Owner-level credentials) before the GitHub Actions pipeline can succeed. After the bootstrap, Terraform manages these assignments idempotently.
 
 ```bash
 SUBSCRIPTION_ID="86b37969-9445-49cf-b03f-d8866235171c"
+SP_OBJECT_ID="<GitHub Actions OIDC service principal object ID>"
 
 # Network Contributor on the API resource group (VNet, subnets, endpoints, DNS)
 az role assignment create \
-  --assignee-object-id "<SP_OBJECT_ID>" \
+  --assignee-object-id "$SP_OBJECT_ID" \
   --role "Network Contributor" \
   --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/rg-salespoc-api" \
   --assignee-principal-type "ServicePrincipal"
 
 # Network Contributor on ai-myaacoub RG (to auto-approve private endpoint connections)
 az role assignment create \
-  --assignee-object-id "<SP_OBJECT_ID>" \
+  --assignee-object-id "$SP_OBJECT_ID" \
   --role "Network Contributor" \
   --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/ai-myaacoub" \
   --assignee-principal-type "ServicePrincipal"
 ```
+
+> **GitHub Secret:** Add the service principal's object ID as the `AZUREAPPSERVICE_SP_OBJECT_ID` secret in your repository settings. The workflow passes it to Terraform via `TF_VAR_github_actions_sp_object_id`.
 
 > **Tip:** If using OIDC federated credentials, the service principal already has `id-token: write` in the workflow. The roles above are additive Azure RBAC assignments.
 
