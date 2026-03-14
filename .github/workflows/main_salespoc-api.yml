@@ -76,9 +76,6 @@ jobs:
             -target=azurerm_private_endpoint.cosmos \
             -target=azurerm_private_endpoint.blob \
             -target=azurerm_app_service_virtual_network_swift_connection.main \
-            -var="sql_admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}" \
-            -var="azure_agent_endpoint=${{ secrets.AZURE_AGENT_ENDPOINT }}" \
-            -var="azure_agent_tenant_id=${{ secrets.AZURE_AGENT_TENANT_ID }}" \
             -out=tfplan-network
         env:
           ARM_CLIENT_ID: ${{ secrets.AZUREAPPSERVICE_CLIENTID_1E160D2C298B4D89B6CD7A00C35E69D1 }}

@@ -62,17 +62,20 @@ variable "sql_admin_login" {
 variable "sql_admin_password" {
   description = "SQL Server admin password"
   type        = string
+  default     = null
   sensitive   = true
 }
 
 variable "azure_agent_endpoint" {
   description = "Azure AI Foundry project endpoint URL"
   type        = string
+  default     = null
 }
 
 variable "azure_agent_tenant_id" {
   description = "Azure AD tenant ID for the AI agent"
   type        = string
+  default     = null
 }
 
 variable "azure_agent_name" {
