@@ -64,10 +64,6 @@ variable "network_resource_group_name" {
 
 data "azurerm_client_config" "current" {}
 
-data "azurerm_resource_group" "main" {
-  name = var.resource_group_name
-}
-
 locals {
   sql_server_id      = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Sql/servers/${var.sql_server_name}"
   cosmos_account_id  = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.network_resource_group_name}/providers/Microsoft.DocumentDB/databaseAccounts/${var.cosmos_db_account_name}"
@@ -80,8 +76,8 @@ locals {
 
 resource "azurerm_virtual_network" "main" {
   name                = "vnet-salespoc-api"
-  resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
+  resource_group_name = var.resource_group_name
+  location            = var.location
   address_space       = ["10.0.0.0/16"]
 
   tags = {
@@ -96,7 +92,7 @@ resource "azurerm_virtual_network" "main" {
 
 resource "azurerm_subnet" "app_service" {
   name                 = "snet-appservice"
-  resource_group_name  = data.azurerm_resource_group.main.name
+  resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = ["10.0.1.0/24"]
 
@@ -111,7 +107,7 @@ resource "azurerm_subnet" "app_service" {
 
 resource "azurerm_subnet" "private_endpoints" {
   name                 = "snet-private-endpoints"
-  resource_group_name  = data.azurerm_resource_group.main.name
+  resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = ["10.0.2.0/24"]
 }
@@ -122,7 +118,7 @@ resource "azurerm_subnet" "private_endpoints" {
 
 resource "azurerm_private_dns_zone" "sql" {
   name                = "privatelink.database.windows.net"
-  resource_group_name = data.azurerm_resource_group.main.name
+  resource_group_name = var.resource_group_name
 
   tags = {
     environment = "production"
@@ -132,7 +128,7 @@ resource "azurerm_private_dns_zone" "sql" {
 
 resource "azurerm_private_dns_zone" "cosmos" {
   name                = "privatelink.documents.azure.com"
-  resource_group_name = data.azurerm_resource_group.main.name
+  resource_group_name = var.resource_group_name
 
   tags = {
     environment = "production"
@@ -142,7 +138,7 @@ resource "azurerm_private_dns_zone" "cosmos" {
 
 resource "azurerm_private_dns_zone" "blob" {
   name                = "privatelink.blob.core.windows.net"
-  resource_group_name = data.azurerm_resource_group.main.name
+  resource_group_name = var.resource_group_name
 
   tags = {
     environment = "production"
@@ -156,7 +152,7 @@ resource "azurerm_private_dns_zone" "blob" {
 
 resource "azurerm_private_dns_zone_virtual_network_link" "sql" {
   name                  = "vnetlink-sql"
-  resource_group_name   = data.azurerm_resource_group.main.name
+  resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.sql.name
   virtual_network_id    = azurerm_virtual_network.main.id
   registration_enabled  = false
@@ -169,7 +165,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "sql" {
 
 resource "azurerm_private_dns_zone_virtual_network_link" "cosmos" {
   name                  = "vnetlink-cosmos"
-  resource_group_name   = data.azurerm_resource_group.main.name
+  resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.cosmos.name
   virtual_network_id    = azurerm_virtual_network.main.id
   registration_enabled  = false
@@ -182,7 +178,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "cosmos" {
 
 resource "azurerm_private_dns_zone_virtual_network_link" "blob" {
   name                  = "vnetlink-blob"
-  resource_group_name   = data.azurerm_resource_group.main.name
+  resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.blob.name
   virtual_network_id    = azurerm_virtual_network.main.id
   registration_enabled  = false
@@ -199,8 +195,8 @@ resource "azurerm_private_dns_zone_virtual_network_link" "blob" {
 
 resource "azurerm_private_endpoint" "sql" {
   name                = "pe-sql-salespoc"
-  resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
+  resource_group_name = var.resource_group_name
+  location            = var.location
   subnet_id           = azurerm_subnet.private_endpoints.id
 
   private_service_connection {
@@ -223,8 +219,8 @@ resource "azurerm_private_endpoint" "sql" {
 
 resource "azurerm_private_endpoint" "cosmos" {
   name                = "pe-cosmos-salespoc"
-  resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
+  resource_group_name = var.resource_group_name
+  location            = var.location
   subnet_id           = azurerm_subnet.private_endpoints.id
 
   private_service_connection {
@@ -247,8 +243,8 @@ resource "azurerm_private_endpoint" "cosmos" {
 
 resource "azurerm_private_endpoint" "blob" {
   name                = "pe-blob-salespoc"
-  resource_group_name = data.azurerm_resource_group.main.name
-  location            = data.azurerm_resource_group.main.location
+  resource_group_name = var.resource_group_name
+  location            = var.location
   subnet_id           = azurerm_subnet.private_endpoints.id
 
   private_service_connection {
