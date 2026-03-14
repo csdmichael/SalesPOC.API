@@ -60,6 +60,41 @@ variable "storage_account_name" {
 
 data "azurerm_client_config" "current" {}
 
+# =============================================================================
+# Import blocks — adopt CLI-created resources into Terraform state.
+# Remove these blocks after the first successful `terraform apply`.
+# =============================================================================
+
+import {
+  to = azurerm_virtual_network.main
+  id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Network/virtualNetworks/vnet-salespoc-westus2"
+}
+
+import {
+  to = azurerm_subnet.app_service
+  id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Network/virtualNetworks/vnet-salespoc-westus2/subnets/snet-appservice"
+}
+
+import {
+  to = azurerm_subnet.private_endpoints
+  id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Network/virtualNetworks/vnet-salespoc-westus2/subnets/snet-private-endpoints"
+}
+
+import {
+  to = azurerm_private_endpoint.sql
+  id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Network/privateEndpoints/pe-sql-westus2"
+}
+
+import {
+  to = azurerm_private_endpoint.cosmos
+  id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Network/privateEndpoints/pe-cosmos-westus2"
+}
+
+import {
+  to = azurerm_private_endpoint.blob
+  id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Network/privateEndpoints/pe-blob-westus2"
+}
+
 locals {
   sql_server_id      = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Sql/servers/${var.sql_server_name}"
   cosmos_account_id  = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.DocumentDB/databaseAccounts/${var.cosmos_db_account_name}"
