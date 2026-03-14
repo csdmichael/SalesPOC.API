@@ -113,84 +113,13 @@ resource "azurerm_subnet" "private_endpoints" {
 }
 
 # =============================================================================
-# Private DNS Zones
-# =============================================================================
-
-resource "azurerm_private_dns_zone" "sql" {
-  name                = "privatelink.database.windows.net"
-  resource_group_name = var.resource_group_name
-
-  tags = {
-    environment = "production"
-    application = "SalesAPI"
-  }
-}
-
-resource "azurerm_private_dns_zone" "cosmos" {
-  name                = "privatelink.documents.azure.com"
-  resource_group_name = var.resource_group_name
-
-  tags = {
-    environment = "production"
-    application = "SalesAPI"
-  }
-}
-
-resource "azurerm_private_dns_zone" "blob" {
-  name                = "privatelink.blob.core.windows.net"
-  resource_group_name = var.resource_group_name
-
-  tags = {
-    environment = "production"
-    application = "SalesAPI"
-  }
-}
-
-# =============================================================================
-# Private DNS Zone VNet Links
-# =============================================================================
-
-resource "azurerm_private_dns_zone_virtual_network_link" "sql" {
-  name                  = "vnetlink-sql"
-  resource_group_name   = var.resource_group_name
-  private_dns_zone_name = azurerm_private_dns_zone.sql.name
-  virtual_network_id    = azurerm_virtual_network.main.id
-  registration_enabled  = false
-
-  tags = {
-    environment = "production"
-    application = "SalesAPI"
-  }
-}
-
-resource "azurerm_private_dns_zone_virtual_network_link" "cosmos" {
-  name                  = "vnetlink-cosmos"
-  resource_group_name   = var.resource_group_name
-  private_dns_zone_name = azurerm_private_dns_zone.cosmos.name
-  virtual_network_id    = azurerm_virtual_network.main.id
-  registration_enabled  = false
-
-  tags = {
-    environment = "production"
-    application = "SalesAPI"
-  }
-}
-
-resource "azurerm_private_dns_zone_virtual_network_link" "blob" {
-  name                  = "vnetlink-blob"
-  resource_group_name   = var.resource_group_name
-  private_dns_zone_name = azurerm_private_dns_zone.blob.name
-  virtual_network_id    = azurerm_virtual_network.main.id
-  registration_enabled  = false
-
-  tags = {
-    environment = "production"
-    application = "SalesAPI"
-  }
-}
-
-# =============================================================================
 # Private Endpoints
+# NOTE: Private DNS zones and VNet links are not managed by this module because
+# the deployment service principal lacks Microsoft.Network/privateDnsZones/read
+# permission. Private DNS zones (privatelink.database.windows.net,
+# privatelink.documents.azure.com, privatelink.blob.core.windows.net) and their
+# VNet links must be configured separately by a principal with the required
+# Network permissions to enable automatic DNS resolution for these endpoints.
 # =============================================================================
 
 resource "azurerm_private_endpoint" "sql" {
@@ -204,11 +133,6 @@ resource "azurerm_private_endpoint" "sql" {
     private_connection_resource_id = local.sql_server_id
     subresource_names              = ["sqlServer"]
     is_manual_connection           = false
-  }
-
-  private_dns_zone_group {
-    name                 = "dns-zone-group-sql"
-    private_dns_zone_ids = [azurerm_private_dns_zone.sql.id]
   }
 
   tags = {
@@ -230,11 +154,6 @@ resource "azurerm_private_endpoint" "cosmos" {
     is_manual_connection           = false
   }
 
-  private_dns_zone_group {
-    name                 = "dns-zone-group-cosmos"
-    private_dns_zone_ids = [azurerm_private_dns_zone.cosmos.id]
-  }
-
   tags = {
     environment = "production"
     application = "SalesAPI"
@@ -252,11 +171,6 @@ resource "azurerm_private_endpoint" "blob" {
     private_connection_resource_id = local.storage_account_id
     subresource_names              = ["blob"]
     is_manual_connection           = false
-  }
-
-  private_dns_zone_group {
-    name                 = "dns-zone-group-blob"
-    private_dns_zone_ids = [azurerm_private_dns_zone.blob.id]
   }
 
   tags = {
