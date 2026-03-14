@@ -187,7 +187,10 @@ SalesPOC.API/
 ├── SalesAPI.csproj           # Project file
 ├── appsettings.json          # Configuration settings
 ├── main.tf                   # Terraform infrastructure definition (core resources)
-├── network.tf                # Private VNet, subnets, private endpoint, DNS
+├── network.tf                # Pointer — networking moved to infra/network/
+├── infra/
+│   └── network/
+│       └── main.tf           # Private VNet, subnets, private endpoints, DNS (separate root module)
 ├── terraform.tfvars.example  # Terraform variables template
 ├── openapi.json              # OpenAPI specification
 ├── swagger.json              # Swagger documentation
@@ -430,7 +433,7 @@ The API is configured to accept requests from Angular frontend running on `http:
 
 ## Private Network & Endpoint Configuration
 
-All data sources — Azure SQL Server, Cosmos DB, and Blob Storage — have **public network access disabled**. All traffic flows through private endpoints inside a shared Virtual Network. The networking resources are defined in `network.tf` and deployed as a separate GitHub Actions job (`deploy-networking`).
+All data sources — Azure SQL Server, Cosmos DB, and Blob Storage — have **public network access disabled**. All traffic flows through private endpoints inside a shared Virtual Network. The networking resources are defined in `infra/network/main.tf` as a **separate Terraform root module** with its own state, deployed independently via the `deploy-networking` GitHub Actions job.
 
 ### Network Architecture
 
@@ -488,7 +491,7 @@ All data sources — Azure SQL Server, Cosmos DB, and Blob Storage — have **pu
 The GitHub Actions workflow (`main_salespoc-api.yml`) has three jobs:
 
 1. **build** — Compiles and publishes the .NET app
-2. **deploy-networking** — Runs `terraform plan` and `terraform apply` targeting only the `network.tf` resources (VNet, subnets, private endpoints, DNS zones)
+2. **deploy-networking** — Runs `terraform init/plan/apply` in `infra/network/` (VNet, subnets, private endpoints, DNS zones)
 3. **deploy** — Deploys the application to Azure App Service (depends on both `build` and `deploy-networking`)
 
 ### RBAC Pre-requisites
@@ -497,10 +500,11 @@ Before deploying, the GitHub Actions service principal (or whoever runs Terrafor
 
 | Action | Required Role | Scope |
 |--------|--------------|-------|
-| Create/manage VNet, subnets, private endpoints | **Network Contributor** | Resource group `rg-salespoc-api` |
-| Create private endpoint to Cosmos DB | **Network Contributor** | Resource group `ai-myaacoub` (for cross-RG private link approval) |
-| Create private endpoint to Storage Account | **Network Contributor** | Resource group `ai-myaacoub` (for cross-RG private link approval) |
-| Read Cosmos DB / Storage Account resource IDs | **Reader** | Resource group `ai-myaacoub` |
+| Create/manage VNet, subnets, private endpoints, DNS | **Network Contributor** | Resource group `rg-salespoc-api` |
+| Auto-approve private endpoint to Cosmos DB | **Network Contributor** | Resource group `ai-myaacoub` |
+| Auto-approve private endpoint to Storage Account | **Network Contributor** | Resource group `ai-myaacoub` |
+
+> Resource IDs for Cosmos DB and Storage are constructed from variable names, so **Reader** on `ai-myaacoub` is **not** required.
 
 Grant roles to the service principal used by GitHub Actions (replace `<SP_OBJECT_ID>` with the Github App OIDC service principal object ID):
 
@@ -512,13 +516,6 @@ az role assignment create \
   --assignee-object-id "<SP_OBJECT_ID>" \
   --role "Network Contributor" \
   --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/rg-salespoc-api" \
-  --assignee-principal-type "ServicePrincipal"
-
-# Reader on ai-myaacoub RG (so Terraform can look up Cosmos DB and Storage Account IDs)
-az role assignment create \
-  --assignee-object-id "<SP_OBJECT_ID>" \
-  --role "Reader" \
-  --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/ai-myaacoub" \
   --assignee-principal-type "ServicePrincipal"
 
 # Network Contributor on ai-myaacoub RG (to auto-approve private endpoint connections)
@@ -548,7 +545,7 @@ policy.WithOrigins("http://localhost:4200")
 
 Terraform configuration is included for Azure deployment:
 - `main.tf`: Core infrastructure (App Service, SQL Server, App Insights)
-- `network.tf`: Private VNet, subnets, private endpoints for SQL/Cosmos DB/Blob Storage, DNS zones
+- `infra/network/main.tf`: Private VNet, subnets, private endpoints for SQL/Cosmos DB/Blob Storage, DNS zones (separate Terraform root module)
 - `terraform.tfvars.example`: Template for deployment variables
 
 ### GitHub Actions Workflow
@@ -558,7 +555,7 @@ The CI/CD pipeline (`.github/workflows/main_salespoc-api.yml`) runs three jobs:
 | Job | Runner | Purpose |
 |-----|--------|---------|
 | `build` | `windows-latest` | Build & publish .NET 10 app |
-| `deploy-networking` | `ubuntu-latest` | Terraform apply for VNet + private endpoints |
+| `deploy-networking` | `ubuntu-latest` | Terraform apply `infra/network/` for VNet + private endpoints |
 | `deploy` | `windows-latest` | Deploy app to Azure App Service |
 
 `deploy-networking` and `deploy` both depend on `build`; `deploy` also waits for `deploy-networking` to finish so that the private endpoints are in place before the app starts.

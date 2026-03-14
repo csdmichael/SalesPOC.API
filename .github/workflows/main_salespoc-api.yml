@@ -58,24 +58,12 @@ jobs:
           terraform_version: '1.11.0'
 
       - name: Terraform Init
+        working-directory: infra/network
         run: terraform init
 
       - name: Terraform Plan (networking)
-        run: |
-          terraform plan \
-            -target=azurerm_virtual_network.main \
-            -target=azurerm_subnet.app_service \
-            -target=azurerm_subnet.private_endpoints \
-            -target=azurerm_private_dns_zone.sql \
-            -target=azurerm_private_dns_zone.cosmos \
-            -target=azurerm_private_dns_zone.blob \
-            -target=azurerm_private_dns_zone_virtual_network_link.sql \
-            -target=azurerm_private_dns_zone_virtual_network_link.cosmos \
-            -target=azurerm_private_dns_zone_virtual_network_link.blob \
-            -target=azurerm_private_endpoint.sql \
-            -target=azurerm_private_endpoint.cosmos \
-            -target=azurerm_private_endpoint.blob \
-            -out=tfplan-network
+        working-directory: infra/network
+        run: terraform plan -out=tfplan-network
         env:
           ARM_CLIENT_ID: ${{ secrets.AZUREAPPSERVICE_CLIENTID_1E160D2C298B4D89B6CD7A00C35E69D1 }}
           ARM_TENANT_ID: ${{ secrets.AZUREAPPSERVICE_TENANTID_D4FC4F94681D43C8AB58C91AA83E7CBC }}
@@ -83,6 +71,7 @@ jobs:
           ARM_USE_OIDC: true
 
       - name: Terraform Apply (networking)
+        working-directory: infra/network
         run: terraform apply -auto-approve tfplan-network
         env:
           ARM_CLIENT_ID: ${{ secrets.AZUREAPPSERVICE_CLIENTID_1E160D2C298B4D89B6CD7A00C35E69D1 }}

@@ -16,6 +16,8 @@ provider "azurerm" {
   resource_provider_registrations = "none"
 }
 
+data "azurerm_client_config" "current" {}
+
 # Variables
 variable "resource_group_name" {
   description = "Name of the resource group"
@@ -103,6 +105,30 @@ variable "cosmos_container_name" {
   default     = "products"
 }
 
+variable "cosmos_db_account_name" {
+  description = "Name of the existing Cosmos DB account (used in app settings)"
+  type        = string
+  default     = "cosmos-ai-poc"
+}
+
+variable "storage_account_name" {
+  description = "Name of the existing Storage Account (used in app settings)"
+  type        = string
+  default     = "aistoragemyaacoub"
+}
+
+variable "vnet_name" {
+  description = "Name of the VNet (managed by infra/network)"
+  type        = string
+  default     = "vnet-salespoc-api"
+}
+
+variable "app_service_subnet_name" {
+  description = "Name of the App Service subnet (managed by infra/network)"
+  type        = string
+  default     = "snet-appservice"
+}
+
 # Resource Group
 resource "azurerm_resource_group" "main" {
   name     = var.resource_group_name
@@ -134,7 +160,7 @@ resource "azurerm_linux_web_app" "main" {
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
   service_plan_id          = azurerm_service_plan.main.id
-  virtual_network_subnet_id = azurerm_subnet.app_service.id
+  virtual_network_subnet_id = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}/providers/Microsoft.Network/virtualNetworks/${var.vnet_name}/subnets/${var.app_service_subnet_name}"
 
   site_config {
     always_on = true
