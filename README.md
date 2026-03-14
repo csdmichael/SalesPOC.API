@@ -460,23 +460,18 @@ All data sources — Azure SQL Server, Cosmos DB, and Blob Storage — have **pu
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
-### Resources (defined in `network.tf`)
+### Resources (defined in `infra/network/main.tf`)
 
 | Resource | Name | Purpose |
 |----------|------|---------|
 | Virtual Network | `vnet-salespoc-api` | Isolated network (10.0.0.0/16) |
 | Subnet | `snet-appservice` (10.0.1.0/24) | App Service VNet integration (delegated to `Microsoft.Web/serverFarms`) |
 | Subnet | `snet-private-endpoints` (10.0.2.0/24) | Hosts all private endpoints |
-| Private DNS Zone | `privatelink.database.windows.net` | Resolves SQL FQDN to private IP |
-| Private DNS Zone | `privatelink.documents.azure.com` | Resolves Cosmos DB FQDN to private IP |
-| Private DNS Zone | `privatelink.blob.core.windows.net` | Resolves Blob Storage FQDN to private IP |
-| DNS Zone VNet Link | `vnetlink-sql` | Links SQL DNS zone to the VNet |
-| DNS Zone VNet Link | `vnetlink-cosmos` | Links Cosmos DB DNS zone to the VNet |
-| DNS Zone VNet Link | `vnetlink-blob` | Links Blob Storage DNS zone to the VNet |
 | Private Endpoint | `pe-sql-salespoc` | Private connection to Azure SQL Server (`sqlServer` sub-resource) |
 | Private Endpoint | `pe-cosmos-salespoc` | Private connection to Cosmos DB (`Sql` sub-resource) |
 | Private Endpoint | `pe-blob-salespoc` | Private connection to Blob Storage (`blob` sub-resource) |
-| VNet Integration | Swift connection | Routes App Service outbound traffic through the VNet |
+
+> **Note:** Private DNS zones (`privatelink.database.windows.net`, `privatelink.documents.azure.com`, `privatelink.blob.core.windows.net`) and their VNet links must be created separately by a principal with the required `Microsoft.Network/privateDnsZones` permissions. They are not managed by this Terraform module.
 
 ### Key Settings
 
@@ -484,7 +479,7 @@ All data sources — Azure SQL Server, Cosmos DB, and Blob Storage — have **pu
 - **Cosmos DB**: Public network access disabled; private endpoint via `pe-cosmos-salespoc`
 - **Blob Storage**: Public network access disabled; private endpoint via `pe-blob-salespoc`
 - **App Service**: `WEBSITE_VNET_ROUTE_ALL = 1` — all outbound traffic routed through VNet
-- **Private Endpoints**: Auto-approved, DNS auto-registered via zone groups
+- **Private Endpoints**: Auto-approved via `is_manual_connection = false`
 
 ### CI/CD Pipeline
 
