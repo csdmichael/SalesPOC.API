@@ -117,6 +117,8 @@ az cosmosdb update \
 
 ## Architecture
 
+![Backend Architecture](docs/Backend%20Architecture.jpg)
+
 ### Layered Architecture
 
 ```
