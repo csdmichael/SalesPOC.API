@@ -92,10 +92,6 @@ builder.Services.AddDbContext<SalesDbContext>(options =>
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi(options =>
 {
-    options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0;
-});
-builder.Services.AddOpenApi("v2", options =>
-{
     options.OpenApiVersion = OpenApiSpecVersion.OpenApi2_0;
 });
 
@@ -104,19 +100,13 @@ var app = builder.Build();
 app.MapOpenApi();
 app.MapGet("/openapi.json", () => Results.Redirect("/openapi/v1.json", permanent: false));
 app.MapGet("/swagger.json", () => Results.Redirect("/openapi/v1.json", permanent: false));
-app.MapGet("/v1/openapi.json", () => Results.Redirect("/openapi/v1.json", permanent: false));
-app.MapGet("/v1/swagger.json", () => Results.Redirect("/openapi/v1.json", permanent: false));
-app.MapGet("/v1/swagger/v1/swagger.json", () => Results.Redirect("/openapi/v1.json", permanent: false));
-app.MapGet("/v1/v1/swagger.json", () => Results.Redirect("/openapi/v1.json", permanent: false));
-app.MapGet("/v1/openapi", () => Results.Redirect("/openapi/v1.json", permanent: false));
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/openapi/v1.json", "SalesAPI v1 (OpenAPI 3.0)");
-        options.SwaggerEndpoint("/openapi/v2.json", "SalesAPI v2 (Swagger 2.0)");
+        options.SwaggerEndpoint("/openapi/v1.json", "SalesAPI (Swagger 2.0)");
     });
 }
 
