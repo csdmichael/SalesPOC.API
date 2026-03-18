@@ -94,6 +94,10 @@ builder.Services.AddOpenApi(options =>
 {
     options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0;
 });
+builder.Services.AddOpenApi("v2", options =>
+{
+    options.OpenApiVersion = OpenApiSpecVersion.OpenApi2_0;
+});
 
 var app = builder.Build();
 
@@ -111,7 +115,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/openapi/v1.json", "SalesAPI v1");
+        options.SwaggerEndpoint("/openapi/v1.json", "SalesAPI v1 (OpenAPI 3.0)");
+        options.SwaggerEndpoint("/openapi/v2.json", "SalesAPI v2 (Swagger 2.0)");
     });
 }
 

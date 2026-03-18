@@ -1,0 +1,309 @@
+rules:
+
+  # ── Inlined Spectral OAS rules (API Center cannot resolve extends: spectral:oas) ──
+
+  info-contact:
+    description: Info object must have a contact property.
+    message: API must have a contact section in info.
+    severity: warn
+    given: $
+    then:
+      field: info.contact
+      function: truthy
+
+  info-description:
+    description: Info object must have a description.
+    message: API must have a description in info.
+    severity: warn
+    given: $
+    then:
+      field: info.description
+      function: truthy
+
+  operation-operationId:
+    description: Every operation must have an operationId.
+    message: Operation must have an operationId.
+    severity: warn
+    given: $.paths[*][get,put,post,delete,options,head,patch,trace]
+    then:
+      field: operationId
+      function: truthy
+
+  operation-description:
+    description: Every operation should have a description.
+    message: Operation should have a description.
+    severity: warn
+    given: $.paths[*][get,put,post,delete,options,head,patch,trace]
+    then:
+      field: description
+      function: truthy
+
+  operation-tags:
+    description: Every operation must have at least one tag.
+    message: Operation must have non-empty tags.
+    severity: warn
+    given: $.paths[*][get,put,post,delete,options,head,patch,trace]
+    then:
+      field: tags
+      function: length
+      functionOptions:
+        min: 1
+
+  operation-success-response:
+    description: Every operation must define at least one 2xx response.
+    message: Operation must have at least one 2xx response.
+    severity: warn
+    given: $.paths[*][get,put,post,delete,options,head,patch,trace].responses
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          patternProperties:
+            "^2": true
+          minProperties: 1
+
+  path-keys-no-trailing-slash:
+    description: Paths must not end with a trailing slash.
+    message: Path must not end with a trailing slash.
+    severity: warn
+    given: $.paths
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        notMatch: "\\/$"
+
+  path-not-include-query:
+    description: Paths must not include query string parameters.
+    message: Path must not include query string (use parameters instead).
+    severity: warn
+    given: $.paths
+    then:
+      field: "@key"
+      function: pattern
+      functionOptions:
+        notMatch: "\\?"
+
+  no-eval-in-markdown:
+    description: Markdown descriptions must not contain eval().
+    message: Markdown must not contain eval().
+    severity: warn
+    given: $..description
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "eval\\("
+
+  no-script-tags-in-markdown:
+    description: Markdown descriptions must not contain script tags.
+    message: Markdown must not contain script tags.
+    severity: warn
+    given: $..description
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "<script"
+
+  openapi-tags:
+    description: OpenAPI document must have a non-empty tags array.
+    message: Document should have a top-level tags array.
+    severity: warn
+    given: $
+    then:
+      field: tags
+      function: length
+      functionOptions:
+        min: 1
+
+  tag-description:
+    description: Tags should have a description.
+    message: Tag must have a description.
+    severity: warn
+    given: $.tags[*]
+    then:
+      field: description
+      function: truthy
+
+  oas3-api-servers:
+    description: OpenAPI 3.x must define at least one server.
+    message: API must have at least one server defined.
+    severity: warn
+    given: $
+    then:
+      field: servers
+      function: length
+      functionOptions:
+        min: 1
+
+  oas3-server-not-example:
+    description: Server URLs must not point to example.com.
+    message: Server URL must not be example.com.
+    severity: warn
+    given: $.servers[*].url
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "example\\.com"
+
+  # ── Custom security controls rules ────────────────────────────────────────
+
+  require-security-controls-contract:
+    description: API specs must declare security control settings in x-security-controls.
+    message: Define x-security-controls with rateLimiting, inputValidation, and errorHandling sections.
+    severity: error
+    given: $
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required:
+            - x-security-controls
+          properties:
+            x-security-controls:
+              type: object
+              required:
+                - rateLimiting
+                - inputValidation
+                - errorHandling
+
+  ip-based-throttling-enabled:
+    description: IP-based throttling must be configured.
+    message: Set x-security-controls.rateLimiting.ipBasedThrottling to true.
+    severity: error
+    given: $.x-security-controls.rateLimiting
+    then:
+      field: ipBasedThrottling
+      function: truthy
+
+  subscription-user-rate-limits-enabled:
+    description: Subscription or user rate limiting must be configured.
+    message: Set x-security-controls.rateLimiting.subscriptionOrUserRateLimits to true.
+    severity: error
+    given: $.x-security-controls.rateLimiting
+    then:
+      field: subscriptionOrUserRateLimits
+      function: truthy
+
+  spike-arrest-enabled:
+    description: Spike arrest must be enabled.
+    message: Set x-security-controls.rateLimiting.spikeArrest to true.
+    severity: error
+    given: $.x-security-controls.rateLimiting
+    then:
+      field: spikeArrest
+      function: truthy
+
+  payload-size-limit-defined:
+    description: Payload size limit must be explicitly configured.
+    message: Set x-security-controls.rateLimiting.payloadSizeLimitKb to a value >= 1.
+    severity: error
+    given: $.x-security-controls.rateLimiting
+    then:
+      field: payloadSizeLimitKb
+      function: schema
+      functionOptions:
+        schema:
+          type: integer
+          minimum: 1
+
+  account-recovery-thresholds-defined:
+    description: Login/account recovery thresholds must be stricter and explicit.
+    message: Define maxAttempts and windowSeconds under x-security-controls.rateLimiting.accountRecoveryThresholds.
+    severity: error
+    given: $.x-security-controls.rateLimiting
+    then:
+      field: accountRecoveryThresholds
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required:
+            - maxAttempts
+            - windowSeconds
+          properties:
+            maxAttempts:
+              type: integer
+              minimum: 1
+              maximum: 10
+            windowSeconds:
+              type: integer
+              minimum: 60
+
+  content-type-enforcement-enabled:
+    description: Content-Type enforcement must be enabled.
+    message: Set x-security-controls.inputValidation.contentTypeEnforcement to true.
+    severity: error
+    given: $.x-security-controls.inputValidation
+    then:
+      field: contentTypeEnforcement
+      function: truthy
+
+  schema-validation-at-gateway-enabled:
+    description: Schema validation at gateway must be enabled.
+    message: Set x-security-controls.inputValidation.schemaValidationAtGateway to true.
+    severity: error
+    given: $.x-security-controls.inputValidation
+    then:
+      field: schemaValidationAtGateway
+      function: truthy
+
+  waf-protection-enabled:
+    description: WAF protection for SQLi/XSS must be enabled.
+    message: Set x-security-controls.inputValidation.wafProtection to true.
+    severity: error
+    given: $.x-security-controls.inputValidation
+    then:
+      field: wafProtection
+      function: truthy
+
+  header-validation-enabled:
+    description: Header validation must be enabled.
+    message: Set x-security-controls.inputValidation.headerValidation to true.
+    severity: error
+    given: $.x-security-controls.inputValidation
+    then:
+      field: headerValidation
+      function: truthy
+
+  no-wildcard-request-content-type:
+    description: Wildcard request content-types are not allowed.
+    message: Do not use */* as a requestBody content type.
+    severity: warn
+    given: $.paths[*][*].requestBody.content
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          propertyNames:
+            not:
+              const: '*/*'
+
+  generic-external-errors-enabled:
+    description: External error messages must be generic.
+    message: Set x-security-controls.errorHandling.genericExternalErrors to true.
+    severity: error
+    given: $.x-security-controls.errorHandling
+    then:
+      field: genericExternalErrors
+      function: truthy
+
+  structured-log-analytics-enabled:
+    description: Structured logging to Log Analytics must be enabled.
+    message: Set x-security-controls.errorHandling.structuredLoggingToLogAnalytics to true.
+    severity: error
+    given: $.x-security-controls.errorHandling
+    then:
+      field: structuredLoggingToLogAnalytics
+      function: truthy
+
+  secure-log-storage-enabled:
+    description: Secure log storage must be enabled.
+    message: Set x-security-controls.errorHandling.secureLogStorage to true.
+    severity: error
+    given: $.x-security-controls.errorHandling
+    then:
+      field: secureLogStorage
+      function: truthy
