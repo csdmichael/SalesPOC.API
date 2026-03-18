@@ -174,13 +174,15 @@
           {
             "name": "pageSize",
             "in": "query",
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           },
           {
             "name": "pageNumber",
             "in": "query",
             "format": "int32",
-            "default": 1
+            "default": 1,
+            "type": "integer"
           }
         ],
         "responses": {
@@ -203,7 +205,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           }
         ],
         "responses": {
@@ -224,7 +227,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           },
           {
             "name": "body",
@@ -250,7 +254,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           }
         ],
         "responses": {
@@ -649,13 +654,15 @@
           {
             "name": "pageSize",
             "in": "query",
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           },
           {
             "name": "pageNumber",
             "in": "query",
             "format": "int32",
-            "default": 1
+            "default": 1,
+            "type": "integer"
           }
         ],
         "responses": {
@@ -678,7 +685,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           }
         ],
         "responses": {
@@ -699,7 +707,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           },
           {
             "name": "body",
@@ -725,7 +734,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           }
         ],
         "responses": {
@@ -745,7 +755,8 @@
             "name": "orderId",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           }
         ],
         "responses": {
@@ -782,13 +793,15 @@
           {
             "name": "pageSize",
             "in": "query",
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           },
           {
             "name": "pageNumber",
             "in": "query",
             "format": "int32",
-            "default": 1
+            "default": 1,
+            "type": "integer"
           }
         ],
         "responses": {
@@ -861,13 +874,15 @@
           {
             "name": "pageSize",
             "in": "query",
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           },
           {
             "name": "pageNumber",
             "in": "query",
             "format": "int32",
-            "default": 1
+            "default": 1,
+            "type": "integer"
           }
         ],
         "responses": {
@@ -981,13 +996,15 @@
           {
             "name": "pageSize",
             "in": "query",
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           },
           {
             "name": "pageNumber",
             "in": "query",
             "format": "int32",
-            "default": 1
+            "default": 1,
+            "type": "integer"
           }
         ],
         "responses": {
@@ -1010,7 +1027,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           }
         ],
         "responses": {
@@ -1031,7 +1049,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           },
           {
             "name": "body",
@@ -1057,7 +1076,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           }
         ],
         "responses": {
@@ -1120,13 +1140,15 @@
           {
             "name": "pageSize",
             "in": "query",
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           },
           {
             "name": "pageNumber",
             "in": "query",
             "format": "int32",
-            "default": 1
+            "default": 1,
+            "type": "integer"
           }
         ],
         "responses": {
@@ -1319,13 +1341,15 @@
           {
             "name": "pageSize",
             "in": "query",
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           },
           {
             "name": "pageNumber",
             "in": "query",
             "format": "int32",
-            "default": 1
+            "default": 1,
+            "type": "integer"
           }
         ],
         "responses": {
@@ -1348,7 +1372,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           }
         ],
         "responses": {
@@ -1369,7 +1394,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           },
           {
             "name": "body",
@@ -1395,7 +1421,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           }
         ],
         "responses": {
@@ -1415,7 +1442,8 @@
             "name": "customerId",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           }
         ],
         "responses": {
@@ -1441,7 +1469,8 @@
             "name": "salesRepId",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           }
         ],
         "responses": {
@@ -1507,13 +1536,15 @@
           {
             "name": "pageSize",
             "in": "query",
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           },
           {
             "name": "pageNumber",
             "in": "query",
             "format": "int32",
-            "default": 1
+            "default": 1,
+            "type": "integer"
           }
         ],
         "responses": {
@@ -1536,7 +1567,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           }
         ],
         "responses": {
@@ -1557,7 +1589,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           },
           {
             "name": "body",
@@ -1583,7 +1616,8 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "format": "int32"
+            "format": "int32",
+            "type": "integer"
           }
         ],
         "responses": {
@@ -1665,7 +1699,7 @@
         },
         "productCategory": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "peerPurchaseCount": {
           "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1715,33 +1749,33 @@
         },
         "customerType": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "industry": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "country": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "state": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "city": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "annualRevenueUsd": {
           "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
           "format": "double",
-          "nullable": true
+          "x-nullable": true
         },
         "createdDate": {
           "type": "string",
           "format": "date-time",
-          "nullable": true
+          "x-nullable": true
         }
       }
     },
@@ -1859,23 +1893,23 @@
         },
         "customerType": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "industry": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "country": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "state": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "city": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "totalOrders": {
           "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2083,7 +2117,7 @@
         "lineTotalUsd": {
           "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
           "format": "double",
-          "nullable": true
+          "x-nullable": true
         },
         "product": {
           "$ref": "#/definitions/Product"
@@ -2345,16 +2379,16 @@
         },
         "productCategory": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "processNodeNm": {
           "pattern": "^-?(?:0|[1-9]\\d*)$",
           "format": "int32",
-          "nullable": true
+          "x-nullable": true
         },
         "packageType": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "unitPriceUsd": {
           "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
@@ -2362,12 +2396,12 @@
         },
         "lifecycleStatus": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "createdDate": {
           "type": "string",
           "format": "date-time",
-          "nullable": true
+          "x-nullable": true
         }
       }
     },
@@ -2404,7 +2438,7 @@
         "lastModified": {
           "type": "string",
           "format": "date-time",
-          "nullable": true
+          "x-nullable": true
         },
         "url": {
           "type": "string"
@@ -2528,7 +2562,7 @@
         },
         "region": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "totalOrders": {
           "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2599,7 +2633,7 @@
         "salesRepId": {
           "pattern": "^-?(?:0|[1-9]\\d*)$",
           "format": "int32",
-          "nullable": true
+          "x-nullable": true
         },
         "orderDate": {
           "type": "string",
@@ -2607,16 +2641,16 @@
         },
         "orderStatus": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "totalAmountUsd": {
           "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
           "format": "double",
-          "nullable": true
+          "x-nullable": true
         },
         "currency": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "customer": {
           "$ref": "#/definitions/Customer"
@@ -2628,14 +2662,8 @@
           }
         },
         "salesRep": {
-          "oneOf": [
-            {
-              "nullable": true
-            },
-            {
-              "$ref": "#/definitions/SalesRep"
-            }
-          ]
+          "$ref": "#/definitions/SalesRep",
+          "x-nullable": true
         }
       }
     },
@@ -2651,16 +2679,16 @@
         },
         "region": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "email": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "hireDate": {
           "type": "string",
           "format": "date",
-          "nullable": true
+          "x-nullable": true
         }
       }
     },
@@ -2680,19 +2708,19 @@
         },
         "customerType": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "productName": {
           "type": "string"
         },
         "productCategory": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "processNodeNm": {
           "pattern": "^-?(?:0|[1-9]\\d*)$",
           "format": "int32",
-          "nullable": true
+          "x-nullable": true
         },
         "quantity": {
           "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2705,15 +2733,15 @@
         "lineTotalUsd": {
           "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
           "format": "double",
-          "nullable": true
+          "x-nullable": true
         },
         "repName": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         },
         "region": {
           "type": "string",
-          "nullable": true
+          "x-nullable": true
         }
       }
     }
