@@ -1,13 +1,21 @@
 {
-  "openapi": "3.0.4",
+  "swagger": "2.0",
   "info": {
     "title": "SalesAPI | v1",
     "version": "1.0.0"
   },
-  "servers": [
-    {
-      "url": "https://salespoc-api.azurewebsites.net/"
-    }
+  "host": "salespoc-api.azurewebsites.net",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json",
+    "text/json",
+    "text/plain"
   ],
   "paths": {
     "/openapi.json": {
@@ -99,26 +107,16 @@
         "tags": [
           "Chat"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChatRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChatRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ChatRequest"
-              }
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ChatRequest"
             }
-          },
-          "required": true
-        },
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -134,30 +132,10 @@
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Customer"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Customer"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Customer"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Customer"
               }
             }
           }
@@ -167,45 +145,21 @@
         "tags": [
           "Customers"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Customer"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Customer"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Customer"
-              }
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Customer"
             }
-          },
-          "required": true
-        },
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/Customer"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Customer"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Customer"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/Customer"
             }
           }
         }
@@ -220,40 +174,20 @@
           {
             "name": "pageSize",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           },
           {
             "name": "pageNumber",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32",
-              "default": 1
-            }
+            "format": "int32",
+            "default": 1
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfCustomer"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfCustomer"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfCustomer"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/PagedResponseOfCustomer"
             }
           }
         }
@@ -269,31 +203,14 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/Customer"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Customer"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Customer"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/Customer"
             }
           }
         }
@@ -307,32 +224,17 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "format": "int32"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
             "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
+              "$ref": "#/definitions/Customer"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Customer"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Customer"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Customer"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -348,10 +250,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           }
         ],
         "responses": {
@@ -366,59 +265,26 @@
         "tags": [
           "DealStrategy"
         ],
-        "summary": "Get customer summary",
-        "description": "Returns account profile, order volume, revenue, average order value, and top product categories for a customer.",
         "parameters": [
           {
             "name": "customerId",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": "integer",
-              "format": "int32"
-            }
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomerSummaryResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomerSummaryResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomerSummaryResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/CustomerSummaryResponse"
             }
           },
           "404": {
             "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -429,67 +295,32 @@
         "tags": [
           "DealStrategy"
         ],
-        "summary": "Get customer order trends",
-        "description": "Returns monthly order count and revenue trend points for the requested customer and time range (for example 90d, 6m, 1y).",
         "parameters": [
           {
             "name": "customerId",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": "integer",
-              "format": "int32"
-            }
+            "type": "integer",
+            "format": "int32"
           },
           {
             "name": "timeRange",
             "in": "query",
-            "schema": {
-              "type": "string",
-              "default": "180d"
-            }
+            "type": "string",
+            "default": "180d"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomerOrderTrendResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomerOrderTrendResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomerOrderTrendResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/CustomerOrderTrendResponse"
             }
           },
           "404": {
             "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -500,59 +331,26 @@
         "tags": [
           "DealStrategy"
         ],
-        "summary": "Get customer product mix",
-        "description": "Returns spend distribution by product category and top purchased products for the customer.",
         "parameters": [
           {
             "name": "customerId",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": "integer",
-              "format": "int32"
-            }
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomerProductMixResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomerProductMixResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomerProductMixResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/CustomerProductMixResponse"
             }
           },
           "404": {
             "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -563,57 +361,25 @@
         "tags": [
           "DealStrategy"
         ],
-        "summary": "Get regional performance",
-        "description": "Returns aggregate order and revenue performance for a region, including top reps.",
         "parameters": [
           {
             "name": "regionId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegionalPerformanceResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegionalPerformanceResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegionalPerformanceResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/RegionalPerformanceResponse"
             }
           },
           "404": {
             "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -624,59 +390,26 @@
         "tags": [
           "DealStrategy"
         ],
-        "summary": "Get sales rep performance",
-        "description": "Returns pipeline and win metrics for a sales rep, including top revenue customers.",
         "parameters": [
           {
             "name": "repId",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": "integer",
-              "format": "int32"
-            }
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/RepPerformanceResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RepPerformanceResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RepPerformanceResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/RepPerformanceResponse"
             }
           },
           "404": {
             "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -687,59 +420,26 @@
         "tags": [
           "DealStrategy"
         ],
-        "summary": "Calculate deal risk",
-        "description": "Calculates a heuristic risk score and signal list for an account based on recency, trend, and product concentration.",
         "parameters": [
           {
             "name": "customerId",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": "integer",
-              "format": "int32"
-            }
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DealRiskResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DealRiskResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DealRiskResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/DealRiskResponse"
             }
           },
           "404": {
             "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -750,59 +450,26 @@
         "tags": [
           "DealStrategy"
         ],
-        "summary": "Identify cross-sell opportunities",
-        "description": "Finds products not yet purchased by the customer but commonly purchased by peer customers.",
         "parameters": [
           {
             "name": "customerId",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": "integer",
-              "format": "int32"
-            }
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CrossSellResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CrossSellResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CrossSellResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/CrossSellResponse"
             }
           },
           "404": {
             "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -813,79 +480,32 @@
         "tags": [
           "DealStrategy"
         ],
-        "summary": "Generate executive summary",
-        "description": "Generates an account-level strategic narrative using summary metrics, deal risk, and top cross-sell recommendations.",
         "parameters": [
           {
             "name": "customerId",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": "integer",
-              "format": "int32"
-            }
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExecutiveSummaryResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExecutiveSummaryResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExecutiveSummaryResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ExecutiveSummaryResponse"
             }
           },
           "404": {
             "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "500": {
             "description": "Internal Server Error",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -896,99 +516,40 @@
         "tags": [
           "DealStrategy"
         ],
-        "summary": "Create follow-up task",
-        "description": "Creates a suggested follow-up task payload with generated priority and due date.",
         "parameters": [
           {
             "name": "customerId",
             "in": "path",
             "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
             "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": "integer",
-              "format": "int32"
+              "$ref": "#/definitions/FollowUpTaskRequest"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FollowUpTaskRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FollowUpTaskRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/FollowUpTaskRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/FollowUpTaskResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FollowUpTaskResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FollowUpTaskResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/FollowUpTaskResponse"
             }
           },
           "400": {
             "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "404": {
             "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -999,99 +560,40 @@
         "tags": [
           "DealStrategy"
         ],
-        "summary": "Draft customer email",
-        "description": "Generates a draft outbound email aligned to the provided strategy and account opportunities.",
         "parameters": [
           {
             "name": "customerId",
             "in": "path",
             "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
             "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": "integer",
-              "format": "int32"
+              "$ref": "#/definitions/DraftEmailRequest"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DraftEmailRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DraftEmailRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/DraftEmailRequest"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DraftEmailResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DraftEmailResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DraftEmailResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/DraftEmailResponse"
             }
           },
           "400": {
             "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           },
           "404": {
             "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -1105,30 +607,10 @@
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/OrderItem"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/OrderItem"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/OrderItem"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OrderItem"
               }
             }
           }
@@ -1138,45 +620,21 @@
         "tags": [
           "OrderItems"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderItem"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderItem"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderItem"
-              }
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrderItem"
             }
-          },
-          "required": true
-        },
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderItem"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderItem"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderItem"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/OrderItem"
             }
           }
         }
@@ -1191,40 +649,20 @@
           {
             "name": "pageSize",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           },
           {
             "name": "pageNumber",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32",
-              "default": 1
-            }
+            "format": "int32",
+            "default": 1
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfOrderItem"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfOrderItem"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfOrderItem"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/PagedResponseOfOrderItem"
             }
           }
         }
@@ -1240,31 +678,14 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderItem"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderItem"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderItem"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/OrderItem"
             }
           }
         }
@@ -1278,32 +699,17 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "format": "int32"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
             "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
+              "$ref": "#/definitions/OrderItem"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderItem"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderItem"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/OrderItem"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -1319,10 +725,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           }
         ],
         "responses": {
@@ -1342,39 +745,16 @@
             "name": "orderId",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/OrderItem"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/OrderItem"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/OrderItem"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OrderItem"
               }
             }
           }
@@ -1402,40 +782,20 @@
           {
             "name": "pageSize",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           },
           {
             "name": "pageNumber",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32",
-              "default": 1
-            }
+            "format": "int32",
+            "default": 1
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfProductDescription"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfProductDescription"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfProductDescription"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/PagedResponseOfProductDescription"
             }
           }
         }
@@ -1451,9 +811,7 @@
             "name": "productId",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           }
         ],
         "responses": {
@@ -1472,9 +830,7 @@
           {
             "name": "q",
             "in": "query",
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           }
         ],
         "responses": {
@@ -1505,40 +861,20 @@
           {
             "name": "pageSize",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           },
           {
             "name": "pageNumber",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32",
-              "default": 1
-            }
+            "format": "int32",
+            "default": 1
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfProductDocument"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfProductDocument"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfProductDocument"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/PagedResponseOfProductDocument"
             }
           }
         }
@@ -1566,9 +902,7 @@
             "name": "productName",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           }
         ],
         "responses": {
@@ -1587,9 +921,7 @@
           {
             "name": "blobName",
             "in": "query",
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           }
         ],
         "responses": {
@@ -1607,30 +939,10 @@
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Product"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Product"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Product"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Product"
               }
             }
           }
@@ -1640,45 +952,21 @@
         "tags": [
           "Products"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Product"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Product"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Product"
-              }
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Product"
             }
-          },
-          "required": true
-        },
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/Product"
             }
           }
         }
@@ -1693,40 +981,20 @@
           {
             "name": "pageSize",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           },
           {
             "name": "pageNumber",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32",
-              "default": 1
-            }
+            "format": "int32",
+            "default": 1
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfProduct"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfProduct"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfProduct"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/PagedResponseOfProduct"
             }
           }
         }
@@ -1742,31 +1010,14 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Product"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/Product"
             }
           }
         }
@@ -1780,32 +1031,17 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "format": "int32"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
             "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
+              "$ref": "#/definitions/Product"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Product"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Product"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Product"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -1821,10 +1057,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           }
         ],
         "responses": {
@@ -1844,38 +1077,16 @@
             "name": "category",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Product"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Product"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Product"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Product"
               }
             }
           }
@@ -1890,30 +1101,10 @@
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VwSalesFact"
               }
             }
           }
@@ -1929,40 +1120,20 @@
           {
             "name": "pageSize",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           },
           {
             "name": "pageNumber",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32",
-              "default": 1
-            }
+            "format": "int32",
+            "default": 1
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfVwSalesFact"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfVwSalesFact"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfVwSalesFact"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/PagedResponseOfVwSalesFact"
             }
           }
         }
@@ -1978,38 +1149,16 @@
             "name": "customerName",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VwSalesFact"
               }
             }
           }
@@ -2026,38 +1175,16 @@
             "name": "productName",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VwSalesFact"
               }
             }
           }
@@ -2074,38 +1201,16 @@
             "name": "repName",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VwSalesFact"
               }
             }
           }
@@ -2122,38 +1227,16 @@
             "name": "region",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VwSalesFact"
               }
             }
           }
@@ -2170,38 +1253,16 @@
             "name": "category",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/VwSalesFact"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VwSalesFact"
               }
             }
           }
@@ -2216,30 +1277,10 @@
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesOrder"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesOrder"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesOrder"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SalesOrder"
               }
             }
           }
@@ -2249,45 +1290,21 @@
         "tags": [
           "SalesOrders"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SalesOrder"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SalesOrder"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/SalesOrder"
-              }
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SalesOrder"
             }
-          },
-          "required": true
-        },
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/SalesOrder"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SalesOrder"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SalesOrder"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/SalesOrder"
             }
           }
         }
@@ -2302,40 +1319,20 @@
           {
             "name": "pageSize",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           },
           {
             "name": "pageNumber",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32",
-              "default": 1
-            }
+            "format": "int32",
+            "default": 1
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfSalesOrder"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfSalesOrder"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfSalesOrder"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/PagedResponseOfSalesOrder"
             }
           }
         }
@@ -2351,31 +1348,14 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/SalesOrder"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SalesOrder"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SalesOrder"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/SalesOrder"
             }
           }
         }
@@ -2389,32 +1369,17 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "format": "int32"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
             "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
+              "$ref": "#/definitions/SalesOrder"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SalesOrder"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SalesOrder"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/SalesOrder"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -2430,10 +1395,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           }
         ],
         "responses": {
@@ -2453,39 +1415,16 @@
             "name": "customerId",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesOrder"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesOrder"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesOrder"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SalesOrder"
               }
             }
           }
@@ -2502,39 +1441,16 @@
             "name": "salesRepId",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesOrder"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesOrder"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesOrder"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SalesOrder"
               }
             }
           }
@@ -2549,30 +1465,10 @@
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesRep"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesRep"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesRep"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SalesRep"
               }
             }
           }
@@ -2582,45 +1478,21 @@
         "tags": [
           "SalesReps"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SalesRep"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SalesRep"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/SalesRep"
-              }
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SalesRep"
             }
-          },
-          "required": true
-        },
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/SalesRep"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SalesRep"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SalesRep"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/SalesRep"
             }
           }
         }
@@ -2635,40 +1507,20 @@
           {
             "name": "pageSize",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           },
           {
             "name": "pageNumber",
             "in": "query",
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32",
-              "default": 1
-            }
+            "format": "int32",
+            "default": 1
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfSalesRep"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfSalesRep"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedResponseOfSalesRep"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/PagedResponseOfSalesRep"
             }
           }
         }
@@ -2684,31 +1536,14 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/SalesRep"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SalesRep"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SalesRep"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/SalesRep"
             }
           }
         }
@@ -2722,32 +1557,17 @@
             "name": "id",
             "in": "path",
             "required": true,
+            "format": "int32"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
             "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
+              "$ref": "#/definitions/SalesRep"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SalesRep"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SalesRep"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/SalesRep"
-              }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "OK"
@@ -2763,10 +1583,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "format": "int32"
-            }
+            "format": "int32"
           }
         ],
         "responses": {
@@ -2786,38 +1603,16 @@
             "name": "region",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesRep"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesRep"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SalesRep"
-                  }
-                }
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SalesRep"
               }
             }
           }
@@ -2825,1139 +1620,1102 @@
       }
     }
   },
-  "components": {
-    "schemas": {
-      "CategorySpend": {
-        "required": [
-          "category",
-          "amount"
-        ],
-        "type": "object",
-        "properties": {
-          "category": {
-            "type": "string"
-          },
-          "amount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          }
+  "definitions": {
+    "CategorySpend": {
+      "required": [
+        "category",
+        "amount"
+      ],
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string"
+        },
+        "amount": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
         }
-      },
-      "ChatRequest": {
-        "type": "object",
-        "properties": {
-          "question": {
-            "type": "string"
-          }
+      }
+    },
+    "ChatRequest": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string"
         }
-      },
-      "CrossSellOpportunity": {
-        "required": [
-          "productId",
-          "productName",
-          "productCategory",
-          "peerPurchaseCount",
-          "avgPeerUnitPriceUsd",
-          "rationale"
-        ],
-        "type": "object",
-        "properties": {
-          "productId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "productName": {
-            "type": "string"
-          },
-          "productCategory": {
-            "type": "string",
-            "nullable": true
-          },
-          "peerPurchaseCount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "avgPeerUnitPriceUsd": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "rationale": {
-            "type": "string"
-          }
+      }
+    },
+    "CrossSellOpportunity": {
+      "required": [
+        "productId",
+        "productName",
+        "productCategory",
+        "peerPurchaseCount",
+        "avgPeerUnitPriceUsd",
+        "rationale"
+      ],
+      "type": "object",
+      "properties": {
+        "productId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "productCategory": {
+          "type": "string",
+          "nullable": true
+        },
+        "peerPurchaseCount": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "avgPeerUnitPriceUsd": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "rationale": {
+          "type": "string"
         }
-      },
-      "CrossSellResponse": {
-        "required": [
-          "customerId",
-          "customerName",
-          "opportunities"
-        ],
-        "type": "object",
-        "properties": {
-          "customerId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "customerName": {
-            "type": "string"
-          },
-          "opportunities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CrossSellOpportunity"
-            }
-          }
-        }
-      },
-      "Customer": {
-        "type": "object",
-        "properties": {
-          "customerId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "customerName": {
-            "type": "string"
-          },
-          "customerType": {
-            "type": "string",
-            "nullable": true
-          },
-          "industry": {
-            "type": "string",
-            "nullable": true
-          },
-          "country": {
-            "type": "string",
-            "nullable": true
-          },
-          "state": {
-            "type": "string",
-            "nullable": true
-          },
-          "city": {
-            "type": "string",
-            "nullable": true
-          },
-          "annualRevenueUsd": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double",
-            "nullable": true
-          },
-          "createdDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          }
-        }
-      },
-      "CustomerOrderTrendResponse": {
-        "required": [
-          "customerId",
-          "customerName",
-          "timeRange",
-          "points",
-          "trendDirection"
-        ],
-        "type": "object",
-        "properties": {
-          "customerId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "customerName": {
-            "type": "string"
-          },
-          "timeRange": {
-            "type": "string"
-          },
-          "points": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OrderTrendPoint"
-            }
-          },
-          "trendDirection": {
-            "type": "string"
-          }
-        }
-      },
-      "CustomerProductMixResponse": {
-        "required": [
-          "customerId",
-          "customerName",
-          "totalAmount",
-          "categories",
-          "topProducts"
-        ],
-        "type": "object",
-        "properties": {
-          "customerId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "customerName": {
-            "type": "string"
-          },
-          "totalAmount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "categories": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProductMixCategory"
-            }
-          },
-          "topProducts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProductMixItem"
-            }
-          }
-        }
-      },
-      "CustomerRevenue": {
-        "required": [
-          "customerId",
-          "revenue",
-          "orderCount"
-        ],
-        "type": "object",
-        "properties": {
-          "customerId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "revenue": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "orderCount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          }
-        }
-      },
-      "CustomerSummaryResponse": {
-        "required": [
-          "customerId",
-          "customerName",
-          "customerType",
-          "industry",
-          "country",
-          "state",
-          "city",
-          "totalOrders",
-          "totalRevenueUsd",
-          "averageOrderValueUsd",
-          "lastOrderDate",
-          "topCategories"
-        ],
-        "type": "object",
-        "properties": {
-          "customerId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "customerName": {
-            "type": "string"
-          },
-          "customerType": {
-            "type": "string",
-            "nullable": true
-          },
-          "industry": {
-            "type": "string",
-            "nullable": true
-          },
-          "country": {
-            "type": "string",
-            "nullable": true
-          },
-          "state": {
-            "type": "string",
-            "nullable": true
-          },
-          "city": {
-            "type": "string",
-            "nullable": true
-          },
-          "totalOrders": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalRevenueUsd": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "averageOrderValueUsd": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "lastOrderDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "topCategories": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CategorySpend"
-            }
-          }
-        }
-      },
-      "DealRiskResponse": {
-        "required": [
-          "customerId",
-          "customerName",
-          "riskScore",
-          "riskLevel",
-          "signals"
-        ],
-        "type": "object",
-        "properties": {
-          "customerId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "customerName": {
-            "type": "string"
-          },
-          "riskScore": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "riskLevel": {
-            "type": "string"
-          },
-          "signals": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "DraftEmailRequest": {
-        "type": "object",
-        "properties": {
-          "strategy": {
-            "type": "string"
-          }
-        }
-      },
-      "DraftEmailResponse": {
-        "required": [
-          "customerId",
-          "customerName",
-          "subject",
-          "body"
-        ],
-        "type": "object",
-        "properties": {
-          "customerId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "customerName": {
-            "type": "string"
-          },
-          "subject": {
-            "type": "string"
-          },
-          "body": {
-            "type": "string"
-          }
-        }
-      },
-      "ErrorResponse": {
-        "required": [
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          }
-        }
-      },
-      "ExecutiveSummaryResponse": {
-        "required": [
-          "customerId",
-          "customerName",
-          "narrative",
-          "risk",
-          "topCrossSellOpportunities"
-        ],
-        "type": "object",
-        "properties": {
-          "customerId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "customerName": {
-            "type": "string"
-          },
-          "narrative": {
-            "type": "string"
-          },
-          "risk": {
-            "$ref": "#/components/schemas/DealRiskResponse"
-          },
-          "topCrossSellOpportunities": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CrossSellOpportunity"
-            }
-          }
-        }
-      },
-      "FollowUpTaskRequest": {
-        "type": "object",
-        "properties": {
-          "action": {
-            "type": "string"
-          }
-        }
-      },
-      "FollowUpTaskResponse": {
-        "required": [
-          "taskId",
-          "customerId",
-          "customerName",
-          "action",
-          "priority",
-          "createdUtc",
-          "dueUtc",
-          "status"
-        ],
-        "type": "object",
-        "properties": {
-          "taskId": {
-            "type": "string"
-          },
-          "customerId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "customerName": {
-            "type": "string"
-          },
-          "action": {
-            "type": "string"
-          },
-          "priority": {
-            "type": "string"
-          },
-          "createdUtc": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "dueUtc": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "status": {
-            "type": "string"
-          }
-        }
-      },
-      "OrderItem": {
-        "type": "object",
-        "properties": {
-          "orderItemId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "orderId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "productId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "quantity": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "unitPriceUsd": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "lineTotalUsd": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double",
-            "nullable": true
-          },
-          "product": {
-            "$ref": "#/components/schemas/Product"
-          }
-        }
-      },
-      "OrderTrendPoint": {
-        "required": [
-          "month",
-          "orderCount",
-          "revenue",
-          "averageOrderValue"
-        ],
-        "type": "object",
-        "properties": {
-          "month": {
-            "type": "string",
-            "format": "date"
-          },
-          "orderCount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "revenue": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "averageOrderValue": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          }
-        }
-      },
-      "PagedResponseOfCustomer": {
-        "type": "object",
-        "properties": {
+      }
+    },
+    "CrossSellResponse": {
+      "required": [
+        "customerId",
+        "customerName",
+        "opportunities"
+      ],
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "opportunities": {
+          "type": "array",
           "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Customer"
-            }
-          },
-          "pageNumber": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "pageSize": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalRecords": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalPages": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          }
-        }
-      },
-      "PagedResponseOfOrderItem": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OrderItem"
-            }
-          },
-          "pageNumber": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "pageSize": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalRecords": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalPages": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          }
-        }
-      },
-      "PagedResponseOfProduct": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Product"
-            }
-          },
-          "pageNumber": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "pageSize": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalRecords": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalPages": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          }
-        }
-      },
-      "PagedResponseOfProductDescription": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProductDescription"
-            }
-          },
-          "pageNumber": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "pageSize": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalRecords": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalPages": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          }
-        }
-      },
-      "PagedResponseOfProductDocument": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProductDocument"
-            }
-          },
-          "pageNumber": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "pageSize": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalRecords": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalPages": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          }
-        }
-      },
-      "PagedResponseOfSalesOrder": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SalesOrder"
-            }
-          },
-          "pageNumber": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "pageSize": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalRecords": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalPages": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          }
-        }
-      },
-      "PagedResponseOfSalesRep": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SalesRep"
-            }
-          },
-          "pageNumber": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "pageSize": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalRecords": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalPages": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          }
-        }
-      },
-      "PagedResponseOfVwSalesFact": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/VwSalesFact"
-            }
-          },
-          "pageNumber": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "pageSize": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalRecords": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalPages": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          }
-        }
-      },
-      "Product": {
-        "type": "object",
-        "properties": {
-          "productId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "productName": {
-            "type": "string"
-          },
-          "productCategory": {
-            "type": "string",
-            "nullable": true
-          },
-          "processNodeNm": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32",
-            "nullable": true
-          },
-          "packageType": {
-            "type": "string",
-            "nullable": true
-          },
-          "unitPriceUsd": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "lifecycleStatus": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          }
-        }
-      },
-      "ProductDescription": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          }
-        }
-      },
-      "ProductDocument": {
-        "type": "object",
-        "properties": {
-          "fileName": {
-            "type": "string"
-          },
-          "productName": {
-            "type": "string"
-          },
-          "documentType": {
-            "type": "string"
-          },
-          "size": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int64"
-          },
-          "contentType": {
-            "type": "string"
-          },
-          "lastModified": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "url": {
-            "type": "string"
-          }
-        }
-      },
-      "ProductMixCategory": {
-        "required": [
-          "category",
-          "amount",
-          "sharePercent",
-          "lineCount"
-        ],
-        "type": "object",
-        "properties": {
-          "category": {
-            "type": "string"
-          },
-          "amount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "sharePercent": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "lineCount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          }
-        }
-      },
-      "ProductMixItem": {
-        "required": [
-          "productId",
-          "productName",
-          "amount",
-          "sharePercent",
-          "totalQuantity"
-        ],
-        "type": "object",
-        "properties": {
-          "productId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "productName": {
-            "type": "string"
-          },
-          "amount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "sharePercent": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "totalQuantity": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          }
-        }
-      },
-      "RegionalPerformanceResponse": {
-        "required": [
-          "regionId",
-          "totalOrders",
-          "totalRevenue",
-          "distinctCustomers",
-          "activeSalesReps",
-          "topReps"
-        ],
-        "type": "object",
-        "properties": {
-          "regionId": {
-            "type": "string"
-          },
-          "totalOrders": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalRevenue": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "distinctCustomers": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "activeSalesReps": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "topReps": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RepPerformanceSnapshot"
-            }
-          }
-        }
-      },
-      "RepPerformanceResponse": {
-        "required": [
-          "repId",
-          "repName",
-          "region",
-          "totalOrders",
-          "totalRevenue",
-          "averageDealSize",
-          "winRatePercent",
-          "topCustomers"
-        ],
-        "type": "object",
-        "properties": {
-          "repId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "repName": {
-            "type": "string"
-          },
-          "region": {
-            "type": "string",
-            "nullable": true
-          },
-          "totalOrders": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalRevenue": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "averageDealSize": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "winRatePercent": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "topCustomers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CustomerRevenue"
-            }
-          }
-        }
-      },
-      "RepPerformanceSnapshot": {
-        "required": [
-          "repId",
-          "repName",
-          "orderCount",
-          "totalRevenue",
-          "averageDealSize"
-        ],
-        "type": "object",
-        "properties": {
-          "repId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "repName": {
-            "type": "string"
-          },
-          "orderCount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "totalRevenue": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "averageDealSize": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          }
-        }
-      },
-      "SalesOrder": {
-        "type": "object",
-        "properties": {
-          "orderId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "customerId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "salesRepId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32",
-            "nullable": true
-          },
-          "orderDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "orderStatus": {
-            "type": "string",
-            "nullable": true
-          },
-          "totalAmountUsd": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double",
-            "nullable": true
-          },
-          "currency": {
-            "type": "string",
-            "nullable": true
-          },
-          "customer": {
-            "$ref": "#/components/schemas/Customer"
-          },
-          "orderItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OrderItem"
-            }
-          },
-          "salesRep": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/SalesRep"
-              }
-            ]
-          }
-        }
-      },
-      "SalesRep": {
-        "type": "object",
-        "properties": {
-          "salesRepId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "repName": {
-            "type": "string"
-          },
-          "region": {
-            "type": "string",
-            "nullable": true
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "hireDate": {
-            "type": "string",
-            "format": "date",
-            "nullable": true
-          }
-        }
-      },
-      "VwSalesFact": {
-        "type": "object",
-        "properties": {
-          "orderId": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "orderDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "customerName": {
-            "type": "string"
-          },
-          "customerType": {
-            "type": "string",
-            "nullable": true
-          },
-          "productName": {
-            "type": "string"
-          },
-          "productCategory": {
-            "type": "string",
-            "nullable": true
-          },
-          "processNodeNm": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32",
-            "nullable": true
-          },
-          "quantity": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "format": "int32"
-          },
-          "unitPriceUsd": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double"
-          },
-          "lineTotalUsd": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "format": "double",
-            "nullable": true
-          },
-          "repName": {
-            "type": "string",
-            "nullable": true
-          },
-          "region": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/definitions/CrossSellOpportunity"
           }
         }
       }
+    },
+    "Customer": {
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "customerType": {
+          "type": "string",
+          "nullable": true
+        },
+        "industry": {
+          "type": "string",
+          "nullable": true
+        },
+        "country": {
+          "type": "string",
+          "nullable": true
+        },
+        "state": {
+          "type": "string",
+          "nullable": true
+        },
+        "city": {
+          "type": "string",
+          "nullable": true
+        },
+        "annualRevenueUsd": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double",
+          "nullable": true
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        }
+      }
+    },
+    "CustomerOrderTrendResponse": {
+      "required": [
+        "customerId",
+        "customerName",
+        "timeRange",
+        "points",
+        "trendDirection"
+      ],
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "timeRange": {
+          "type": "string"
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderTrendPoint"
+          }
+        },
+        "trendDirection": {
+          "type": "string"
+        }
+      }
+    },
+    "CustomerProductMixResponse": {
+      "required": [
+        "customerId",
+        "customerName",
+        "totalAmount",
+        "categories",
+        "topProducts"
+      ],
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "totalAmount": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProductMixCategory"
+          }
+        },
+        "topProducts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProductMixItem"
+          }
+        }
+      }
+    },
+    "CustomerRevenue": {
+      "required": [
+        "customerId",
+        "revenue",
+        "orderCount"
+      ],
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "revenue": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "orderCount": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        }
+      }
+    },
+    "CustomerSummaryResponse": {
+      "required": [
+        "customerId",
+        "customerName",
+        "customerType",
+        "industry",
+        "country",
+        "state",
+        "city",
+        "totalOrders",
+        "totalRevenueUsd",
+        "averageOrderValueUsd",
+        "lastOrderDate",
+        "topCategories"
+      ],
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "customerType": {
+          "type": "string",
+          "nullable": true
+        },
+        "industry": {
+          "type": "string",
+          "nullable": true
+        },
+        "country": {
+          "type": "string",
+          "nullable": true
+        },
+        "state": {
+          "type": "string",
+          "nullable": true
+        },
+        "city": {
+          "type": "string",
+          "nullable": true
+        },
+        "totalOrders": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalRevenueUsd": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "averageOrderValueUsd": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "lastOrderDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "topCategories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CategorySpend"
+          }
+        }
+      }
+    },
+    "DealRiskResponse": {
+      "required": [
+        "customerId",
+        "customerName",
+        "riskScore",
+        "riskLevel",
+        "signals"
+      ],
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "riskScore": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "riskLevel": {
+          "type": "string"
+        },
+        "signals": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "DraftEmailRequest": {
+      "type": "object",
+      "properties": {
+        "strategy": {
+          "type": "string"
+        }
+      }
+    },
+    "DraftEmailResponse": {
+      "required": [
+        "customerId",
+        "customerName",
+        "subject",
+        "body"
+      ],
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "required": [
+        "message"
+      ],
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "ExecutiveSummaryResponse": {
+      "required": [
+        "customerId",
+        "customerName",
+        "narrative",
+        "risk",
+        "topCrossSellOpportunities"
+      ],
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "narrative": {
+          "type": "string"
+        },
+        "risk": {
+          "$ref": "#/definitions/DealRiskResponse"
+        },
+        "topCrossSellOpportunities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CrossSellOpportunity"
+          }
+        }
+      }
+    },
+    "FollowUpTaskRequest": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string"
+        }
+      }
+    },
+    "FollowUpTaskResponse": {
+      "required": [
+        "taskId",
+        "customerId",
+        "customerName",
+        "action",
+        "priority",
+        "createdUtc",
+        "dueUtc",
+        "status"
+      ],
+      "type": "object",
+      "properties": {
+        "taskId": {
+          "type": "string"
+        },
+        "customerId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string"
+        },
+        "createdUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "dueUtc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "OrderItem": {
+      "type": "object",
+      "properties": {
+        "orderItemId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "orderId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "productId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "quantity": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "unitPriceUsd": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "lineTotalUsd": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double",
+          "nullable": true
+        },
+        "product": {
+          "$ref": "#/definitions/Product"
+        }
+      }
+    },
+    "OrderTrendPoint": {
+      "required": [
+        "month",
+        "orderCount",
+        "revenue",
+        "averageOrderValue"
+      ],
+      "type": "object",
+      "properties": {
+        "month": {
+          "type": "string",
+          "format": "date"
+        },
+        "orderCount": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "revenue": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "averageOrderValue": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        }
+      }
+    },
+    "PagedResponseOfCustomer": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Customer"
+          }
+        },
+        "pageNumber": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "pageSize": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalRecords": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalPages": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        }
+      }
+    },
+    "PagedResponseOfOrderItem": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderItem"
+          }
+        },
+        "pageNumber": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "pageSize": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalRecords": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalPages": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        }
+      }
+    },
+    "PagedResponseOfProduct": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Product"
+          }
+        },
+        "pageNumber": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "pageSize": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalRecords": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalPages": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        }
+      }
+    },
+    "PagedResponseOfProductDescription": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProductDescription"
+          }
+        },
+        "pageNumber": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "pageSize": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalRecords": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalPages": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        }
+      }
+    },
+    "PagedResponseOfProductDocument": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProductDocument"
+          }
+        },
+        "pageNumber": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "pageSize": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalRecords": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalPages": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        }
+      }
+    },
+    "PagedResponseOfSalesOrder": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SalesOrder"
+          }
+        },
+        "pageNumber": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "pageSize": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalRecords": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalPages": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        }
+      }
+    },
+    "PagedResponseOfSalesRep": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SalesRep"
+          }
+        },
+        "pageNumber": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "pageSize": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalRecords": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalPages": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        }
+      }
+    },
+    "PagedResponseOfVwSalesFact": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VwSalesFact"
+          }
+        },
+        "pageNumber": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "pageSize": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalRecords": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalPages": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        }
+      }
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "productCategory": {
+          "type": "string",
+          "nullable": true
+        },
+        "processNodeNm": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32",
+          "nullable": true
+        },
+        "packageType": {
+          "type": "string",
+          "nullable": true
+        },
+        "unitPriceUsd": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "lifecycleStatus": {
+          "type": "string",
+          "nullable": true
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        }
+      }
+    },
+    "ProductDescription": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "ProductDocument": {
+      "type": "object",
+      "properties": {
+        "fileName": {
+          "type": "string"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "documentType": {
+          "type": "string"
+        },
+        "size": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int64"
+        },
+        "contentType": {
+          "type": "string"
+        },
+        "lastModified": {
+          "type": "string",
+          "format": "date-time",
+          "nullable": true
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "ProductMixCategory": {
+      "required": [
+        "category",
+        "amount",
+        "sharePercent",
+        "lineCount"
+      ],
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string"
+        },
+        "amount": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "sharePercent": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "lineCount": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        }
+      }
+    },
+    "ProductMixItem": {
+      "required": [
+        "productId",
+        "productName",
+        "amount",
+        "sharePercent",
+        "totalQuantity"
+      ],
+      "type": "object",
+      "properties": {
+        "productId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "amount": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "sharePercent": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "totalQuantity": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        }
+      }
+    },
+    "RegionalPerformanceResponse": {
+      "required": [
+        "regionId",
+        "totalOrders",
+        "totalRevenue",
+        "distinctCustomers",
+        "activeSalesReps",
+        "topReps"
+      ],
+      "type": "object",
+      "properties": {
+        "regionId": {
+          "type": "string"
+        },
+        "totalOrders": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalRevenue": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "distinctCustomers": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "activeSalesReps": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "topReps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RepPerformanceSnapshot"
+          }
+        }
+      }
+    },
+    "RepPerformanceResponse": {
+      "required": [
+        "repId",
+        "repName",
+        "region",
+        "totalOrders",
+        "totalRevenue",
+        "averageDealSize",
+        "winRatePercent",
+        "topCustomers"
+      ],
+      "type": "object",
+      "properties": {
+        "repId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "repName": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string",
+          "nullable": true
+        },
+        "totalOrders": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalRevenue": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "averageDealSize": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "winRatePercent": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "topCustomers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustomerRevenue"
+          }
+        }
+      }
+    },
+    "RepPerformanceSnapshot": {
+      "required": [
+        "repId",
+        "repName",
+        "orderCount",
+        "totalRevenue",
+        "averageDealSize"
+      ],
+      "type": "object",
+      "properties": {
+        "repId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "repName": {
+          "type": "string"
+        },
+        "orderCount": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "totalRevenue": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "averageDealSize": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        }
+      }
+    },
+    "SalesOrder": {
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "customerId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "salesRepId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32",
+          "nullable": true
+        },
+        "orderDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "orderStatus": {
+          "type": "string",
+          "nullable": true
+        },
+        "totalAmountUsd": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double",
+          "nullable": true
+        },
+        "currency": {
+          "type": "string",
+          "nullable": true
+        },
+        "customer": {
+          "$ref": "#/definitions/Customer"
+        },
+        "orderItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderItem"
+          }
+        },
+        "salesRep": {
+          "oneOf": [
+            {
+              "nullable": true
+            },
+            {
+              "$ref": "#/definitions/SalesRep"
+            }
+          ]
+        }
+      }
+    },
+    "SalesRep": {
+      "type": "object",
+      "properties": {
+        "salesRepId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "repName": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string",
+          "nullable": true
+        },
+        "email": {
+          "type": "string",
+          "nullable": true
+        },
+        "hireDate": {
+          "type": "string",
+          "format": "date",
+          "nullable": true
+        }
+      }
+    },
+    "VwSalesFact": {
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "orderDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "customerType": {
+          "type": "string",
+          "nullable": true
+        },
+        "productName": {
+          "type": "string"
+        },
+        "productCategory": {
+          "type": "string",
+          "nullable": true
+        },
+        "processNodeNm": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32",
+          "nullable": true
+        },
+        "quantity": {
+          "pattern": "^-?(?:0|[1-9]\\d*)$",
+          "format": "int32"
+        },
+        "unitPriceUsd": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double"
+        },
+        "lineTotalUsd": {
+          "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+          "format": "double",
+          "nullable": true
+        },
+        "repName": {
+          "type": "string",
+          "nullable": true
+        },
+        "region": {
+          "type": "string",
+          "nullable": true
+        }
+      }
     }
-  },
-  "tags": [
-    {
-      "name": "SalesAPI"
-    },
-    {
-      "name": "Chat"
-    },
-    {
-      "name": "Customers"
-    },
-    {
-      "name": "DealStrategy"
-    },
-    {
-      "name": "OrderItems"
-    },
-    {
-      "name": "ProductDescriptions"
-    },
-    {
-      "name": "ProductDocuments"
-    },
-    {
-      "name": "Products"
-    },
-    {
-      "name": "SalesFacts"
-    },
-    {
-      "name": "SalesOrders"
-    },
-    {
-      "name": "SalesReps"
-    }
-  ]
+  }
 }

@@ -50,6 +50,9 @@ override.tf.json
 # Publish output
 publish/
 
+# Node
+node_modules/
+
 # Logs
 logs/
 *.log
